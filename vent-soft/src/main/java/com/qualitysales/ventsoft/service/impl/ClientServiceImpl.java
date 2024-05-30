@@ -1,6 +1,8 @@
 package com.qualitysales.ventsoft.service.impl;
 
+import com.qualitysales.ventsoft.Controllers.DTO.CityDTO;
 import com.qualitysales.ventsoft.Controllers.DTO.ClientDTO;
+import com.qualitysales.ventsoft.mapper.CityMapper;
 import com.qualitysales.ventsoft.mapper.ClientMapper;
 import com.qualitysales.ventsoft.model.City;
 import com.qualitysales.ventsoft.model.Client;
@@ -95,11 +97,13 @@ public class ClientServiceImpl implements ClientService {
         log.info("updateClient idClient ok: {}", idClient);
         City city = cityRepository.findById(idClient.getCity().getId()).orElseThrow(() -> new IllegalArgumentException("Invalid city ID"));
         log.info("updateClient city ok: {}", city);
+        City city1 = CityMapper.MAPPER.toCityDTO(clientDTO.getCity());
+
         try {
             idClient.setName(clientDTO.getName());
             idClient.setLastName(clientDTO.getLastName());
             idClient.setDocument(clientDTO.getDocument());
-            idClient.setCity(city);
+            idClient.setCity(city1);
             idClient.setResidence(clientDTO.getResidence());
             idClient.setCellPhone(clientDTO.getCellPhone());
             idClient.setEmail(clientDTO.getEmail());

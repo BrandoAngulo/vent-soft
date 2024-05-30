@@ -23,7 +23,7 @@ public class Client {
     private String lastName;
     private String docTipe;
     private String document;
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "id_ciudad")
     private City city;
     private String residence;
