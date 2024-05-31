@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/ventsoft/client")
+@RequestMapping("/api/vent-soft/client")
 @Slf4j
 public class ClientController {
 

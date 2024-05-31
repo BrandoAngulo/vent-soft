@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.math.BigDecimal;
 
 @RestController
-@RequestMapping("/api/ventsoft/product")
+@RequestMapping("/api/vent-soft/product")
 public class ProductController {
 
     private final ProductServiceImpl productService;

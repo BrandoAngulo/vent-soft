@@ -10,8 +10,10 @@ import com.qualitysales.ventsoft.repository.CityRepository;
 import com.qualitysales.ventsoft.repository.ClientRepository;
 import com.qualitysales.ventsoft.service.ClientService;
 import com.qualitysales.ventsoft.utils.HttpClientUtil;
+import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.internal.bytebuddy.implementation.bytecode.Throw;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,6 +24,7 @@ import java.util.List;
 public class ClientServiceImpl implements ClientService {
 
     private final HttpClientUtil httpClientUtil;
+    private EntityManager entityManager;
 
     public ClientServiceImpl(ClientRepository clientRepository, HttpClientUtil httpClientUtil, CityRepository cityRepository) {
         this.clientRepository = clientRepository;
@@ -80,11 +83,18 @@ public class ClientServiceImpl implements ClientService {
 
     @Override
     public ClientDTO addClient(Client client) {
+        log.info("Client: {}",client);
+        City city = cityRepository.findById(client.getCity().getId()).orElseThrow(() -> new IllegalArgumentException("City not found"));
         try {
-            ClientDTO clientDTO = ClientMapper.MAPPER.toClient(client);
-            clientRepository.save(client);
-            log.info("addClient ok: {}", client);
-            return clientDTO;
+            if (city == null ) {
+                throw new IllegalArgumentException("City is null");
+            } else {
+                ClientDTO clientDTO = ClientMapper.MAPPER.toClient(client);
+                Client client1 = ClientMapper.MAPPER.toClientDTO(clientDTO);
+                clientRepository.save(client1);
+                log.info("addClient ok: {}", client);
+                return clientDTO;
+            }
         } catch (Exception e) {
             log.error("addClient Error: {}", e.getMessage());
             throw new IllegalArgumentException(e);

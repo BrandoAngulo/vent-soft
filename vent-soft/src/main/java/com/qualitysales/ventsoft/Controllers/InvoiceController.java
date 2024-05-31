@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/ventsoft/invoice")
+@RequestMapping("/api/vent-soft/invoice")
 public class InvoiceController {
     private final InvoiceServiceImpl invoiceService;
 

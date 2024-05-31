@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/ventsoft/city")
+@RequestMapping("/api/vent-soft/city")
 public class CityController {
 
     private final CityServiceImpl cityService;
