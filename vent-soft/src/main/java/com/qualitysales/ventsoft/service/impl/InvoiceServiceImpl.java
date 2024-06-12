@@ -89,21 +89,20 @@ public class InvoiceServiceImpl implements InvoiceService {
     }
 
     @Override
-    public InvoiceDTO anularInvoice(Integer id, Invoice invoice) {
+    public Invoice anularInvoice(Integer id) {
             Invoice searchInvoice = invoiceRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invoice not found"));
-            InvoiceDTO invoiceDTO = InvoiceMapper.MAPPER.toInvoice(searchInvoice);
 
         try {
-            if (invoice.getId().equals(id)){
+            if (searchInvoice.getId().equals(id)){
                 String active = "I";
-                log.info("anularInvoice ok: {}", invoiceDTO.toString());
-                invoiceDTO.setStatus(active);
+                log.info("anularInvoice ok: {}", searchInvoice);
+                searchInvoice.setStatus(active);
                 invoiceRepository.save(searchInvoice);
             }else {
-                log.info("anularInvoice error: {}", invoiceDTO.toString());
+                log.info("anularInvoice error: {}", searchInvoice);
                 throw new IllegalArgumentException("Invoice id not match");
             }
-            return invoiceDTO;
+            return searchInvoice;
         } catch (Exception e) {
             log.error("anularInvoice error: {}", e.getMessage());
             throw new IllegalArgumentException(e);

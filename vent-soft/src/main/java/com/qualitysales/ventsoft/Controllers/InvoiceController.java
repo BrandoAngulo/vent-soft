@@ -23,9 +23,9 @@ public class InvoiceController {
         return ResponseEntity.ok(invoiceService.getInvoices()).getBody();
     }
 
-    @GetMapping("/get-invoice")
-    public ResponseEntity<InvoiceDTO> getInvoice(@RequestParam("invoiceId") Integer invoiceId) {
-        return ResponseEntity.ok(invoiceService.getInvoice(invoiceId));
+    @GetMapping("/get-invoice/{id}")
+    public ResponseEntity<InvoiceDTO> getInvoice(@PathVariable Integer id) {
+        return ResponseEntity.ok(invoiceService.getInvoice(id));
     }
 
     @PostMapping("/save-invoice")
@@ -38,13 +38,13 @@ public class InvoiceController {
         return ResponseEntity.ok(invoiceService.updateInvoice(id, invoiceDTO));
     }
 
-    @PutMapping("/inactivar-invoice")
-    public ResponseEntity<InvoiceDTO> anularInvoice(@RequestParam Integer id, @RequestBody Invoice invoice) {
-        return ResponseEntity.ok(invoiceService.anularInvoice(id, invoice));
+    @PostMapping("/inactivar-invoice/{id}")
+    public ResponseEntity<Invoice> anularInvoice(@PathVariable Integer id) {
+        return ResponseEntity.ok(invoiceService.anularInvoice(id));
     }
 
-    @GetMapping("/invoices-customer-id")
-    public ResponseEntity<List<InvoiceDTO>> getCustomerInvoices(@RequestParam Integer customerId) {
+    @GetMapping("/invoices-customer-id/{customerId}")
+    public ResponseEntity<List<InvoiceDTO>> getCustomerInvoices(@PathVariable Integer customerId) {
         return ResponseEntity.ok(invoiceService.getInvoicesByCustomerId(customerId));
     }
 }
