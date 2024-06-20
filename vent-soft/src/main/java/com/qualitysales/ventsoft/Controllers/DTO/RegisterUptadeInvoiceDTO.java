@@ -9,16 +9,14 @@ import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 
-@AllArgsConstructor
-@NoArgsConstructor
 @Builder
-@Data
-public class InvoiceDTO {
-    private Integer id;
-    private String invoiceCode;
-    private Client client;
-    private String date;
-    private BigDecimal total;
-    private ItemInvoice itemInvoice;
-    private String status;
+public record RegisterUptadeInvoiceDTO(
+         Integer id,
+         String invoiceCode,
+         Client client,
+         String date,
+         BigDecimal total,
+         ItemInvoice itemInvoice,
+         Boolean status
+) {
 }

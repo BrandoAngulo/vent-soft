@@ -1,6 +1,6 @@
 package com.qualitysales.ventsoft.Controllers;
 
-import com.qualitysales.ventsoft.Controllers.DTO.InvoiceDTO;
+import com.qualitysales.ventsoft.Controllers.DTO.RegisterUptadeInvoiceDTO;
 import com.qualitysales.ventsoft.model.Invoice;
 import com.qualitysales.ventsoft.service.impl.InvoiceServiceImpl;
 import org.springframework.http.ResponseEntity;
@@ -18,33 +18,33 @@ public class InvoiceController {
     }
 
     @GetMapping("/get-invoices")
-    public List<InvoiceDTO> getInvoices() {
+    public List<RegisterUptadeInvoiceDTO> getInvoices() {
 
         return ResponseEntity.ok(invoiceService.getInvoices()).getBody();
     }
 
     @GetMapping("/get-invoice/{id}")
-    public ResponseEntity<InvoiceDTO> getInvoice(@PathVariable Integer id) {
+    public ResponseEntity<RegisterUptadeInvoiceDTO> getInvoice(@PathVariable Integer id) {
         return ResponseEntity.ok(invoiceService.getInvoice(id));
     }
 
     @PostMapping("/save-invoice")
-    public ResponseEntity<InvoiceDTO> saveInvoice(@RequestBody Invoice invoice) {
+    public ResponseEntity<RegisterUptadeInvoiceDTO> saveInvoice(@RequestBody Invoice invoice) {
         return ResponseEntity.ok(invoiceService.saveInvoice(invoice));
     }
 
     @PutMapping("/update-invoice/{id}")
-    public ResponseEntity<Invoice> updateInvoice(@PathVariable Integer id, @RequestBody InvoiceDTO invoiceDTO) {
-        return ResponseEntity.ok(invoiceService.updateInvoice(id, invoiceDTO));
+    public ResponseEntity<Invoice> updateInvoice(@PathVariable Integer id, @RequestBody RegisterUptadeInvoiceDTO registerUptadeInvoiceDTO) {
+        return ResponseEntity.ok(invoiceService.updateInvoice(id, registerUptadeInvoiceDTO));
     }
 
     @PostMapping("/inactivar-invoice/{id}")
-    public ResponseEntity<Invoice> anularInvoice(@PathVariable Integer id) {
+    public ResponseEntity<Boolean> anularInvoice(@PathVariable Integer id) {
         return ResponseEntity.ok(invoiceService.anularInvoice(id));
     }
 
     @GetMapping("/invoices-customer-id/{customerId}")
-    public ResponseEntity<List<InvoiceDTO>> getCustomerInvoices(@PathVariable Integer customerId) {
+    public ResponseEntity<List<RegisterUptadeInvoiceDTO>> getCustomerInvoices(@PathVariable Integer customerId) {
         return ResponseEntity.ok(invoiceService.getInvoicesByCustomerId(customerId));
     }
 }
