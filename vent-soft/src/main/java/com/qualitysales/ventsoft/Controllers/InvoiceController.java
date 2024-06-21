@@ -33,9 +33,9 @@ public class InvoiceController {
         return ResponseEntity.ok(invoiceService.saveInvoice(invoice));
     }
 
-    @PutMapping("/update-invoice/{id}")
-    public ResponseEntity<Invoice> updateInvoice(@PathVariable Integer id, @RequestBody RegisterUptadeInvoiceDTO registerUptadeInvoiceDTO) {
-        return ResponseEntity.ok(invoiceService.updateInvoice(id, registerUptadeInvoiceDTO));
+    @PutMapping("/update-invoice")
+    public ResponseEntity<RegisterUptadeInvoiceDTO> updateInvoice(@RequestBody RegisterUptadeInvoiceDTO registerUptadeInvoiceDTO) {
+        return ResponseEntity.ok(invoiceService.updateInvoice(registerUptadeInvoiceDTO));
     }
 
     @PostMapping("/inactivar-invoice/{id}")

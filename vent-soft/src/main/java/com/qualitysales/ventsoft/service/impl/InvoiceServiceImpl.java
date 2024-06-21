@@ -14,7 +14,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Objects;
 
 @Service
 @AllArgsConstructor
@@ -39,9 +38,10 @@ public class InvoiceServiceImpl implements InvoiceService {
     @Override
     public RegisterUptadeInvoiceDTO getInvoice(Integer id) {
         Invoice invoice = invoiceRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invoice not found"));
+        System.out.println("invoice = " + invoice);
         RegisterUptadeInvoiceDTO registerUptadeInvoiceDTO = InvoiceMapper.MAPPER.toInvoiceDTO(invoice);
         try {
-            log.info("getInvoice ok: {}", registerUptadeInvoiceDTO.toString());
+            log.info("getInvoice ok: {}", invoice);
             return registerUptadeInvoiceDTO;
         } catch (Exception e) {
             log.error("getInvoice error: {}", e.getMessage());
@@ -63,15 +63,22 @@ public class InvoiceServiceImpl implements InvoiceService {
     }
 
     @Override
-    public RegisterUptadeInvoiceDTO updateInvoice(Integer id, RegisterUptadeInvoiceDTO registerUptadeInvoiceDTO) {
-        log.info("updateInvoice ok: {}, {}", id, registerUptadeInvoiceDTO);
+    public RegisterUptadeInvoiceDTO updateInvoice(RegisterUptadeInvoiceDTO registerUptadeInvoiceDTO) {
+        log.info("updateInvoice ok: {}", registerUptadeInvoiceDTO);
+            Invoice invoiceId = invoiceRepository.findById(registerUptadeInvoiceDTO.id()).orElseThrow(() -> new IllegalArgumentException("Invoice not found"));
         try {
-            Invoice invoiceId = invoiceRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invoice not found"));
-            if (!Objects.equals(invoiceId.getClient().getId(), id)) {
+            if (invoiceId.getId().equals(registerUptadeInvoiceDTO.id())) {
+                invoiceId.setInvoiceCode(registerUptadeInvoiceDTO.invoiceCode());
+                invoiceId.setDate(registerUptadeInvoiceDTO.date());
+                invoiceId.setClient(registerUptadeInvoiceDTO.client());
+                invoiceId.setTotal(registerUptadeInvoiceDTO.total());
+                invoiceId.setStatus(registerUptadeInvoiceDTO.status());
+                return InvoiceMapper.MAPPER.toInvoiceDTO(invoiceRepository.save(invoiceId));
+            } else {
+
                 throw new IllegalArgumentException("Invoice not found");
             }
-            Invoice invoiceUpdate = InvoiceMapper.MAPPER.toInvoiceDTOToInvoice(registerUptadeInvoiceDTO);
-                return InvoiceMapper.MAPPER.toInvoiceDTO(invoiceRepository.save(invoiceUpdate));
+
 
         } catch (Exception e) {
             log.error("updateInvoice error: {}", e.getMessage());
@@ -83,12 +90,12 @@ public class InvoiceServiceImpl implements InvoiceService {
     @Override
     public boolean anularInvoice(Integer id) {
         log.info("anularInvoice ok: {}", id);
-            Invoice searchInvoice = invoiceRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invoice not found"));
+        Invoice searchInvoice = invoiceRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invoice not found"));
         try {
-                Boolean isActive = searchInvoice.getStatus();
-                searchInvoice.setStatus(Boolean.TRUE.equals(isActive) ? Boolean.FALSE : Boolean.TRUE);
-                invoiceRepository.save(searchInvoice);
-                return searchInvoice.getStatus();
+            Boolean isActive = searchInvoice.isStatus();
+            searchInvoice.setStatus(Boolean.TRUE.equals(isActive) ? Boolean.FALSE : Boolean.TRUE);
+            invoiceRepository.save(searchInvoice);
+            return searchInvoice.isStatus();
 
         } catch (Exception e) {
             log.error("anularInvoice error: {}", e.getMessage());
@@ -106,11 +113,11 @@ public class InvoiceServiceImpl implements InvoiceService {
         List<Invoice> invoiceList = invoiceRepository.findAll();
         List<RegisterUptadeInvoiceDTO> registerUptadeInvoiceDTOList = InvoiceMapper.MAPPER.toInvoiceList(invoiceList);
         try {
-            if(customerId.equals(clientDTO.getId())){
+            if (customerId.equals(clientDTO.getId())) {
                 log.info("getInvoicesByCustomerId ok: {}", registerUptadeInvoiceDTO.toString());
                 invoiceRepository.findInvoiceByClientId(customerId);
                 return registerUptadeInvoiceDTOList;
-            }else {
+            } else {
                 log.info("getInvoicesByCustomerId error: {}", registerUptadeInvoiceDTO.toString());
                 throw new IllegalArgumentException("Customer id not match");
             }

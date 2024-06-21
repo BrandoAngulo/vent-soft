@@ -1,11 +1,6 @@
 package com.qualitysales.ventsoft.model;
 
-import jakarta.persistence.Id;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Table;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 
 import lombok.Builder;
 import lombok.AllArgsConstructor;
@@ -31,9 +26,11 @@ public class Invoice {
     private String invoiceCode;
     @ManyToOne
     private Client client;
+    @Column(length = 10)
     private String date;
     private BigDecimal total;
     @ManyToOne
     private ItemInvoice itemInvoice;
-    private Boolean status;
+    @Column(length = 10, nullable = false)
+    private boolean status;
 }

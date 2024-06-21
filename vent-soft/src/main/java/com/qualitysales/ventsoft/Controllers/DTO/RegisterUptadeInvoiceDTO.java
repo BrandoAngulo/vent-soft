@@ -17,6 +17,6 @@ public record RegisterUptadeInvoiceDTO(
          String date,
          BigDecimal total,
          ItemInvoice itemInvoice,
-         Boolean status
+         boolean status
 ) {
 }
