@@ -18,9 +18,11 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     private Integer id;
-    @Column(name = "nombre")
+    @Column(name = "codigo_producto", length = 50)
+    private Integer itemCode;
+    @Column(name = "nombre", length = 50)
     private String name;
-    @Column(name = "descripcion")
+    @Column(name = "descripcion", length = 50)
     private String description;
     @ManyToOne
     @JoinColumn(name = "id_proveedor")
@@ -30,7 +32,7 @@ public class Product {
     private Category category;
     @Column(name = "precio")
     private BigDecimal price;
-    @Column(name = "cantidad")
+    @Column(name = "cantidad", length = 50)
     private Integer stock;
 
 }

@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+import java.util.Set;
 
 @Builder
 public record RegisterUptadeInvoiceDTO(
@@ -16,7 +17,7 @@ public record RegisterUptadeInvoiceDTO(
          Client client,
          String date,
          BigDecimal total,
-         ItemInvoice itemInvoice,
+         Set<ItemInvoice> itemInvoice,
          boolean status
 ) {
 }

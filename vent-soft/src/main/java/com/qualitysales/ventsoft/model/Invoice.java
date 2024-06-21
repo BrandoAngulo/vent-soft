@@ -10,6 +10,7 @@ import lombok.Getter;
 import lombok.ToString;
 
 import java.math.BigDecimal;
+import java.util.Set;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -29,8 +30,8 @@ public class Invoice {
     @Column(length = 10)
     private String date;
     private BigDecimal total;
-    @ManyToOne
-    private ItemInvoice itemInvoice;
+    @OneToMany
+    private Set<ItemInvoice> itemInvoice;
     @Column(length = 10, nullable = false)
     private boolean status;
 }
