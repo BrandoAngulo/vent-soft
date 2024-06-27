@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/api/vent-soft/invoice")
@@ -18,7 +19,7 @@ public class InvoiceController {
     }
 
     @GetMapping("/get-invoices")
-    public List<RegisterUptadeInvoiceDTO> getInvoices() {
+    public Set<RegisterUptadeInvoiceDTO> getInvoices() {
 
         return ResponseEntity.ok(invoiceService.getInvoices()).getBody();
     }
@@ -44,7 +45,7 @@ public class InvoiceController {
     }
 
     @GetMapping("/invoices-customer-id/{customerId}")
-    public ResponseEntity<List<RegisterUptadeInvoiceDTO>> getCustomerInvoices(@PathVariable Integer customerId) {
+    public ResponseEntity<Set<RegisterUptadeInvoiceDTO>> getCustomerInvoices(@PathVariable Integer customerId) {
         return ResponseEntity.ok(invoiceService.getInvoicesByCustomerId(customerId));
     }
 }

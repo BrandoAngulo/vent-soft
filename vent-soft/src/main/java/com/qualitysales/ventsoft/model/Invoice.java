@@ -30,8 +30,8 @@ public class Invoice {
     @Column(length = 10)
     private String date;
     private BigDecimal total;
-    @OneToMany
-    private Set<ItemInvoice> itemInvoice;
+    @OneToMany(mappedBy = "invoice", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<ItemInvoice> itemInvoices;
     @Column(length = 10, nullable = false)
     private boolean status;
 }

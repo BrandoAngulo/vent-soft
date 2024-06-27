@@ -13,7 +13,9 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
 @AllArgsConstructor
@@ -23,9 +25,9 @@ public class InvoiceServiceImpl implements InvoiceService {
     private final ClientRepository clientRepository;
 
     @Override
-    public List<RegisterUptadeInvoiceDTO> getInvoices() {
+    public Set<RegisterUptadeInvoiceDTO> getInvoices() {
         List<Invoice> invoices = invoiceRepository.findAll();
-        List<RegisterUptadeInvoiceDTO> registerUptadeInvoiceDTOList = InvoiceMapper.MAPPER.toInvoiceList(invoices);
+        Set<RegisterUptadeInvoiceDTO> registerUptadeInvoiceDTOList = InvoiceMapper.MAPPER.toInvoiceList(new HashSet<>(invoices));
         try {
             log.info("getInvoices ok: {}", registerUptadeInvoiceDTOList.toString());
             return registerUptadeInvoiceDTOList;
@@ -105,13 +107,13 @@ public class InvoiceServiceImpl implements InvoiceService {
     }
 
     @Override
-    public List<RegisterUptadeInvoiceDTO> getInvoicesByCustomerId(Integer customerId) {
+    public Set<RegisterUptadeInvoiceDTO> getInvoicesByCustomerId(Integer customerId) {
         Invoice invoice = invoiceRepository.findById(customerId).orElseThrow(() -> new IllegalArgumentException("Invoice not found"));
         RegisterUptadeInvoiceDTO registerUptadeInvoiceDTO = InvoiceMapper.MAPPER.toInvoiceDTO(invoice);
         Client client = clientRepository.findById(customerId).orElseThrow(() -> new IllegalArgumentException("Client not found"));
         ClientDTO clientDTO = ClientMapper.MAPPER.toClient(client);
         List<Invoice> invoiceList = invoiceRepository.findAll();
-        List<RegisterUptadeInvoiceDTO> registerUptadeInvoiceDTOList = InvoiceMapper.MAPPER.toInvoiceList(invoiceList);
+        Set<RegisterUptadeInvoiceDTO> registerUptadeInvoiceDTOList = InvoiceMapper.MAPPER.toInvoiceList(new HashSet<>(invoiceList));
         try {
             if (customerId.equals(clientDTO.getId())) {
                 log.info("getInvoicesByCustomerId ok: {}", registerUptadeInvoiceDTO.toString());

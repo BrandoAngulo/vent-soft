@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+import java.util.Set;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -34,5 +35,7 @@ public class Product {
     private BigDecimal price;
     @Column(name = "cantidad", length = 50)
     private Integer stock;
+    @OneToMany(mappedBy = "product")
+    private Set<ItemInvoice> itemInvoices;
 
 }

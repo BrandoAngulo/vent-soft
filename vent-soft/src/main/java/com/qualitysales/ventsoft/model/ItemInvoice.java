@@ -25,6 +25,10 @@ public class ItemInvoice {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     private Integer id;
-    @OneToMany
-    private Set<Product> product;
+    @ManyToOne
+    @JoinColumn(name = "id_producto")
+    private Product product;
+    @ManyToOne
+    @JoinColumn(name = "id_factura")
+    private Invoice invoice;
 }
