@@ -6,16 +6,20 @@ import com.qualitysales.ventsoft.mapper.ClientMapper;
 import com.qualitysales.ventsoft.mapper.InvoiceMapper;
 import com.qualitysales.ventsoft.model.Client;
 import com.qualitysales.ventsoft.model.Invoice;
+import com.qualitysales.ventsoft.model.ItemInvoice;
 import com.qualitysales.ventsoft.repository.ClientRepository;
 import com.qualitysales.ventsoft.repository.InvoiceRepository;
+import com.qualitysales.ventsoft.repository.ItemInvoiceRepository;
 import com.qualitysales.ventsoft.service.InvoiceService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.web.servlet.View;
 
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -23,6 +27,8 @@ import java.util.Set;
 public class InvoiceServiceImpl implements InvoiceService {
     private final InvoiceRepository invoiceRepository;
     private final ClientRepository clientRepository;
+    private final View error;
+    private final ItemInvoiceRepository itemInvoiceRepository;
 
     @Override
     public Set<RegisterUptadeInvoiceDTO> getInvoices() {
@@ -55,10 +61,18 @@ public class InvoiceServiceImpl implements InvoiceService {
     public RegisterUptadeInvoiceDTO saveInvoice(Invoice invoice) {
         log.info("saveInvoice ok: {}", invoice);
         try {
-            RegisterUptadeInvoiceDTO registerUptadeInvoiceDTO = InvoiceMapper.MAPPER.toInvoiceDTO(invoice);
             invoiceRepository.save(invoice);
+            if (invoice.getItemInvoices()!= null && !invoice.getItemInvoices().isEmpty()){
+                invoice.setItemInvoices(invoice.getItemInvoices().stream().map(item -> {
+                    item.setInvoice(invoice);
+                            return itemInvoiceRepository.save(item);
+                            }).collect(Collectors.toSet()));
+                }
+            RegisterUptadeInvoiceDTO registerUptadeInvoiceDTO = InvoiceMapper.MAPPER.toInvoiceDTO(invoice);
+            log.info("saveInvoice success: {}", registerUptadeInvoiceDTO);
             return registerUptadeInvoiceDTO;
         } catch (Exception e) {
+            e.printStackTrace();
             log.error("saveInvoice error: {}", e.getMessage());
             throw new IllegalArgumentException(e);
         }

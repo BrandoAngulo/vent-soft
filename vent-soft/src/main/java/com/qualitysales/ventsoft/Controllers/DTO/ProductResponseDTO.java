@@ -7,7 +7,6 @@ import java.util.Set;
 
 public record ProductResponseDTO(
         Integer id,
-        @JsonProperty("item_code")
         Integer itemCode,
         String name,
         String description,

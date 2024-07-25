@@ -14,13 +14,25 @@ public interface InvoiceMapper {
 
     InvoiceMapper MAPPER = Mappers.getMapper(InvoiceMapper.class);
 
-    @Mapping(target = "itemInvoices", source = "itemInvoices")
+    @Mapping(source = "id", target = "id")
+    @Mapping(source = "invoiceCode", target = "invoiceCode")
+    @Mapping(source = "client", target = "client")
+    @Mapping(source = "date", target = "date")
+    @Mapping(source = "total", target = "total")
+    @Mapping(source = "itemInvoices", target = "itemInvoices")
+    @Mapping(source = "status", target = "status")
     RegisterUptadeInvoiceDTO toInvoiceDTO(Invoice invoice);
-    @Mapping(target = "itemInvoices", source = "itemInvoices")
+
+    @Mapping(source = "id", target = "id")
+    @Mapping(source = "invoiceCode", target = "invoiceCode")
+    @Mapping(source = "client", target = "client")
+    @Mapping(source = "date", target = "date")
+    @Mapping(source = "total", target = "total")
+    @Mapping(source = "itemInvoices", target = "itemInvoices")
+    @Mapping(source = "status", target = "status")
     Invoice toInvoiceDTOToInvoice(RegisterUptadeInvoiceDTO registerUptadeInvoiceDTO);
 
-    @Mapping(target = "itemInvoices", source = "itemInvoices")
     Set<RegisterUptadeInvoiceDTO> toInvoiceList(Set<Invoice> invoices);
-    @Mapping(target = "itemInvoices", source = "itemInvoices")
+
     Set<Invoice> toInvoiceDTOList(List<Invoice> invoices);
 }

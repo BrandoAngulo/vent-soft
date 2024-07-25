@@ -1,5 +1,6 @@
 package com.qualitysales.ventsoft.Controllers.DTO;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.qualitysales.ventsoft.model.Client;
 
 import java.math.BigDecimal;
