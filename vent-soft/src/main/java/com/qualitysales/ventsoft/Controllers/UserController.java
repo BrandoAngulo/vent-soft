@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/vent-soft/user")
+@RequestMapping("/api/ventsoft/user")
 public class UserController {
 
     private final UserServiceImpl userService;

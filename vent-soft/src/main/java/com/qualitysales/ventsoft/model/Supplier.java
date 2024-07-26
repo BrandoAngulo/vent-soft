@@ -5,8 +5,7 @@ import lombok.*;
 
 @AllArgsConstructor
 @NoArgsConstructor
-@Setter
-@Getter
+@Data
 @Builder
 @Entity
 @Table(name = "proveedor")

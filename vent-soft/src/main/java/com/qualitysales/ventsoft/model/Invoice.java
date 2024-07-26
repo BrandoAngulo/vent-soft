@@ -1,6 +1,11 @@
 package com.qualitysales.ventsoft.model;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Id;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Table;
+import jakarta.persistence.ManyToOne;
 
 import lombok.Builder;
 import lombok.AllArgsConstructor;
@@ -10,12 +15,12 @@ import lombok.Getter;
 import lombok.ToString;
 
 import java.math.BigDecimal;
-import java.util.Set;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Setter
 @Getter
+@ToString
 @Builder
 @Entity
 @Table(name = "factura")
@@ -26,24 +31,9 @@ public class Invoice {
     private String invoiceCode;
     @ManyToOne
     private Client client;
-    @Column(length = 10)
     private String date;
     private BigDecimal total;
-    @OneToMany(mappedBy = "invoice", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<ItemInvoice> itemInvoices;
-    @Column(length = 10, nullable = false)
-    private boolean status;
-
-    @Override
-    public String toString() {
-        return "Invoice{" +
-                "id=" + id +
-                ", invoiceCode='" + invoiceCode + '\'' +
-                ", Client=" + client +
-                ", date='" + date + '\'' +
-                ", total=" + total +
-                ", itemInvoices=" + itemInvoices +
-                ", status=" + status +
-                '}';
-    }
+    @ManyToOne
+    private ItemInvoice itemInvoice;
+    private String status;
 }

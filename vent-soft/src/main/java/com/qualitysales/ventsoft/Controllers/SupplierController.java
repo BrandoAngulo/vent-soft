@@ -8,7 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/vent-soft/supplier")
+@RequestMapping("/api/ventsoft/supplier")
 public class SupplierController {
 
     private final SupplierServiceImpl supplierService;

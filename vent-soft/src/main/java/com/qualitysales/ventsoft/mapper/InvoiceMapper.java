@@ -1,38 +1,20 @@
 package com.qualitysales.ventsoft.mapper;
 
-import com.qualitysales.ventsoft.Controllers.DTO.RegisterUptadeInvoiceDTO;
+import com.qualitysales.ventsoft.Controllers.DTO.InvoiceDTO;
 import com.qualitysales.ventsoft.model.Invoice;
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
 import java.util.List;
-import java.util.Set;
 
-@Mapper(uses = ItemInvoiceMapper.class)
+@Mapper
 public interface InvoiceMapper {
 
     InvoiceMapper MAPPER = Mappers.getMapper(InvoiceMapper.class);
 
-    @Mapping(source = "id", target = "id")
-    @Mapping(source = "invoiceCode", target = "invoiceCode")
-    @Mapping(source = "client", target = "client")
-    @Mapping(source = "date", target = "date")
-    @Mapping(source = "total", target = "total")
-    @Mapping(source = "itemInvoices", target = "itemInvoices")
-    @Mapping(source = "status", target = "status")
-    RegisterUptadeInvoiceDTO toInvoiceDTO(Invoice invoice);
+    InvoiceDTO toInvoice(Invoice invoice);
+    Invoice toInvoiceDTO(InvoiceDTO invoiceDTO);
 
-    @Mapping(source = "id", target = "id")
-    @Mapping(source = "invoiceCode", target = "invoiceCode")
-    @Mapping(source = "client", target = "client")
-    @Mapping(source = "date", target = "date")
-    @Mapping(source = "total", target = "total")
-    @Mapping(source = "itemInvoices", target = "itemInvoices")
-    @Mapping(source = "status", target = "status")
-    Invoice toInvoiceDTOToInvoice(RegisterUptadeInvoiceDTO registerUptadeInvoiceDTO);
-
-    Set<RegisterUptadeInvoiceDTO> toInvoiceList(Set<Invoice> invoices);
-
-    Set<Invoice> toInvoiceDTOList(List<Invoice> invoices);
+    List<InvoiceDTO> toInvoiceList(List<Invoice> invoices);
+    List<Invoice> toInvoiceDTOList(List<Invoice> invoices);
 }

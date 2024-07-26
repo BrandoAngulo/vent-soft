@@ -12,11 +12,11 @@ public interface CityMapper {
 
     CityMapper MAPPER = Mappers.getMapper(CityMapper.class);
 
-    City toCityDTO(CityDTO cityDTO);
+    City toCity(CityDTO cityDTO);
 
-    CityDTO toCity(City city);
+    CityDTO toCityDTO(City city);
 
-    List<City> toCitiesDTO(List<CityDTO> cityDTOS);
+    List<City> toCities(List<CityDTO> cityDTOS);
 
-    List<CityDTO> toCities(List<City> cities);
+    List<CityDTO> toCityDTOS(List<City> cities);
 }

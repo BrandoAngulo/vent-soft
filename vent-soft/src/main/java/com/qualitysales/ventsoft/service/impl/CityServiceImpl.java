@@ -22,7 +22,7 @@ public class CityServiceImpl implements CityService {
     public CityDTO findCity(Integer id) {
 
         City cityId = cityRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("id not found"));
-        CityDTO cityDTO = CityMapper.MAPPER.toCity(cityId);
+        CityDTO cityDTO = CityMapper.MAPPER.toCityDTO(cityId);
 
         try {
             log.info("findCity ok: {}", cityDTO);
@@ -38,7 +38,7 @@ public class CityServiceImpl implements CityService {
     @Override
     public List<CityDTO> findCities() {
         List<City> cities = cityRepository.findAll();
-        List<CityDTO> cityDTOS = CityMapper.MAPPER.toCities(cities);
+        List<CityDTO> cityDTOS = CityMapper.MAPPER.toCityDTOS(cities);
         try {
             log.info("findCities OK: {}", cities);
             return cityDTOS;
@@ -53,7 +53,7 @@ public class CityServiceImpl implements CityService {
     @Override
     public CityDTO saveCity(City city) {
         try {
-            CityDTO cityDTO = CityMapper.MAPPER.toCity(city);
+            CityDTO cityDTO = CityMapper.MAPPER.toCityDTO(city);
             cityRepository.save(city);
             log.info("saveCity ok: {}", city);
 
@@ -67,7 +67,7 @@ public class CityServiceImpl implements CityService {
     @Override
     public CityDTO updateCity(Integer id, City city) {
         City findId = cityRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("id not found"));
-        CityDTO cityDTO = CityMapper.MAPPER.toCity(findId);
+        CityDTO cityDTO = CityMapper.MAPPER.toCityDTO(findId);
         if (findId.getId().equals(city.getId())) {
             throw new IllegalArgumentException("Id is present");
         }
