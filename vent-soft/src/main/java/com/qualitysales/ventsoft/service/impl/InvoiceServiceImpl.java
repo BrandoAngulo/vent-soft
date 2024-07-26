@@ -1,12 +1,12 @@
 package com.qualitysales.ventsoft.service.impl;
 
 import com.qualitysales.ventsoft.Controllers.DTO.ClientDTO;
+import com.qualitysales.ventsoft.Controllers.DTO.ItemInvoiceDTO;
 import com.qualitysales.ventsoft.Controllers.DTO.RegisterUptadeInvoiceDTO;
 import com.qualitysales.ventsoft.mapper.ClientMapper;
 import com.qualitysales.ventsoft.mapper.InvoiceMapper;
 import com.qualitysales.ventsoft.model.Client;
 import com.qualitysales.ventsoft.model.Invoice;
-import com.qualitysales.ventsoft.model.ItemInvoice;
 import com.qualitysales.ventsoft.repository.ClientRepository;
 import com.qualitysales.ventsoft.repository.InvoiceRepository;
 import com.qualitysales.ventsoft.repository.ItemInvoiceRepository;
@@ -16,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.View;
 
+import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -141,5 +142,19 @@ public class InvoiceServiceImpl implements InvoiceService {
             log.error("getInvoicesByCustomerId error: {}", e.getMessage());
             throw new IllegalArgumentException(e);
         }
+    }
+
+    private BigDecimal calculateItemTotalPrice(ItemInvoiceDTO itemInvoiceDTO){
+        BigDecimal price = itemInvoiceDTO.product().price();
+        BigDecimal quantity =new BigDecimal(itemInvoiceDTO.product().stock());
+
+        return price.multiply(quantity);
+
+    }
+
+    private BigDecimal calculateInvoiceTotal(Set<ItemInvoiceDTO> itemInvoiceDTOS){
+        return itemInvoiceDTOS.stream().
+                map(this::calculateItemTotalPrice)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 }
