@@ -1,6 +1,7 @@
 package com.qualitysales.ventsoft.Controllers;
 
 import com.qualitysales.ventsoft.Controllers.DTO.ClientDTO;
+import com.qualitysales.ventsoft.Controllers.DTO.ClientRequestDTO;
 import com.qualitysales.ventsoft.model.Client;
 import com.qualitysales.ventsoft.service.impl.ClientServiceImpl;
 import lombok.extern.slf4j.Slf4j;
@@ -10,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/ventsoft/client")
+@RequestMapping("/api/vent-soft/client")
 @Slf4j
 public class ClientController {
 
@@ -43,9 +44,9 @@ public class ClientController {
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<Client> updateClient(@PathVariable Integer id, @RequestBody ClientDTO clientDTO) {
-        log.info("Received update request for client ID: {}, with data: {}", id, clientDTO);
-        return ResponseEntity.ok(clientService.updateClient(id, clientDTO));
+    public ResponseEntity<Client> updateClient(@PathVariable Integer id, @RequestBody ClientRequestDTO clietRequestDTO) {
+        log.info("Received update request for client ID: {}, with data: {}", id, clietRequestDTO);
+        return ResponseEntity.ok(clientService.updateClient(id, clietRequestDTO));
     }
 
     @DeleteMapping("/delete/{id}")

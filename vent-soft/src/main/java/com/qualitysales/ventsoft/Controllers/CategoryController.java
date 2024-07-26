@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @AllArgsConstructor
-@RequestMapping("/api/ventsoft/category")
+@RequestMapping("/api/vent-soft/category")
 @RestController
 public class CategoryController {
 

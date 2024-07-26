@@ -1,10 +1,6 @@
 package com.qualitysales.ventsoft.model;
 
-import jakarta.persistence.Id;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 import lombok.Builder;
 import lombok.AllArgsConstructor;
@@ -14,12 +10,13 @@ import lombok.Getter;
 import lombok.ToString;
 
 import java.math.BigDecimal;
+import java.util.List;
+import java.util.Set;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Setter
 @Getter
-@ToString
 @Builder
 @Entity
 @Table(name = "itemfactura")
@@ -27,8 +24,15 @@ public class ItemInvoice {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     private Integer id;
-    private Integer itemCode;
-    private Integer stock;
-    private BigDecimal price;
-    private String product;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "id_producto")
+    private Product product;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "id_factura")
+    private Invoice invoice;
+
+    @Override
+    public String toString() {
+        return "ItemInvoice{" + "id=" + id + ", product=" + product +"}";
+    }
 }

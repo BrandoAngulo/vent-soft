@@ -8,14 +8,14 @@ import org.mapstruct.factory.Mappers;
 import java.util.List;
 
 @Mapper
-public interface ClientMapper {
-    ClientMapper MAPPER = Mappers.getMapper(ClientMapper.class);
+public interface ClientRequestMapper {
+
+    ClientRequestMapper MAPPER = Mappers.getMapper(ClientRequestMapper.class);
 
     Client toClientDTO(ClientDTO clientDTO);
     ClientDTO toClient(Client client);
 
     List<Client> toClientsDTO(List<ClientDTO> clientDTO);
     List<ClientDTO> toClients(List<Client> client);
-
+    
 }
-
