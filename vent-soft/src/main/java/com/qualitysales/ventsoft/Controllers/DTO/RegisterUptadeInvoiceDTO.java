@@ -9,7 +9,7 @@ import java.util.Set;
 public record RegisterUptadeInvoiceDTO(
          Integer id,
          String invoiceCode,
-         Client client,
+         ClientDTO client,
          String date,
          BigDecimal total,
          Set<ItemInvoiceDTO> itemInvoices,

@@ -17,7 +17,6 @@ import java.util.Set;
 @NoArgsConstructor
 @Setter
 @Getter
-@ToString
 @Builder
 @Entity
 @Table(name = "itemfactura")
@@ -31,4 +30,9 @@ public class ItemInvoice {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_factura")
     private Invoice invoice;
+
+    @Override
+    public String toString() {
+        return "ItemInvoice{" + "id=" + id + ", product=" + product +"}";
+    }
 }

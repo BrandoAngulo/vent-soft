@@ -46,7 +46,6 @@ public class InvoiceServiceImpl implements InvoiceService {
     @Override
     public RegisterUptadeInvoiceDTO getInvoice(Integer id) {
         Invoice invoice = invoiceRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invoice not found"));
-        System.out.println("invoice = " + invoice);
         RegisterUptadeInvoiceDTO registerUptadeInvoiceDTO = InvoiceMapper.MAPPER.toInvoiceDTO(invoice);
         try {
             log.info("getInvoice ok: {}", invoice);
@@ -59,7 +58,7 @@ public class InvoiceServiceImpl implements InvoiceService {
 
     @Override
     public RegisterUptadeInvoiceDTO saveInvoice(Invoice invoice) {
-        log.info("saveInvoice ok: {}", invoice);
+        log.info("saveInvoice ok: {}", invoice.toString());
         try {
             invoiceRepository.save(invoice);
             if (invoice.getItemInvoices()!= null && !invoice.getItemInvoices().isEmpty()){
@@ -82,11 +81,12 @@ public class InvoiceServiceImpl implements InvoiceService {
     public RegisterUptadeInvoiceDTO updateInvoice(RegisterUptadeInvoiceDTO registerUptadeInvoiceDTO) {
         log.info("updateInvoice ok: {}", registerUptadeInvoiceDTO);
             Invoice invoiceId = invoiceRepository.findById(registerUptadeInvoiceDTO.id()).orElseThrow(() -> new IllegalArgumentException("Invoice not found"));
+            Client client = ClientMapper.MAPPER.toClientDTO(registerUptadeInvoiceDTO.client());
         try {
             if (invoiceId.getId().equals(registerUptadeInvoiceDTO.id())) {
                 invoiceId.setInvoiceCode(registerUptadeInvoiceDTO.invoiceCode());
                 invoiceId.setDate(registerUptadeInvoiceDTO.date());
-                invoiceId.setClient(registerUptadeInvoiceDTO.client());
+                invoiceId.setClient(client);
                 invoiceId.setTotal(registerUptadeInvoiceDTO.total());
                 invoiceId.setStatus(registerUptadeInvoiceDTO.status());
                 return InvoiceMapper.MAPPER.toInvoiceDTO(invoiceRepository.save(invoiceId));

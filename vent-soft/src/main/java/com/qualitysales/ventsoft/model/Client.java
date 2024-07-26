@@ -7,8 +7,8 @@ import lombok.*;
 
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
-@ToString
+@Setter
+@Getter
 @Builder
 @Entity
 @Table(name = "cliente")
@@ -38,4 +38,10 @@ public class Client {
     private String email;
     @Column(name = "estado")
     private String estate;
+
+    @Override
+    public String toString() {
+        return "cliente{" + ", id= " + id + ", name" + name + ", lastName=" + lastName + ", docTipe="
+                + docTipe + ", email" + email + "}";
+    }
 }

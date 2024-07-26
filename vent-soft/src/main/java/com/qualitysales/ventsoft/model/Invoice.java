@@ -16,7 +16,6 @@ import java.util.Set;
 @NoArgsConstructor
 @Setter
 @Getter
-@ToString
 @Builder
 @Entity
 @Table(name = "factura")
@@ -34,4 +33,17 @@ public class Invoice {
     private Set<ItemInvoice> itemInvoices;
     @Column(length = 10, nullable = false)
     private boolean status;
+
+    @Override
+    public String toString() {
+        return "Invoice{" +
+                "id=" + id +
+                ", invoiceCode='" + invoiceCode + '\'' +
+                ", Client=" + client +
+                ", date='" + date + '\'' +
+                ", total=" + total +
+                ", itemInvoices=" + itemInvoices +
+                ", status=" + status +
+                '}';
+    }
 }
