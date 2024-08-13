@@ -1,15 +1,17 @@
 package com.qualitysales.ventsoft.service.impl;
 
 import com.qualitysales.ventsoft.Controllers.DTO.ClientDTO;
-import com.qualitysales.ventsoft.Controllers.DTO.ItemInvoiceDTO;
 import com.qualitysales.ventsoft.Controllers.DTO.RegisterUptadeInvoiceDTO;
 import com.qualitysales.ventsoft.mapper.ClientMapper;
 import com.qualitysales.ventsoft.mapper.InvoiceMapper;
 import com.qualitysales.ventsoft.model.Client;
 import com.qualitysales.ventsoft.model.Invoice;
+import com.qualitysales.ventsoft.model.ItemInvoice;
+import com.qualitysales.ventsoft.model.Product;
 import com.qualitysales.ventsoft.repository.ClientRepository;
 import com.qualitysales.ventsoft.repository.InvoiceRepository;
 import com.qualitysales.ventsoft.repository.ItemInvoiceRepository;
+import com.qualitysales.ventsoft.repository.ProductRepository;
 import com.qualitysales.ventsoft.service.InvoiceService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,6 +32,7 @@ public class InvoiceServiceImpl implements InvoiceService {
     private final ClientRepository clientRepository;
     private final View error;
     private final ItemInvoiceRepository itemInvoiceRepository;
+    private final ProductRepository productRepository;
 
     @Override
     public Set<RegisterUptadeInvoiceDTO> getInvoices() {
@@ -63,11 +66,18 @@ public class InvoiceServiceImpl implements InvoiceService {
         try {
             invoiceRepository.save(invoice);
             if (invoice.getItemInvoices()!= null && !invoice.getItemInvoices().isEmpty()){
-                invoice.setItemInvoices(invoice.getItemInvoices().stream().map(item -> {
-                    item.setInvoice(invoice);
-                            return itemInvoiceRepository.save(item);
-                            }).collect(Collectors.toSet()));
-                }
+                Set<ItemInvoice> itemInvoices = invoice.getItemInvoices().stream().map(itemInvoice -> {
+                    itemInvoice.setInvoice(invoice);
+                    return itemInvoiceRepository.save(itemInvoice);
+                        }).collect(Collectors.toSet());
+
+                // Calcular el total de la factura antes de guardar
+                BigDecimal totalInvoice = calculateInvoiceTotal(itemInvoices);
+                invoice.setTotal(totalInvoice);
+
+            }
+            invoiceRepository.save(invoice);
+
             RegisterUptadeInvoiceDTO registerUptadeInvoiceDTO = InvoiceMapper.MAPPER.toInvoiceDTO(invoice);
             log.info("saveInvoice success: {}", registerUptadeInvoiceDTO);
             return registerUptadeInvoiceDTO;
@@ -144,16 +154,17 @@ public class InvoiceServiceImpl implements InvoiceService {
         }
     }
 
-    private BigDecimal calculateItemTotalPrice(ItemInvoiceDTO itemInvoiceDTO){
-        BigDecimal price = itemInvoiceDTO.product().price();
-        BigDecimal quantity =new BigDecimal(itemInvoiceDTO.product().stock());
+    private BigDecimal calculateItemTotalPrice(ItemInvoice itemInvoice){
+        Product product = productRepository.findById(itemInvoice.getProduct().getId()).orElseThrow(() -> new IllegalArgumentException("Product not found"));
+        BigDecimal price = product.getPrice();
+        BigDecimal quantity =new BigDecimal(itemInvoice.getProduct().getStock());
 
         return price.multiply(quantity);
 
     }
 
-    private BigDecimal calculateInvoiceTotal(Set<ItemInvoiceDTO> itemInvoiceDTOS){
-        return itemInvoiceDTOS.stream().
+    private BigDecimal calculateInvoiceTotal(Set<ItemInvoice> itemInvoices){
+        return itemInvoices.stream().
                 map(this::calculateItemTotalPrice)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }

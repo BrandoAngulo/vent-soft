@@ -29,7 +29,7 @@ public class Invoice {
     @Column(length = 10)
     private String date;
     private BigDecimal total;
-    @OneToMany(mappedBy = "invoice", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "invoice", cascade = CascadeType.ALL)
     private Set<ItemInvoice> itemInvoices;
     @Column(length = 10, nullable = false)
     private boolean status;
