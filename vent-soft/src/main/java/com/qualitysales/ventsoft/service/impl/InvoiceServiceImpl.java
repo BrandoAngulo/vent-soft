@@ -68,8 +68,16 @@ public class InvoiceServiceImpl implements InvoiceService {
             if (invoice.getItemInvoices()!= null && !invoice.getItemInvoices().isEmpty()){
                 Set<ItemInvoice> itemInvoices = invoice.getItemInvoices().stream().map(itemInvoice -> {
                     itemInvoice.setInvoice(invoice);
+
+                    List<Integer> cantidadFacturada = invoice.getItemInvoices()
+                            .stream().map(ItemInvoice::getAmountSold).toList();
+                    Product product = productRepository.findById(itemInvoice.getProduct().getId()).orElse(null);
+                    product.getStock()
                     return itemInvoiceRepository.save(itemInvoice);
                         }).collect(Collectors.toSet());
+
+                System.out.println("itemInvoices>>>> = {}" + itemInvoices.stream().map(itemInvoice -> itemInvoice.
+                        getProduct().getStock()).toList());
 
                 // Calcular el total de la factura antes de guardar
                 BigDecimal totalInvoice = calculateInvoiceTotal(itemInvoices);
@@ -157,15 +165,21 @@ public class InvoiceServiceImpl implements InvoiceService {
     private BigDecimal calculateItemTotalPrice(ItemInvoice itemInvoice){
         Product product = productRepository.findById(itemInvoice.getProduct().getId()).orElseThrow(() -> new IllegalArgumentException("Product not found"));
         BigDecimal price = product.getPrice();
-        BigDecimal quantity =new BigDecimal(itemInvoice.getProduct().getStock());
+        BigDecimal quantity =new BigDecimal(itemInvoice.getAmountSold());
 
         return price.multiply(quantity);
 
     }
 
     private BigDecimal calculateInvoiceTotal(Set<ItemInvoice> itemInvoices){
-        return itemInvoices.stream().
-                map(this::calculateItemTotalPrice)
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
+        try {
+            BigDecimal valorT  = itemInvoices.stream().
+                    map(this::calculateItemTotalPrice)
+                    .reduce(BigDecimal.ZERO, BigDecimal::add);
+            System.out.println("valorT>>>> = " + valorT);
+            return valorT;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 }

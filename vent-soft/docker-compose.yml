@@ -38,10 +38,20 @@
 #volumes:
 #  my-db:
 
-
-
 version: '3.1'
 services:
+  ventsoft:
+    image: ventsoft
+    container_name: vent-soft-container
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    networks:
+      - ventsoft-network
+    depends_on:
+      - db
   db:
     container_name: localhost
     image: postgres:15.0-alpine3.16
@@ -50,11 +60,15 @@ services:
     restart: always
     ports:
       - '5433:5432'
+    networks:
+      - ventsoft-network
     expose:
       - '5432'
     environment:
       POSTGRES_USER: 'postgres'
       POSTGRES_PASSWORD: 'postgres'
+      POSTGRES_DB: 'ventsoft'
+networks:
+  ventsoft-network:
 volumes:
   my-db:
-

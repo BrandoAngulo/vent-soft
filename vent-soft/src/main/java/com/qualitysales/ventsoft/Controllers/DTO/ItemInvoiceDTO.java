@@ -3,6 +3,7 @@ package com.qualitysales.ventsoft.Controllers.DTO;
 
 public record ItemInvoiceDTO(
         Integer id,
-        ProductResponseDTO product
+        ProductResponseDTO product,
+        Integer amountSold
 ) {
 }

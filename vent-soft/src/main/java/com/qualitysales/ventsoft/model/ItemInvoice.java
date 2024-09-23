@@ -30,9 +30,10 @@ public class ItemInvoice {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_factura")
     private Invoice invoice;
+    private Integer amountSold;
 
     @Override
     public String toString() {
-        return "ItemInvoice{" + "id=" + id + ", product=" + product +"}";
+        return "ItemInvoice{" + "id=" + id + ", product=" + product + ", amountSold=" + amountSold + '}';
     }
 }
