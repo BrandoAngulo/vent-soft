@@ -65,7 +65,7 @@ public class InvoiceServiceImpl implements InvoiceService {
     public RegisterUptadeInvoiceDTO saveInvoice(Invoice invoice) {
         log.info("saveInvoice ok: {}", invoice.toString());
         try {
-            invoiceRepository.save(invoice);
+//            invoiceRepository.save(invoice);
             if (invoice.getItemInvoices() != null && !invoice.getItemInvoices().isEmpty()) {
                 Set<ItemInvoice> itemInvoices = invoice.getItemInvoices().stream().map(itemInvoice -> {
                     itemInvoice.setInvoice(invoice);
@@ -79,7 +79,8 @@ public class InvoiceServiceImpl implements InvoiceService {
                         product.setStock(product.getStock() - amountSold);
                         productRepository.save(product);//se guarda el producto con la nueva cantidad
                     } else {
-                        throw new RuntimeException("Product has no stock" + product.getStock());
+                        throw new RuntimeException("Product has no stock, producto = "+ product.getDescription() + ", stock = " + product.getStock());
+
                     }
                     return itemInvoiceRepository.save(itemInvoice);
                 }).collect(Collectors.toSet());
@@ -94,7 +95,6 @@ public class InvoiceServiceImpl implements InvoiceService {
             log.info("saveInvoice success: {}", registerUptadeInvoiceDTO);
             return registerUptadeInvoiceDTO;
         } catch (Exception e) {
-            e.printStackTrace();
             log.error("saveInvoice error: {}", e.getMessage());
             throw new IllegalArgumentException(e);
         }
