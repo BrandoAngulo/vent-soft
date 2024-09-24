@@ -68,22 +68,25 @@ public class InvoiceServiceImpl implements InvoiceService {
             if (invoice.getItemInvoices()!= null && !invoice.getItemInvoices().isEmpty()){
                 Set<ItemInvoice> itemInvoices = invoice.getItemInvoices().stream().map(itemInvoice -> {
                     itemInvoice.setInvoice(invoice);
-
-                    List<Integer> cantidadFacturada = invoice.getItemInvoices()
-                            .stream().map(ItemInvoice::getAmountSold).toList();
-                    Product product = productRepository.findById(itemInvoice.getProduct().getId()).orElse(null);
-                    product.getStock()
+                    //obtenemos el producto y la cantidad vendida
+                    Product product = productRepository.findById(itemInvoice.getProduct().getId()).orElseThrow(() -> new IllegalArgumentException("Product not found"));
+                    Integer amountSold = itemInvoice.getAmountSold();
+                    System.out.println("product>>>>> = " + product);
+                    //validar si el ahi stock o si es suficiente para realizar la venta
+                    if (product.getStock() >= amountSold){
+                        //se setea el stock del producto y se resta con la cantidad vendida
+                        product.setStock(product.getStock() - amountSold);
+                        productRepository.save(product);//se guarda el producto con la nueva cantidad
+                    }else {
+                        throw new RuntimeException("Product has no stock" + product.getStock());
+                    }
                     return itemInvoiceRepository.save(itemInvoice);
                         }).collect(Collectors.toSet());
-
-                System.out.println("itemInvoices>>>> = {}" + itemInvoices.stream().map(itemInvoice -> itemInvoice.
-                        getProduct().getStock()).toList());
-
                 // Calcular el total de la factura antes de guardar
                 BigDecimal totalInvoice = calculateInvoiceTotal(itemInvoices);
                 invoice.setTotal(totalInvoice);
-
             }
+            // Volvemos a guardar la factura con el total actualizado
             invoiceRepository.save(invoice);
 
             RegisterUptadeInvoiceDTO registerUptadeInvoiceDTO = InvoiceMapper.MAPPER.toInvoiceDTO(invoice);
