@@ -21,6 +21,7 @@ import org.springframework.web.servlet.View;
 import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -65,23 +66,23 @@ public class InvoiceServiceImpl implements InvoiceService {
         log.info("saveInvoice ok: {}", invoice.toString());
         try {
             invoiceRepository.save(invoice);
-            if (invoice.getItemInvoices()!= null && !invoice.getItemInvoices().isEmpty()){
+            if (invoice.getItemInvoices() != null && !invoice.getItemInvoices().isEmpty()) {
                 Set<ItemInvoice> itemInvoices = invoice.getItemInvoices().stream().map(itemInvoice -> {
                     itemInvoice.setInvoice(invoice);
                     //obtenemos el producto y la cantidad vendida
-                    Product product = productRepository.findById(itemInvoice.getProduct().getId()).orElseThrow(() -> new IllegalArgumentException("Product not found"));
+                    Product product = productRepository.findById(itemInvoice.getProduct().getId()).orElseThrow(() ->
+                            new IllegalArgumentException("Product not found"));
                     Integer amountSold = itemInvoice.getAmountSold();
-                    System.out.println("product>>>>> = " + product);
                     //validar si el ahi stock o si es suficiente para realizar la venta
-                    if (product.getStock() >= amountSold){
+                    if (product.getStock() >= amountSold) {
                         //se setea el stock del producto y se resta con la cantidad vendida
                         product.setStock(product.getStock() - amountSold);
                         productRepository.save(product);//se guarda el producto con la nueva cantidad
-                    }else {
+                    } else {
                         throw new RuntimeException("Product has no stock" + product.getStock());
                     }
                     return itemInvoiceRepository.save(itemInvoice);
-                        }).collect(Collectors.toSet());
+                }).collect(Collectors.toSet());
                 // Calcular el total de la factura antes de guardar
                 BigDecimal totalInvoice = calculateInvoiceTotal(itemInvoices);
                 invoice.setTotal(totalInvoice);
@@ -102,8 +103,8 @@ public class InvoiceServiceImpl implements InvoiceService {
     @Override
     public RegisterUptadeInvoiceDTO updateInvoice(RegisterUptadeInvoiceDTO registerUptadeInvoiceDTO) {
         log.info("updateInvoice ok: {}", registerUptadeInvoiceDTO);
-            Invoice invoiceId = invoiceRepository.findById(registerUptadeInvoiceDTO.id()).orElseThrow(() -> new IllegalArgumentException("Invoice not found"));
-            Client client = ClientMapper.MAPPER.toClientDTO(registerUptadeInvoiceDTO.client());
+        Invoice invoiceId = invoiceRepository.findById(registerUptadeInvoiceDTO.id()).orElseThrow(() -> new IllegalArgumentException("Invoice not found"));
+        Client client = ClientMapper.MAPPER.toClientDTO(registerUptadeInvoiceDTO.client());
         try {
             if (invoiceId.getId().equals(registerUptadeInvoiceDTO.id())) {
                 invoiceId.setInvoiceCode(registerUptadeInvoiceDTO.invoiceCode());
@@ -165,18 +166,18 @@ public class InvoiceServiceImpl implements InvoiceService {
         }
     }
 
-    private BigDecimal calculateItemTotalPrice(ItemInvoice itemInvoice){
+    private BigDecimal calculateItemTotalPrice(ItemInvoice itemInvoice) {
         Product product = productRepository.findById(itemInvoice.getProduct().getId()).orElseThrow(() -> new IllegalArgumentException("Product not found"));
         BigDecimal price = product.getPrice();
-        BigDecimal quantity =new BigDecimal(itemInvoice.getAmountSold());
+        BigDecimal quantity = new BigDecimal(itemInvoice.getAmountSold());
 
         return price.multiply(quantity);
 
     }
 
-    private BigDecimal calculateInvoiceTotal(Set<ItemInvoice> itemInvoices){
+    private BigDecimal calculateInvoiceTotal(Set<ItemInvoice> itemInvoices) {
         try {
-            BigDecimal valorT  = itemInvoices.stream().
+            BigDecimal valorT = itemInvoices.stream().
                     map(this::calculateItemTotalPrice)
                     .reduce(BigDecimal.ZERO, BigDecimal::add);
             System.out.println("valorT>>>> = " + valorT);

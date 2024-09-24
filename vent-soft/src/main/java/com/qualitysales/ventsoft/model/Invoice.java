@@ -18,7 +18,7 @@ import java.util.Set;
 @Getter
 @Builder
 @Entity
-@Table(name = "factura")
+@Table(name = "factura", uniqueConstraints = @UniqueConstraint(columnNames = {"invoice_code"}))
 public class Invoice {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
