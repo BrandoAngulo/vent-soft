@@ -21,7 +21,6 @@ import org.springframework.web.servlet.View;
 import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -50,51 +49,71 @@ public class InvoiceServiceImpl implements InvoiceService {
 
     @Override
     public RegisterUptadeInvoiceDTO getInvoice(Integer id) {
-        Invoice invoice = invoiceRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invoice not found"));
+        Invoice invoice = invoiceRepository.findById(id).orElseThrow(() -> new RuntimeException("Invoice not found"));
         RegisterUptadeInvoiceDTO registerUptadeInvoiceDTO = InvoiceMapper.MAPPER.toInvoiceDTO(invoice);
         try {
             log.info("getInvoice ok: {}", invoice);
             return registerUptadeInvoiceDTO;
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             log.error("getInvoice error: {}", e.getMessage());
-            throw new IllegalArgumentException(e);
+            throw new RuntimeException(e);
         }
     }
 
     @Override
     public RegisterUptadeInvoiceDTO saveInvoice(Invoice invoice) {
         log.info("saveInvoice ok: {}", invoice.toString());
+
         try {
-//            invoiceRepository.save(invoice);
+            // Verificamos que todos los productos asociados existan y tengan stock suficiente
+            invoice.getItemInvoices().forEach(itemInvoice -> {
+                Product product = productRepository.findById(itemInvoice.getProduct().getId())
+                        .orElseThrow(() -> new RuntimeException("Product not found with ID: " + itemInvoice.getProduct().getId()));
+
+                if (product.getStock() < 0) {
+                    throw new RuntimeException("El producto no tiene stock: " + product.getDescription());
+                }
+            });
+
+            // Guardamos la factura inicialmente
+            invoiceRepository.save(invoice);
+
+            // Si existen ItemInvoices, procesamos los productos y calculamos el total
             if (invoice.getItemInvoices() != null && !invoice.getItemInvoices().isEmpty()) {
                 Set<ItemInvoice> itemInvoices = invoice.getItemInvoices().stream().map(itemInvoice -> {
-                    itemInvoice.setInvoice(invoice);
-                    //obtenemos el producto y la cantidad vendida
-                    Product product = productRepository.findById(itemInvoice.getProduct().getId()).orElseThrow(() ->
-                            new IllegalArgumentException("Product not found"));
-                    Integer amountSold = itemInvoice.getAmountSold();
-                    //validar si el ahi stock o si es suficiente para realizar la venta
-                    if (product.getStock() >= amountSold) {
-                        //se setea el stock del producto y se resta con la cantidad vendida
-                        product.setStock(product.getStock() - amountSold);
-                        productRepository.save(product);//se guarda el producto con la nueva cantidad
-                    } else {
-                        throw new RuntimeException("Product has no stock, producto = "+ product.getDescription() + ", stock = " + product.getStock());
+                    Product product = productRepository.findById(itemInvoice.getProduct().getId())
+                            .orElseThrow(() -> new IllegalArgumentException("Product not found with ID: " + itemInvoice.getProduct().getId()));
 
+                    Integer amountSold = itemInvoice.getAmountSold();
+
+                    // Verificamos y actualizamos el stock del producto
+                    if (product.getStock() < amountSold) {
+                        throw new RuntimeException("Insufficient stock for product: " + product.getDescription());
                     }
-                    return itemInvoiceRepository.save(itemInvoice);
+
+                    // Actualizamos el stock del producto
+                    product.setStock(product.getStock() - amountSold);
+                    productRepository.save(product); // Guardamos el producto actualizado
+
+                    // Asociamos el ItemInvoice a la factura
+                    itemInvoice.setInvoice(invoice);
+                    return itemInvoiceRepository.save(itemInvoice); // Guardamos cada ItemInvoice
                 }).collect(Collectors.toSet());
-                // Calcular el total de la factura antes de guardar
+
+                // Calculamos el total de la factura y lo asignamos
                 BigDecimal totalInvoice = calculateInvoiceTotal(itemInvoices);
                 invoice.setTotal(totalInvoice);
             }
+
             // Volvemos a guardar la factura con el total actualizado
             invoiceRepository.save(invoice);
 
+            // Convertimos la factura a DTO y la retornamos
             RegisterUptadeInvoiceDTO registerUptadeInvoiceDTO = InvoiceMapper.MAPPER.toInvoiceDTO(invoice);
             log.info("saveInvoice success: {}", registerUptadeInvoiceDTO);
             return registerUptadeInvoiceDTO;
-        } catch (Exception e) {
+
+        } catch (RuntimeException e) {
             log.error("saveInvoice error: {}", e.getMessage());
             throw new IllegalArgumentException(e);
         }
