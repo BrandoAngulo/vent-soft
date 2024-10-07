@@ -13,12 +13,15 @@ import com.qualitysales.ventsoft.repository.InvoiceRepository;
 import com.qualitysales.ventsoft.repository.ItemInvoiceRepository;
 import com.qualitysales.ventsoft.repository.ProductRepository;
 import com.qualitysales.ventsoft.service.InvoiceService;
+import com.qualitysales.ventsoft.service.ProductService;
+import com.qualitysales.ventsoft.utils.DateUtils;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.View;
 
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -30,9 +33,9 @@ import java.util.stream.Collectors;
 public class InvoiceServiceImpl implements InvoiceService {
     private final InvoiceRepository invoiceRepository;
     private final ClientRepository clientRepository;
-    private final View error;
     private final ItemInvoiceRepository itemInvoiceRepository;
     private final ProductRepository productRepository;
+    private final DateUtils dateUtils;
 
     @Override
     public Set<RegisterUptadeInvoiceDTO> getInvoices() {
@@ -63,36 +66,20 @@ public class InvoiceServiceImpl implements InvoiceService {
     @Override
     public RegisterUptadeInvoiceDTO saveInvoice(Invoice invoice) {
         log.info("saveInvoice ok: {}", invoice.toString());
-
         try {
-            // Verificamos que todos los productos asociados existan y tengan stock suficiente
-            invoice.getItemInvoices().forEach(itemInvoice -> {
-                Product product = productRepository.findById(itemInvoice.getProduct().getId())
-                        .orElseThrow(() -> new RuntimeException("Product not found with ID: " + itemInvoice.getProduct().getId()));
-
-                if (product.getStock() < 0) {
-                    throw new RuntimeException("El producto no tiene stock: " + product.getDescription());
-                }
-            });
+            stockValidate(invoice.getItemInvoices());
 
             // Guardamos la factura inicialmente
             invoiceRepository.save(invoice);
 
             // Si existen ItemInvoices, procesamos los productos y calculamos el total
-            if (invoice.getItemInvoices() != null && !invoice.getItemInvoices().isEmpty()) {
+            if (!invoice.getItemInvoices().isEmpty()) {
                 Set<ItemInvoice> itemInvoices = invoice.getItemInvoices().stream().map(itemInvoice -> {
                     Product product = productRepository.findById(itemInvoice.getProduct().getId())
                             .orElseThrow(() -> new IllegalArgumentException("Product not found with ID: " + itemInvoice.getProduct().getId()));
 
-                    Integer amountSold = itemInvoice.getAmountSold();
-
-                    // Verificamos y actualizamos el stock del producto
-                    if (product.getStock() < amountSold) {
-                        throw new RuntimeException("Insufficient stock for product: " + product.getDescription());
-                    }
-
                     // Actualizamos el stock del producto
-                    product.setStock(product.getStock() - amountSold);
+                    product.setStock(product.getStock() - itemInvoice.getAmountSold());
                     productRepository.save(product); // Guardamos el producto actualizado
 
                     // Asociamos el ItemInvoice a la factura
@@ -106,6 +93,8 @@ public class InvoiceServiceImpl implements InvoiceService {
             }
 
             // Volvemos a guardar la factura con el total actualizado
+
+            invoice.setDate(dateUtils.getLocalDate());
             invoiceRepository.save(invoice);
 
             // Convertimos la factura a DTO y la retornamos
@@ -116,6 +105,19 @@ public class InvoiceServiceImpl implements InvoiceService {
         } catch (RuntimeException e) {
             log.error("saveInvoice error: {}", e.getMessage());
             throw new IllegalArgumentException(e);
+        }
+    }
+
+    public void stockValidate(Set<ItemInvoice> items){
+        for (ItemInvoice item : items) {
+            Integer idProducto = item.getProduct().getId();
+            Integer cantSold = item.getAmountSold();
+
+            Product product = productRepository.findById(idProducto).orElseThrow(() -> new RuntimeException("Product not found with ID: " + idProducto));
+
+            if (product.getStock() < cantSold) {
+                throw new RuntimeException("Insufficient stock for product: " + product.getName());
+            }
         }
     }
 

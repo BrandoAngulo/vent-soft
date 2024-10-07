@@ -7,9 +7,9 @@ import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.Getter;
-import lombok.ToString;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.Set;
 
 @AllArgsConstructor
@@ -27,7 +27,7 @@ public class Invoice {
     @ManyToOne
     private Client client;
     @Column(length = 10)
-    private String date;
+    private LocalDate date;
     private BigDecimal total;
     @OneToMany(mappedBy = "invoice", cascade = CascadeType.ALL)
     private Set<ItemInvoice> itemInvoices;

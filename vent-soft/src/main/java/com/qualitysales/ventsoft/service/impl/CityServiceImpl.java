@@ -53,8 +53,8 @@ public class CityServiceImpl implements CityService {
     @Override
     public CityDTO saveCity(City city) {
         try {
-            CityDTO cityDTO = CityMapper.MAPPER.toCity(city);
             cityRepository.save(city);
+            CityDTO cityDTO = CityMapper.MAPPER.toCity(city);
             log.info("saveCity ok: {}", city);
 
             return cityDTO;
