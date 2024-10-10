@@ -22,6 +22,8 @@ RUN ./mvnw dependency:go-offline
 # Copiar el código fuente dentro del contenedor
 COPY ./src /root/src
 #Contruir la aplicacion
-RUN ./mvnw clean install -DskipTests
+RUN ./mvnw clean package -DskipTests
+# Cambiar al directorio donde se encuentra el JAR compilado
+WORKDIR /root/target
 #Levantar la aplicacion cuando el contenedor inicie ENTRYPOINT EJECUTA UN COMANDO SOLAMENTE CUANDO EL CONTENEDOR INICIE
 ENTRYPOINT ["java", "-jar", "vent-soft-0.0.1-SNAPSHOT.jar"]

@@ -42,7 +42,7 @@ version: '3.1'
 services:
   ventsoft:
     image: ventsoft
-    container_name: vent-soft-container
+    container_name: vent-soft
     build:
       context: .
       dockerfile: Dockerfile
