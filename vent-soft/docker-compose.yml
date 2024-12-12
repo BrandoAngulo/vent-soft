@@ -23,18 +23,18 @@
 #version: '3.1'
 #services:
 #  db:
-#    container_name: postgres_db_listo
-#    image: postgres:16.1-alpine3.18
+#    container_name: integrador
+#    image: postgres:15.0-alpine3.16
 #    volumes:
 #      - /var/lib/postgresql/data
 #    restart: always
 #    ports:
-#      - '5433:5432'
+#      - '5437:5432'
 #    expose:
 #      - '5432'
 #    environment:
 #      POSTGRES_USER: 'postgres'
-#      POSTGRES_PASSWORD: 'admin'
+#      POSTGRES_PASSWORD: 'postgres'
 #volumes:
 #  my-db:
 

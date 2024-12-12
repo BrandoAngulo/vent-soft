@@ -13,18 +13,13 @@ import com.qualitysales.ventsoft.repository.InvoiceRepository;
 import com.qualitysales.ventsoft.repository.ItemInvoiceRepository;
 import com.qualitysales.ventsoft.repository.ProductRepository;
 import com.qualitysales.ventsoft.service.InvoiceService;
-import com.qualitysales.ventsoft.service.ProductService;
 import com.qualitysales.ventsoft.utils.DateUtils;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.web.servlet.View;
 
 import java.math.BigDecimal;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -93,8 +88,10 @@ public class InvoiceServiceImpl implements InvoiceService {
             }
 
             // Volvemos a guardar la factura con el total actualizado
-
             invoice.setDate(dateUtils.getLocalDate());
+            Client client = clientRepository.findById(invoice.getId()).orElseThrow(() -> new RuntimeException("Pailas cliente"));
+            System.out.println("client = " + client);
+            invoice.setClient(client);
             invoiceRepository.save(invoice);
 
             // Convertimos la factura a DTO y la retornamos
@@ -128,6 +125,7 @@ public class InvoiceServiceImpl implements InvoiceService {
         Client client = ClientMapper.MAPPER.toClientDTO(registerUptadeInvoiceDTO.client());
         try {
             if (invoiceId.getId().equals(registerUptadeInvoiceDTO.id())) {
+                System.out.println("client >>>> entro= " + client);
                 invoiceId.setInvoiceCode(registerUptadeInvoiceDTO.invoiceCode());
                 invoiceId.setDate(registerUptadeInvoiceDTO.date());
                 invoiceId.setClient(client);
