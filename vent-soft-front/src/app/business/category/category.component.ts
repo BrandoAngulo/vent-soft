@@ -1,24 +1,11 @@
-import { Component } from '@angular/core';
-import { UiTableComponent } from "../../shared/components/ui-table/ui-table.component";
-export interface PeriodicElement {
-  name: string;
-  position: number;
-  weight: number;
-  symbol: string;
-}
+import { Component, OnInit } from '@angular/core';
+import { UiTableComponent, TableColumn } from '../../shared/components/ui-table/ui-table.component';
+import { timer } from 'rxjs';
 
-const ELEMENT_DATA: PeriodicElement[] = [
-  { position: 1, name: 'Hydrogen', weight: 1.0079, symbol: 'H' },
-  { position: 2, name: 'Helium', weight: 4.0026, symbol: 'He' },
-  { position: 3, name: 'Lithium', weight: 6.941, symbol: 'Li' },
-  { position: 4, name: 'Beryllium', weight: 9.0122, symbol: 'Be' },
-  { position: 5, name: 'Boron', weight: 10.811, symbol: 'B' },
-  { position: 6, name: 'Carbon', weight: 12.0107, symbol: 'C' },
-  { position: 7, name: 'Nitrogen', weight: 14.0067, symbol: 'N' },
-  { position: 8, name: 'Oxygen', weight: 15.9994, symbol: 'O' },
-  { position: 9, name: 'Fluorine', weight: 18.9984, symbol: 'F' },
-  { position: 10, name: 'Neon', weight: 20.1797, symbol: 'Ne' },
-];
+interface Category {
+  description: string;
+  id: number;
+}
 
 @Component({
   selector: 'app-category',
@@ -27,6 +14,48 @@ const ELEMENT_DATA: PeriodicElement[] = [
   templateUrl: './category.component.html',
   styleUrl: './category.component.css'
 })
-export default class  CategoryComponent {
-categories = ELEMENT_DATA
+export default class CategoryComponent implements OnInit {
+  categories: Category[] = [];
+  tableColumns: TableColumn<Category>[] = [];
+  isLoadingCategory = true;
+  ngOnInit(): void {
+    this.getCategories()
+    this.setTableColumns();
+  }
+  getCategories() {
+    timer(2000).subscribe(() => {
+      this.isLoadingCategory = false;
+      this.categories = [
+        {
+          description: 'Repuestos',
+          id: 1
+        },
+        {
+          description: 'Tecnologia',
+          id: 2
+        },
+        {
+          description: 'Accesorios',
+          id: 3
+        },
+      ]
+    })
+  }
+
+  setTableColumns() {
+   this.tableColumns = [
+    {
+      label: 'Id',
+      def: 'id',
+      content: (row) => row.id,
+    },
+    {
+      label: 'Description',
+      def: 'description',
+      content: (row) => row.description,
+    },
+
+   ]
+
+  }
 }

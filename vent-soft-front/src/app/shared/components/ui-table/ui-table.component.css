@@ -15,3 +15,7 @@
 .demo-row-is-clicked {
   font-weight: bold;
 }
+
+.noData {
+  text-align: center;
+}
