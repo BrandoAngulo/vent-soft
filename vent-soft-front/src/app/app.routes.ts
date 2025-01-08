@@ -19,7 +19,11 @@ export const routes: Routes = [
       },
       {
         path: 'product',
-        loadComponent: () => import('./business/product/product.component')
+        loadComponent: () => import('./business/product/product.component'),
+      },
+      {
+        path: 'create',
+        loadComponent: () => import('./business/product/product-form/product-form.component').then(m => m.ProductFormComponent),
       },
       {
         path: 'category',

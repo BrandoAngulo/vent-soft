@@ -1,20 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { TableColumn, UiTableComponent } from '../../shared/components/ui-table/ui-table.component';
 import { timer } from 'rxjs';
-
-interface Product {
-  id: number;
-  itemCode: number;
-  name: string;
-  description: string;
-  price: number;
-  stock: number;
-}
+import { ProductFormComponent } from "./product-form/product-form.component";
+import { Product } from './product.model';
 
 @Component({
   selector: 'app-product',
   standalone: true,
-  imports: [UiTableComponent],
+  imports: [UiTableComponent, ProductFormComponent],
   templateUrl: './product.component.html',
   styleUrl: './product.component.css'
 })
@@ -96,5 +89,10 @@ export default class ProductComponent implements OnInit {
       },
 
     ]
+  }
+
+  addProduct(product: Product){
+    console.log(product);
+    this.products = [...this.products, product];
   }
 }
