@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { UiTableComponent, TableColumn } from '../../shared/components/ui-table/ui-table.component';
 import { timer } from 'rxjs';
+import { CategoryFormComponent } from "./category-form/category-form.component";
 
 interface Category {
   description: string;
@@ -10,7 +11,7 @@ interface Category {
 @Component({
   selector: 'app-category',
   standalone: true,
-  imports: [UiTableComponent],
+  imports: [UiTableComponent, CategoryFormComponent],
   templateUrl: './category.component.html',
   styleUrl: './category.component.css'
 })
@@ -58,4 +59,9 @@ export default class CategoryComponent implements OnInit {
    ]
 
   }
+
+    addCategory(category: Category){
+      console.log(category);
+      this.categories = [...this.categories, category];
+    }
 }

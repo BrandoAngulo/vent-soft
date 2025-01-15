@@ -5,6 +5,7 @@ import { ReactiveFormsModule, FormGroup, FormBuilder, Validators } from '@angula
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { Product } from '../product.model';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 @Component({
   selector: 'app-product-form',
@@ -14,7 +15,8 @@ import { Product } from '../product.model';
     RouterModule,
     ReactiveFormsModule,
     MatInputModule,
-    MatButtonModule
+    MatButtonModule,
+    MatSlideToggleModule
   ],
   templateUrl: './product-form.component.html',
   styleUrls: ['./product-form.component.css']
@@ -30,7 +32,8 @@ export class ProductFormComponent {
       description: [''],
       itemCode: ['', [Validators.required, Validators.pattern('^[0-9]+(\\.[0-9]{1,2})?$')]],
       price: ['', [Validators.required, Validators.pattern('^[0-9]+(\\.[0-9]{1,2})?$')]],
-      stock: ['', [Validators.required, Validators.min(1)]]
+      stock: ['', [Validators.required, Validators.min(1)]],
+      status: [false, Validators.requiredTrue],
     });
   }
 

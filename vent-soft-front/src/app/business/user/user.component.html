@@ -1,1 +1,3 @@
-<p>user works!</p>
+<app-user-form (add)="addUser($event)"/>
+
+<ui-table [data]="users" [columns]="tableColumns" [isLoading]="isLoadingProduct" />

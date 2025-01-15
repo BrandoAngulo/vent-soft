@@ -4,7 +4,7 @@ import {MatTableDataSource, MatTableModule} from '@angular/material/table';
 export interface TableColumn<T> {
   label: string;
   def: string;
-  content: (row: T) => string | null | undefined | number
+  content: (row: T) => string | null | undefined | number | boolean
 }
 
 @Component({

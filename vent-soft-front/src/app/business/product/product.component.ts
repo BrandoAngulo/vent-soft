@@ -31,7 +31,8 @@ export default class ProductComponent implements OnInit {
           description: 'Celular inteligente android ',
           itemCode: 1,
           price: 1000.0,
-          stock: 1000
+          stock: 1000,
+          status: true,
         },
         {
           id: 2,
@@ -39,7 +40,8 @@ export default class ProductComponent implements OnInit {
           description: 'Auriculares de apple',
           itemCode: 2,
           price: 1000.0,
-          stock: 1000
+          stock: 1000,
+          status: true,
         },
         {
           id: 3,
@@ -47,7 +49,8 @@ export default class ProductComponent implements OnInit {
           description: 'Reloj inteligente de apple',
           itemCode: 2,
           price: 1000.0,
-          stock: 1000
+          stock: 1000,
+          status: true,
         },
       ]
 

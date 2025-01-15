@@ -1,0 +1,37 @@
+<div class="form-container">
+  <h4 class="error">{{ message }}</h4>
+  <form [formGroup]="userForm" (ngSubmit)="addUser()">
+
+    <mat-form-field appearance="fill">
+      <mat-label>ID</mat-label>
+      <input matInput formControlName="id" type="number" placeholder="Enter id" />
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Name</mat-label>
+      <input matInput formControlName="name" placeholder="Enter user name" />
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>LastName</mat-label>
+      <input matInput formControlName="lastName" placeholder="Enter user lastName" />
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Code</mat-label>
+      <input matInput formControlName="code" placeholder="Enter code user" />
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Email</mat-label>
+      <input matInput formControlName="email" type="email" placeholder="enter user email" />
+    </mat-form-field>
+
+    <!-- Slide Toggle for status -->
+    <div class="toggle-container">
+      <mat-slide-toggle formControlName="status" color="primary">Is Active</mat-slide-toggle>
+    </div>
+
+    <button mat-raised-button color="primary" type="submit">Save Product</button>
+  </form>
+</div>

@@ -30,5 +30,5 @@ public class User {
     @Column(name = "correo")
     private String email;
     @Column(name = "estado")
-    private String state;
+    private String status;
 }
