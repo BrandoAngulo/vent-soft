@@ -90,6 +90,11 @@ export default class ProductComponent implements OnInit {
         def: 'price',
         content: (row) => row.price,
       },
+      {
+        label: 'Status',
+        def: 'status',
+        content: (row) => row.status,
+      },
 
     ]
   }

@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { User } from './user-form/user.model';
+import { User } from './user.model';
 import { TableColumn, UiTableComponent } from '../../shared/components/ui-table/ui-table.component';
 import { timer } from 'rxjs';
 import { UserFormComponent } from "./user-form/user-form.component";
@@ -72,7 +72,7 @@ export default class UserComponent {
       },
       {
         label: 'Description',
-        def: 'description',
+        def: 'lastName',
         content: (row) => row.lastName,
       },
       {

@@ -33,7 +33,7 @@ export class ProductFormComponent {
       itemCode: ['', [Validators.required, Validators.pattern('^[0-9]+(\\.[0-9]{1,2})?$')]],
       price: ['', [Validators.required, Validators.pattern('^[0-9]+(\\.[0-9]{1,2})?$')]],
       stock: ['', [Validators.required, Validators.min(1)]],
-      status: [false, Validators.requiredTrue],
+      status: true,
     });
   }
 
@@ -51,7 +51,7 @@ export class ProductFormComponent {
       description: [''],
       itemCode: [0],
       price: [0.0],
-      stock: [0]
+      stock: [0],
     });
     };
   }

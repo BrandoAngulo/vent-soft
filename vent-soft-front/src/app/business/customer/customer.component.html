@@ -1,1 +1,2 @@
-<p>customer works!</p>
+<app-customer-form (add)="addCustomer($event)" />
+<ui-table [data]="customers" [columns]="tableColumns" [isLoading]="isloadingCustomer" />

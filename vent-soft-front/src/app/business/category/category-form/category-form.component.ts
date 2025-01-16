@@ -26,6 +26,7 @@ export class CategoryFormComponent {
     this.categoryForm = this.formBuilder.group({
       id: ['', [Validators.required, Validators.pattern('^[0-9]+(\\.[0-9]{1,2})?$')]],
       description: [''],
+      status: [true],
     });
   }
 

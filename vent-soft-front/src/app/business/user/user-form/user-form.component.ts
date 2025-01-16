@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Output } from '@angular/core';
-import { User } from './user.model';
+import { User } from '../user.model';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
@@ -33,7 +33,7 @@ export class UserFormComponent {
       lastName: [''],
       code: [''],
       email: ['', [Validators.required, Validators.email]],
-      status: [false, Validators.requiredTrue],
+      status: [true],
     });
   }
 
@@ -51,7 +51,6 @@ export class UserFormComponent {
         lastName: [''],
         code: [''],
         email: [''],
-        status: [false],
       });
     };
   }

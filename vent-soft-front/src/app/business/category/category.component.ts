@@ -6,6 +6,7 @@ import { CategoryFormComponent } from "./category-form/category-form.component";
 interface Category {
   description: string;
   id: number;
+  status: boolean;
 }
 
 @Component({
@@ -29,39 +30,50 @@ export default class CategoryComponent implements OnInit {
       this.categories = [
         {
           description: 'Repuestos',
-          id: 1
+          id: 1,
+          status: true,
         },
         {
           description: 'Tecnologia',
-          id: 2
+          id: 2,
+          status: true,
         },
         {
           description: 'Accesorios',
-          id: 3
+          id: 3,
+          status: true,
         },
+
       ]
     })
   }
 
   setTableColumns() {
-   this.tableColumns = [
-    {
-      label: 'Id',
-      def: 'id',
-      content: (row) => row.id,
-    },
-    {
-      label: 'Description',
-      def: 'description',
-      content: (row) => row.description,
-    },
+    this.tableColumns = [
+      {
+        label: 'Id',
+        def: 'id',
+        content: (row) => row.id,
+      },
 
-   ]
+      {
+        label: 'Description',
+        def: 'description',
+        content: (row) => row.description,
+      },
+
+      {
+        label: 'Status',
+        def: 'status',
+        content: (row) => row.status,
+      },
+
+    ]
 
   }
 
-    addCategory(category: Category){
-      console.log(category);
-      this.categories = [...this.categories, category];
-    }
+  addCategory(category: Category) {
+    console.log(category);
+    this.categories = [...this.categories, category];
+  }
 }
