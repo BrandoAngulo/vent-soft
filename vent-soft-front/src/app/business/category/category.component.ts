@@ -2,17 +2,14 @@ import { Component, OnInit } from '@angular/core';
 import { UiTableComponent, TableColumn } from '../../shared/components/ui-table/ui-table.component';
 import { timer } from 'rxjs';
 import { CategoryFormComponent } from "./category-form/category-form.component";
-
-interface Category {
-  description: string;
-  id: number;
-  status: boolean;
-}
+import { Category } from './category.model';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-category',
   standalone: true,
-  imports: [UiTableComponent, CategoryFormComponent],
+  imports: [UiTableComponent, CategoryFormComponent, MatProgressSpinnerModule, CommonModule ],
   templateUrl: './category.component.html',
   styleUrl: './category.component.css'
 })
@@ -20,11 +17,15 @@ export default class CategoryComponent implements OnInit {
   categories: Category[] = [];
   tableColumns: TableColumn<Category>[] = [];
   isLoadingCategory = true;
+
   ngOnInit(): void {
     this.getCategories()
     this.setTableColumns();
   }
+
   getCategories() {
+    console.log(`Categories: ${this.categories}`);
+    console.log(`isLoadingCategory: ${this.isLoadingCategory}`);
     timer(2000).subscribe(() => {
       this.isLoadingCategory = false;
       this.categories = [
@@ -76,4 +77,6 @@ export default class CategoryComponent implements OnInit {
     console.log(category);
     this.categories = [...this.categories, category];
   }
+
+
 }

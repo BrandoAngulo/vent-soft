@@ -2,6 +2,7 @@ import { Component, computed, Input, input, OnChanges, SimpleChanges } from '@an
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { CommonModule } from '@angular/common';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 export interface TableColumn<T> {
   label: string;
@@ -12,7 +13,7 @@ export interface TableColumn<T> {
 @Component({
   selector: 'ui-table',
   standalone: true,
-  imports: [CommonModule, MatTableModule, MatSlideToggleModule],
+  imports: [CommonModule, MatTableModule, MatSlideToggleModule, MatProgressSpinnerModule],
   templateUrl: './ui-table.component.html',
   styleUrl: './ui-table.component.css',
 })

@@ -1,8 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { TableColumn, UiTableComponent } from '../../shared/components/ui-table/ui-table.component';
-import { UserFormComponent } from '../user/user-form/user-form.component';
 import { timer } from 'rxjs';
 import { CustomerFormComponent } from './customer-form/customer-form.component';
+import { Customer } from './customer.model';
 
 @Component({
   selector: 'app-customer',
@@ -14,12 +14,14 @@ import { CustomerFormComponent } from './customer-form/customer-form.component';
   templateUrl: './customer.component.html',
   styleUrl: './customer.component.css'
 })
-export class CustomerComponent {
+export default class CustomerComponent implements OnInit{
   customers: Customer[] = [];
   tableColumns: TableColumn<Customer>[] = [];
   isloadingCustomer = true;
 
-  ngonInit(): void {
+  ngOnInit(): void {
+    this.getCustomer()
+    this.setTableColumns();
   }
 
   getCustomer() {
@@ -32,7 +34,7 @@ export class CustomerComponent {
           lastName: 'Casas',
           docType: 'Cedula',
           document: '1122334455',
-          city: [{ id: 1, code: '5511', name: 'cali' }],
+          city: { id: 1, code: '5511', name: 'cali' },
           residence: 'calle4#200-70',
           cellPhone: '+57-325599666',
           email: 'amigo@gmail.com',
@@ -44,7 +46,7 @@ export class CustomerComponent {
           lastName: 'Casas',
           docType: 'Cedula',
           document: '1122334455',
-          city: [{ id: 1, code: '5511', name: 'Pablollin' }],
+          city: { id: 1, code: '5511', name: 'Pablollin' },
           residence: 'calle4#200-70',
           cellPhone: '+57-325599666',
           email: 'amigo@gmail.com',
@@ -56,7 +58,7 @@ export class CustomerComponent {
           lastName: 'Casas',
           docType: 'Cedula',
           document: '1122334455',
-          city: [{ id: 1, code: '5511', name: 'Tabogo' }],
+          city: { id: 1, code: '5511', name: 'Tabogo' },
           residence: 'calle4#200-70',
           cellPhone: '+57-325599666',
           email: 'amigo@gmail.com',
@@ -92,7 +94,7 @@ export class CustomerComponent {
       {
         label: 'City',
         def: 'city',
-        content: (row) => row.city[0].name,
+        content: (row) => row.city?.name || 'N/A',
       },
       {
         label: 'Residence',

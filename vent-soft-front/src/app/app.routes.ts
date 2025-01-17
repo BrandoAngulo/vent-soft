@@ -10,20 +10,16 @@ export const routes: Routes = [
         loadComponent: () => import('./business/dashboard/dashboard.component')
       },
       {
-        path: 'profile',
-        loadComponent: () => import('./business/profile/profile.component')
+        path: 'customer',
+        loadComponent: () => import('./business/customer/customer.component'),
       },
       {
-        path: 'tables',
-        loadComponent: () => import('./business/tables/tables.component')
+        path: 'city',
+        loadComponent: () => import('./business/city/city.component')
       },
       {
         path: 'product',
         loadComponent: () => import('./business/product/product.component'),
-      },
-      {
-        path: 'create',
-        loadComponent: () => import('./business/product/product-form/product-form.component').then(m => m.ProductFormComponent),
       },
       {
         path: 'category',

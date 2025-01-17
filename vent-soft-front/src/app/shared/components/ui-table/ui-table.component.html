@@ -22,4 +22,9 @@
     <!-- Filas de datos -->
     <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
   </table>
+
+  <div class="loading-overlay" *ngIf="isLoading">
+    <mat-spinner [diameter]="40"></mat-spinner>
+  </div>
+
 </div>

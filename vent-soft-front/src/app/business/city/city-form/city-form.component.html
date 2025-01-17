@@ -1,0 +1,22 @@
+<div class="form-container">
+  <h4 class="error">{{ message }}</h4>
+  <form [formGroup]="cityForm" (ngSubmit)="addCity()">
+
+    <mat-form-field appearance="fill">
+      <mat-label>ID</mat-label>
+      <input matInput formControlName="id" type="number" placeholder="Enter id" />
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Code</mat-label>
+      <textarea matInput formControlName="code" placeholder="Enter code city"></textarea>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Description</mat-label>
+      <textarea matInput formControlName="description" placeholder="Enter city description"></textarea>
+    </mat-form-field>
+
+    <button mat-raised-button color="primary" type="submit">Save city</button>
+  </form>
+</div>
