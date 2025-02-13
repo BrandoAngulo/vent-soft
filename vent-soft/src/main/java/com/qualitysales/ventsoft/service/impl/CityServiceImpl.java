@@ -41,7 +41,8 @@ public class CityServiceImpl implements CityService {
         List<City> cities = cityRepository.findAll();
         List<CityDTO> cityDTOS = CityMapper.MAPPER.toCities(cities);
         try {
-            likes("hola", "carlos", "luis");
+//            likes("hola", "carlos", "luis");
+            fizzBuzz(3);
             log.info("findCities OK: {}", cities);
             return cityDTOS;
 
@@ -159,6 +160,73 @@ public class CityServiceImpl implements CityService {
 
         return "";
     }
+
+    public Integer fizzBuzz(Integer number) {
+        String f = "fizz";
+        String b = "buzz";
+        String fb = "fizzbuzz";
+//        int mul5 = multiplo5();
+        int mul3 = multiplo3();
+        ArrayList<Integer> num = new ArrayList<>(mul3);
+        for (int i = 0; i <= 10; i++) {
+            ArrayList<ArrayList<Integer>> numbers = new ArrayList<>(mul3);
+            numbers.add(num);
+            System.out.println(numbers);
+        }
+        return 0;
+    }
+
+    private int multiplo3(){
+        int calculo = 0;
+        for (int i = 0; i <= 10; i++) {
+             calculo = 3 * i;
+            System.out.println(3 +" x "+i+" = " + calculo);
+        }
+        return calculo;
+    }
+
+    private int multiplo5(){
+        int calculo = 0;
+        for (int i = 0; i <= 10; i++) {
+            calculo = 5 * i;
+            System.out.println(5 +" x "+i+" = " + calculo);
+        }
+        return calculo;
+    }
+
+  /*  int[] miArray = new int[10]; // Tamaño del array
+    Scanner scanner = new Scanner(System.in);
+
+    // Llenar el array
+        for (int i = 0; i < miArray.length; i++) {
+        System.out.print("Ingrese el número " + (i + 1) + ": ");
+        miArray[i] = scanner.nextInt();
+    }
+
+    // Mostrar los números del array
+        System.out.println("Los números del array son:");
+        for (int numero : miArray) {
+        System.out.print(numero + " ");
+    }
+    }*/
+
+    /*
+    *  Scanner scanner = new Scanner(System.in);
+        ArrayList<Integer> numeros = new ArrayList<>();
+
+        int numero;
+        do {
+            System.out.print("Ingrese un número (0 para terminar): ");
+            numero = scanner.nextInt();
+            if (numero != 0) {
+                numeros.add(numero);
+            }
+        } while (numero != 0);
+
+        System.out.println("Los números ingresados son: " + numeros);
+    }
+    * */
+
 
 
 }

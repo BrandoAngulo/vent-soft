@@ -30,7 +30,7 @@ public class SupplierServiceImpl implements SupplierService {
             return listSupplier.stream().map(supplier -> SupplierDTO.builder()
                             .id(supplier.getId())
                             .name(supplier.getName())
-                            .phone(supplier.getPhone())
+                            .phone(supplier.getCellPhone())
                             .nit(supplier.getNit())
                             .build())
                     .toList();
@@ -63,7 +63,7 @@ public class SupplierServiceImpl implements SupplierService {
         try {
             SupplierDTO supplierDto = SupplierDTO.builder()
                     .name(supplier.getName())
-                    .phone(supplier.getPhone())
+                    .phone(supplier.getCellPhone())
                     .nit(supplier.getNit())
                     .build();
             supplierRepository.save(supplier);
@@ -81,7 +81,7 @@ public class SupplierServiceImpl implements SupplierService {
         Supplier supplier = supplierRepository.findById(id).orElseThrow(() -> new RuntimeException("El id no existe"));
         try {
             supplier.setName(supplierDTO.getName());
-            supplier.setPhone(supplierDTO.getPhone());
+            supplier.setCellPhone(supplierDTO.getPhone());
             supplier.setNit(supplierDTO.getNit());
             log.info("update: " + supplier);
             return supplierRepository.save(supplier);

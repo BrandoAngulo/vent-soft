@@ -19,7 +19,7 @@ Supplier {
     @Column(name = "nombre")
     private String name;
     @Column(name = "telefono")
-    private String phone;
+    private String cellPhone;
     @Column
     private String nit;
 

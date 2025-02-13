@@ -44,7 +44,7 @@ export default class CityComponent implements OnInit {
           id: 3,
           code: '#255',
           description: 'Medellin',
-          status: false,
+          status: true,
         },
 
       ]
