@@ -1,15 +1,16 @@
-import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { TableColumn, UiTableComponent } from '../../shared/components/ui-table/ui-table.component';
-import { City } from './city.model';
 import { timer } from 'rxjs';
+import { City } from './city.model';
+import { Component, OnInit } from '@angular/core';
 import { CityFormComponent } from './city-form/city-form.component';
+import { TableColumn, UiTableComponent } from '../../shared/components/ui-table/ui-table.component';
 
 @Component({
   selector: 'app-city',
   standalone: true,
-  imports: [UiTableComponent, CityFormComponent, MatProgressSpinnerModule, CommonModule],
+  imports: [
+    UiTableComponent,
+    CityFormComponent,
+  ],
   templateUrl: './city.component.html',
   styleUrl: './city.component.css'
 })
@@ -31,8 +32,8 @@ export default class CityComponent implements OnInit {
         {
           id: 1,
           code: '#255',
-          status: true,
           description: 'Tabogo',
+          status: true,
         },
         {
           id: 2,

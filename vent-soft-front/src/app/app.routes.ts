@@ -10,6 +10,10 @@ export const routes: Routes = [
         loadComponent: () => import('./business/dashboard/dashboard.component')
       },
       {
+        path: 'category',
+        loadComponent: () => import('./business/category/category.component')
+      },
+      {
         path: 'customer',
         loadComponent: () => import('./business/customer/customer.component'),
       },
@@ -22,8 +26,8 @@ export const routes: Routes = [
         loadComponent: () => import('./business/product/product.component'),
       },
       {
-        path: 'category',
-        loadComponent: () => import('./business/category/category.component')
+        path: 'supplier',
+        loadComponent: () => import('./business/supplier/supplier.component'),
       },
       {
         path: 'user',

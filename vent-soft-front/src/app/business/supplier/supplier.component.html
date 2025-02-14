@@ -1,1 +1,3 @@
-<p>supplier works!</p>
+<app-supplier-form (add)="addSupplier($event)" />
+<ui-table [data]="suppliers" [columns]="tableColumns" [isLoading]="isLoadingSupplier" />
+

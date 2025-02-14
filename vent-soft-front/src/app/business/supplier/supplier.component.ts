@@ -1,18 +1,14 @@
-import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { UiTableComponent, TableColumn } from '../../shared/components/ui-table/ui-table.component';
-import { SupplierFormComponent } from './supplier-form/supplier-form.component';
-import { Supplier } from './supplier.model';
 import { timer } from 'rxjs';
+import { Supplier } from './supplier.model';
+import { Component, OnInit } from '@angular/core';
+import { SupplierFormComponent } from './supplier-form/supplier-form.component';
+import { UiTableComponent, TableColumn } from '../../shared/components/ui-table/ui-table.component';
 
 @Component({
   selector: 'app-supplier',
   standalone: true,
   imports: [
     UiTableComponent,
-    MatProgressSpinnerModule,
-    CommonModule,
     SupplierFormComponent
   ],
   templateUrl: './supplier.component.html',
@@ -28,11 +24,11 @@ export default class SupplierComponent implements OnInit{
     this.setTableColumns();
   }
 
-  getSuppliers(){
+  getSuppliers() {
     console.log(`Suppliers: ${this.suppliers}`)
     console.log(`isLoadingSupplier: ${this.isLoadingSupplier}`)
-    timer(2000).subscribe(()=>{
-      this.isLoadingSupplier = true;
+    timer(2000).subscribe(() => {
+      this.isLoadingSupplier = false;
       this.suppliers = [
         {
           id: 1,

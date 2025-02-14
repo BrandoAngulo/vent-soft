@@ -1,18 +1,22 @@
-import { Component, EventEmitter, Output } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { MatButtonModule } from '@angular/material/button';
-import { MatInputModule } from '@angular/material/input';
-import { RouterModule } from '@angular/router';
 import { City } from '../city.model';
+import { RouterModule } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
+import { Component, EventEmitter, Output } from '@angular/core';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-city-form',
   standalone: true,
   imports: [
-    RouterModule,
-    ReactiveFormsModule,
-    MatInputModule,
-    MatButtonModule
+        CommonModule,
+        RouterModule,
+        MatInputModule,
+        MatButtonModule,
+        ReactiveFormsModule,
+        MatSlideToggleModule,
   ],
   templateUrl: './city-form.component.html',
   styleUrl: './city-form.component.css'
@@ -24,6 +28,7 @@ export class CityFormComponent {
     constructor(private formBuilder: FormBuilder) {
       this.cityForm = this.formBuilder.group({
         id: ['', [Validators.required, Validators.pattern('^[0-9]+(\\.[0-9]{1,2})?$')]],
+        code: [''],
         description: [''],
         status: [true],
       });

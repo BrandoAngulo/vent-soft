@@ -1,11 +1,11 @@
-import { Component, EventEmitter, inject, Output, output } from '@angular/core';
+import { Product } from '../product.model';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { ReactiveFormsModule, FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
-import { Product } from '../product.model';
+import { Component, EventEmitter, Output, } from '@angular/core';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { ReactiveFormsModule, FormGroup, FormBuilder, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-product-form',
@@ -13,15 +13,16 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
   imports: [
     CommonModule,
     RouterModule,
-    ReactiveFormsModule,
     MatInputModule,
     MatButtonModule,
-    MatSlideToggleModule
+    ReactiveFormsModule,
+    MatSlideToggleModule,
   ],
   templateUrl: './product-form.component.html',
   styleUrls: ['./product-form.component.css']
 })
 export class ProductFormComponent {
+  
   @Output() add = new EventEmitter<Product>();
   message = "";
   productForm!: FormGroup;

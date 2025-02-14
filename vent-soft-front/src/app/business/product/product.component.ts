@@ -1,8 +1,8 @@
-import { Component, OnInit } from '@angular/core';
-import { TableColumn, UiTableComponent } from '../../shared/components/ui-table/ui-table.component';
 import { timer } from 'rxjs';
-import { ProductFormComponent } from "./product-form/product-form.component";
 import { Product } from './product.model';
+import { Component, OnInit } from '@angular/core';
+import { ProductFormComponent } from "./product-form/product-form.component";
+import { TableColumn, UiTableComponent } from '../../shared/components/ui-table/ui-table.component';
 
 @Component({
   selector: 'app-product',

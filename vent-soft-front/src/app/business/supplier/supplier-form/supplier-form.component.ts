@@ -1,18 +1,22 @@
-import { Component, EventEmitter, Output } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { MatButtonModule } from '@angular/material/button';
-import { MatInputModule } from '@angular/material/input';
-import { RouterModule } from '@angular/router';
 import { Supplier } from '../supplier.model';
+import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
+import { Component, EventEmitter, Output } from '@angular/core';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-supplier-form',
   standalone: true,
   imports: [
+        CommonModule,
         RouterModule,
-        ReactiveFormsModule,
         MatInputModule,
-        MatButtonModule
+        MatButtonModule,
+        ReactiveFormsModule,
+        MatSlideToggleModule,
   ],
   templateUrl: './supplier-form.component.html',
   styleUrl: './supplier-form.component.css'
@@ -20,7 +24,6 @@ import { Supplier } from '../supplier.model';
 export class SupplierFormComponent {
 
 @Output() add = new EventEmitter<Supplier>();
-
   message = "";
   supplierForm!: FormGroup;
   constructor(private formBuilder: FormBuilder) {
@@ -34,7 +37,7 @@ export class SupplierFormComponent {
 
   addSupplier(){
     if (this.supplierForm.invalid) {
-      console.log(this.message= "Creating category erro");
+      console.log(this.message= "Creating category error");
     }else{
       console.log(this.supplierForm.value);
       const supplier: Supplier = { ...this.supplierForm.value };
