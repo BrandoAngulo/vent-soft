@@ -1,1 +1,17 @@
-<p>invoice-form works!</p>
+<div class="container">
+  <form [formGroup]="invoiceForm" (ngSubmit)="addInvoice()">
+  <mat-card>
+    <mat-card-content>
+      <h2>Módulo de Facturación</h2>
+      <!-- Componente del Formulario -->
+      <app-invoice-form
+        [newInvoice]="newInvoice"
+        (newInvoiceChange)="onInvoiceChange($event)"
+        (saveInvoiceEvent)="onSaveInvoice()">
+      </app-invoice-form>
+      <!-- Componente de la Tabla -->
+      <app-invoice-table [invoices]="invoices"></app-invoice-table>
+    </mat-card-content>
+  </mat-card>
+</div>
+

@@ -1,1 +1,3 @@
+<app-invoice-form (add)="addInvoice($event)"/>
 <p>invoices works!</p>
+<ui-table [data]="invoices" [columns]="tableColumns" [isLoading]="isLoadingInvoices" />

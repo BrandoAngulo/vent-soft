@@ -7,7 +7,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 export interface TableColumn<T> {
   label: string;
   def: keyof T;
-  content: (row: T) => string | null | undefined | number | boolean;
+  content: (row: T) => string | null | undefined | number | boolean ;
 }
 
 @Component({
