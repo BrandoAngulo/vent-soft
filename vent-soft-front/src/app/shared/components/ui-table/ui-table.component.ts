@@ -15,7 +15,7 @@ export interface TableColumn<T> {
   standalone: true,
   imports: [CommonModule, MatTableModule, MatSlideToggleModule, MatProgressSpinnerModule],
   templateUrl: './ui-table.component.html',
-  styleUrl: './ui-table.component.css',
+  styleUrls: ['./ui-table.component.css'],
 })
 export class UiTableComponent<T> implements OnChanges {
   @Input() data: T[] = [];

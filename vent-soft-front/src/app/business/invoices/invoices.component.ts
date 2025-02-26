@@ -1,130 +1,118 @@
+/* import { Invoice } from './invoice.model';
 import { Component, OnInit } from '@angular/core';
-import { Invoice } from './invoice.model';
-import { TableColumn, UiTableComponent } from '../../shared/components/ui-table/ui-table.component';
-import { timer } from 'rxjs';
-import { InvoiceFormComponent } from "./invoice-form/invoice-form.component";
+import { MatCardModule } from '@angular/material/card';
+import { InvoiceFormComponent } from './invoice-form/invoice-form.component';
+import { UiTableComponent, TableColumn } from '../../shared/components/ui-table/ui-table.component';
 
 @Component({
-  selector: 'app-invoices',
+  selector: 'app-invoice',
   standalone: true,
-  imports: [InvoiceFormComponent, UiTableComponent],
+  imports: [
+    InvoiceFormComponent,
+    UiTableComponent,
+    MatCardModule,
+  ],
   templateUrl: './invoices.component.html',
   styleUrl: './invoices.component.css'
 })
-export class InvoicesComponent implements OnInit {
+export default class InvoicesComponent implements OnInit {
   invoices: Invoice[] = [];
+  isLoading: boolean = false;
   tableColumns: TableColumn<Invoice>[] = [];
-  isLoadingInvoices = true;
-  //newInvoice: Invoice;
-
-  constructor() { }
 
   ngOnInit(): void {
-    this.getInvoices();
-    this.setTableColumns()
-
-/*     this.newInvoice = {
-      id: 1,
-      invoiceCode: `FAC-${this.invoices.length + 1}`,
-      customer: '',
-      nit: '',
-      address: '',
-      date: '',
-      total: 0,
-      products: [],
-    } */
-  }
-  getInvoices() {
-    timer(2000).subscribe(() => {
-      this.isLoadingInvoices = false
-      this.invoices = [
-        {
-          id: 1,
-          invoiceCode: 'FAC-001',
-          customer: 'Julian Pelaez',
-          nit: '1122333',
-          address: 'Calle 25#99-100',
-          date: '2025-02-19',
-          total: 2500.0,
-          products: [
-            {
-              id: 1,
-              itemCode: 10,
-              name: 'display',
-              description: 'cellphone display',
-              price: 10000,
-              stock: 100,
-              status: true,
-            },
-            {
-              id: 2,
-              itemCode: 10,
-              name: 'tactil',
-              description: 'cellphone tactil',
-              price: 5000,
-              stock: 50,
-              status: true,
-            },
-          ]
-        }
-      ];
-    })
+    // Ejemplo de factura inicial
+    this.invoices = [
+      {
+        id: 1,
+        invoiceCode: 'FAC-001',
+        customer: 'Juan Pérez',
+        nit: '123456789',
+        address: 'Calle 123',
+        date: '2024-02-18',
+        total: 250.0,
+        products: [
+          { name: 'Producto A', unitPrice: 50, quantity: 2, total: 100 },
+          { name: 'Producto B', unitPrice: 75, quantity: 2, total: 150 }
+        ]
+      }
+    ];
+    this.setTableColumns();
   }
 
-  setTableColumns() {
+  setTableColumns(): void {
     this.tableColumns = [
-      {
-        label: 'Id',
-        def: 'id',
-        content: (row) => row.id,
-      },
-      {
-        label: 'Invoice code',
-        def: 'invoiceCode',
-        content: (row) => row.invoiceCode,
-      },
-      {
-        label: 'Customer',
-        def: 'customer',
-        content: (row) => row.customer,
-      },
-      {
-        label: 'Nit',
-        def: 'nit',
-        content: (row) => row.nit,
-      },
-      {
-        label: 'Address',
-        def: 'address',
-        content: (row) => row.address,
-      },
-      {
-        label: 'Date',
-        def: 'date',
-        content: (row) => row.date,
-      },
-      {
-        label: 'Total',
-        def: 'total',
-        content: (row) => row.total,
-      },
-
-      {
-        label: 'Products',
-        def: 'products',
-        /* row.products.map(product => product.name): Obtiene solo los nombres de los productos.
-        .join(', '): Une los nombres en una sola cadena separada por comas.
-        */
-        content: (row) => row.products?.map(product => product.name).join(', ') || '',
-      },
-    ]
+      { label: 'ID', def: 'id', content: (row: Invoice) => row.id },
+      { label: 'Código', def: 'invoiceCode', content: (row: Invoice) => row.invoiceCode },
+      { label: 'Cliente', def: 'customer', content: (row: Invoice) => row.customer },
+      { label: 'NIT', def: 'nit', content: (row: Invoice) => row.nit },
+      { label: 'Dirección', def: 'address', content: (row: Invoice) => row.address },
+      { label: 'Fecha', def: 'date', content: (row: Invoice) => row.date },
+      { label: 'Total', def: 'total', content: (row: Invoice) => row.total }
+    ];
   }
 
-  addInvoice(invoice: Invoice){
-      console.log(invoice);
-      this.invoices = [...this.invoices, invoice];
-    }
-
-
-
+  onAddInvoice(newInvoice: Invoice): void {
+    newInvoice.id = this.invoices.length + 1;
+    this.invoices = [...this.invoices, newInvoice];
+  }
 }
+ */
+
+import { Component, OnInit } from '@angular/core';
+import { Invoice } from './invoice.model';
+import { CommonModule } from '@angular/common';
+import { MatCardModule } from '@angular/material/card';
+import { InvoiceFormComponent } from './invoice-form/invoice-form.component';
+import { UiTableComponent, TableColumn } from '../../shared/components/ui-table/ui-table.component';
+
+@Component({
+  selector: 'app-invoice',
+  standalone: true,
+  imports: [CommonModule, MatCardModule, InvoiceFormComponent, UiTableComponent],
+  templateUrl: './invoices.component.html',
+  styleUrls: ['./invoices.component.css']
+})
+export default class InvoiceComponent implements OnInit {
+  invoices: Invoice[] = [];
+  isLoading: boolean = false;
+  tableColumns: TableColumn<Invoice>[] = [];
+
+  ngOnInit(): void {
+    // Ejemplo de factura inicial (si lo deseas)
+    this.invoices = [
+      {
+        id: 1,
+        invoiceCode: 'FAC-001',
+        customer: 'Juan Pérez',
+        nit: '123456789',
+        address: 'Calle 123',
+        date: '2024-02-18',
+        total: 250.0,
+        products: [
+          { name: 'Producto A', unitPrice: 50, quantity: 2, total: 100 },
+          { name: 'Producto B', unitPrice: 75, quantity: 2, total: 150 }
+        ]
+      }
+    ];
+    this.setTableColumns();
+  }
+
+  setTableColumns(): void {
+    this.tableColumns = [
+      { label: 'ID', def: 'id', content: (row: Invoice) => row.id },
+      { label: 'Código', def: 'invoiceCode', content: (row: Invoice) => row.invoiceCode },
+      { label: 'Cliente', def: 'customer', content: (row: Invoice) => row.customer },
+      { label: 'NIT', def: 'nit', content: (row: Invoice) => row.nit },
+      { label: 'Dirección', def: 'address', content: (row: Invoice) => row.address },
+      { label: 'Fecha', def: 'date', content: (row: Invoice) => row.date },
+      { label: 'Total', def: 'total', content: (row: Invoice) => row.total }
+    ];
+  }
+
+  onAddInvoice(newInvoice: Invoice): void {
+    newInvoice.id = this.invoices.length + 1;
+    this.invoices = [...this.invoices, newInvoice];
+  }
+}
+

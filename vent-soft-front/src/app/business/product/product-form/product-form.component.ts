@@ -22,7 +22,7 @@ import { ReactiveFormsModule, FormGroup, FormBuilder, Validators } from '@angula
   styleUrls: ['./product-form.component.css']
 })
 export class ProductFormComponent {
-  
+
   @Output() add = new EventEmitter<Product>();
   message = "";
   productForm!: FormGroup;

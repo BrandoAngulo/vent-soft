@@ -22,6 +22,10 @@ export const routes: Routes = [
         loadComponent: () => import('./business/city/city.component')
       },
       {
+        path: 'invoice',
+        loadComponent: () => import('./business/invoices/invoices.component'),
+      },
+      {
         path: 'product',
         loadComponent: () => import('./business/product/product.component'),
       },
