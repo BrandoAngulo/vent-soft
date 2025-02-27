@@ -23,7 +23,7 @@ export const routes: Routes = [
       },
       {
         path: 'invoice',
-        loadComponent: () => import('./business/invoices/invoices.component'),
+        loadComponent: () => import('./business/invoices/invoice/invoice.component'),
       },
       {
         path: 'product',

@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { TableColumn, UiTableComponent } from '../../shared/components/ui-table/ui-table.component';
 import { timer } from 'rxjs';
 import { CustomerFormComponent } from './customer-form/customer-form.component';
 import { Customer } from './customer.model';
+import { CustomerService } from '../../shared/services/customer.service';
 
 @Component({
   selector: 'app-customer',
@@ -18,6 +19,7 @@ export default class CustomerComponent implements OnInit{
   customers: Customer[] = [];
   tableColumns: TableColumn<Customer>[] = [];
   isloadingCustomer = true;
+  //private customerService = inject(CustomerService);
 
   ngOnInit(): void {
     this.getCustomer()
@@ -25,6 +27,7 @@ export default class CustomerComponent implements OnInit{
   }
 
   getCustomer() {
+    //console.log(`Servicio = ${this.customerService}`)
     timer(2000).subscribe(() => {
       this.isloadingCustomer = false
       this.customers = [

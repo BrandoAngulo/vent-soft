@@ -1,23 +1,26 @@
-/* import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
-import { Invoice, InvoiceProduct } from '../invoice.model';
+import { Invoice, InvoiceProduct } from '../invoice/invoice.model';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatCardModule } from '@angular/material/card';
-
+import { MatDialog } from '@angular/material/dialog';
+import { MatIconModule } from '@angular/material/icon';
+import { InvoiceProductModalComponent } from './invoice-product-modal/invoice-product-modal.component';
 @Component({
   selector: 'app-invoice-form',
   standalone: true,
   imports: [
     CommonModule,
-    ReactiveFormsModule,
+    MatCardModule,
+    MatIconModule,
     MatInputModule,
     MatButtonModule,
     MatFormFieldModule,
-    MatCardModule
+    ReactiveFormsModule,
   ],
   templateUrl: './invoice-form.component.html',
   styleUrls: ['./invoice-form.component.css']
@@ -27,7 +30,7 @@ export class InvoiceFormComponent implements OnInit {
   invoiceForm!: FormGroup;
   message: string = '';
 
-  constructor(private fb: FormBuilder) {}
+  constructor(private fb: FormBuilder, private dialog: MatDialog) {}
 
   ngOnInit(): void {
     this.invoiceForm = this.fb.group({
@@ -44,18 +47,19 @@ export class InvoiceFormComponent implements OnInit {
     return this.invoiceForm.get('products') as FormArray;
   }
 
-  addProduct(): void {
-    const productGroup = this.fb.group({
-      name: ['', Validators.required],
-      unitPrice: [0, [Validators.required, Validators.min(0)]],
-      quantity: [1, [Validators.required, Validators.min(1)]],
-      total: [{ value: 0, disabled: true }]
+  openAddProductModal(): void {
+    const dialogRef = this.dialog.open(InvoiceProductModalComponent, { width: '400px' });
+    dialogRef.afterClosed().subscribe((result: InvoiceProduct) => {
+      if (result) {
+        const productGroup = this.fb.group({
+          name: [result.name, Validators.required],
+          unitPrice: [result.unitPrice, [Validators.required, Validators.min(0)]],
+          quantity: [result.quantity, [Validators.required, Validators.min(1)]],
+          total: [{ value: result.total, disabled: true }]
+        });
+        this.products.push(productGroup);
+      }
     });
-    this.products.push(productGroup);
-  }
-
-  removeProduct(index: number): void {
-    this.products.removeAt(index);
   }
 
   updateProductTotal(index: number): void {
@@ -66,17 +70,20 @@ export class InvoiceFormComponent implements OnInit {
     productGroup.get('total')?.setValue(total, { emitEvent: false });
   }
 
+  removeProduct(index: number): void {
+    this.products.removeAt(index);
+  }
+
   onSubmit(): void {
     if (this.invoiceForm.invalid) {
       this.message = 'Error en el formulario, verifica los datos.';
       return;
     }
-    // Obtener valores incluyendo los controles deshabilitados
     const formValue = this.invoiceForm.getRawValue();
     const subtotal = formValue.products.reduce((sum: number, prod: any) => sum + prod.total, 0);
     const newInvoice: Invoice = {
       id: 0, // se asignará en el componente padre
-      invoiceCode: formValue.invoiceCode,
+      invoiceCode: `${formValue.invoiceCode, this.products.length + 1}`,
       customer: formValue.customer,
       nit: formValue.nit,
       address: formValue.address,
@@ -91,103 +98,12 @@ export class InvoiceFormComponent implements OnInit {
   resetForm(): void {
     this.invoiceForm.reset();
     this.invoiceForm.patchValue({
-      invoiceCode: 'FAC-001',
+      invoiceCode: `FAC-00${this.products.length + 1}`,
       date: new Date().toISOString().split('T')[0]
     });
     while (this.products.length !== 0) {
       this.products.removeAt(0);
     }
-  }
-}
- */
-
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { Invoice, InvoiceProduct } from '../invoice.model';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { MatInputModule } from '@angular/material/input';
-import { MatButtonModule } from '@angular/material/button';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatTableModule } from '@angular/material/table';
-
-@Component({
-  selector: 'app-invoice-form',
-  standalone: true,
-  imports: [
-    CommonModule,
-    FormsModule,
-    MatInputModule,
-    MatButtonModule,
-    MatTableModule,
-    MatFormFieldModule
-  ],
-  templateUrl: './invoice-form.component.html',
-  styleUrls: ['./invoice-form.component.css']
-})
-export class InvoiceFormComponent implements OnInit {
-  @Output() addInvoice = new EventEmitter<Invoice>();
-  message: string = '';
-
-  // Objeto que se usa en el formulario
-  newInvoice: Invoice = {
-    id: 0,
-    invoiceCode: 'FAC-001',
-    customer: '',
-    nit: '',
-    address: '',
-    date: new Date().toISOString().split('T')[0],
-    total: 0,
-    products: []
-  };
-
-  ngOnInit(): void {
-    // Se puede inicializar aquí si se requiere
-  }
-
-  addProduct(): void {
-    const newProduct: InvoiceProduct = { name: '', unitPrice: 0, quantity: 1, total: 0 };
-    this.newInvoice.products.push(newProduct);
-  }
-
-  removeProduct(index: number): void {
-    this.newInvoice.products.splice(index, 1);
-  }
-
-  updateProductTotal(product: InvoiceProduct): void {
-    product.total = product.unitPrice * product.quantity;
-  }
-
-  calculateSubtotal(): number {
-    return this.newInvoice.products.reduce((sum, prod) => sum + prod.total, 0);
-  }
-
-  onSaveInvoice(): void {
-    if (!this.newInvoice.customer || !this.newInvoice.nit || !this.newInvoice.address) {
-      this.message = 'Complete los campos requeridos.';
-      return;
-    }
-    // Calcula el subtotal de los productos
-    const subtotal = this.calculateSubtotal();
-    const invoiceToEmit: Invoice = {
-      ...this.newInvoice,
-      id: 0, // se asignará en el componente padre
-      total: subtotal
-    };
-    this.addInvoice.emit(invoiceToEmit);
-    this.resetForm();
-  }
-
-  resetForm(): void {
-    this.newInvoice = {
-      id: 0,
-      invoiceCode: 'FAC-001',
-      customer: '',
-      nit: '',
-      address: '',
-      date: new Date().toISOString().split('T')[0],
-      total: 0,
-      products: []
-    };
     this.message = '';
   }
 }

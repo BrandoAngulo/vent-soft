@@ -1,0 +1,29 @@
+.modal-container {
+  margin: 20px auto;
+  padding: 20px;
+  max-width: 400px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  background-color: #f9f9f9;
+}
+
+mat-form-field {
+  width: 100%;
+  margin-bottom: 15px;
+}
+
+mat-dialog-content {
+  /* Opcional: refuerza el padding del contenido */
+  padding: 10px 0px;
+
+}
+
+mat-dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 15px;
+}
+
+button {
+  margin-left: 8px;
+}

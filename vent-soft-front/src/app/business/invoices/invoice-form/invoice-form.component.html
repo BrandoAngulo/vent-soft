@@ -1,4 +1,4 @@
-<!-- <div class="form-container">
+<div class="form-container">
   <h4 class="error">{{ message }}</h4>
   <form [formGroup]="invoiceForm" (ngSubmit)="onSubmit()">
     <mat-form-field appearance="fill">
@@ -24,7 +24,7 @@
 
     <h3>Productos</h3>
     <div formArrayName="products">
-      <div *ngFor="let prod of products.controls; let i = index" [formGroupName]="i">
+      <div *ngFor="let prod of products.controls; let i = index" [formGroupName]="i" class="product-row">
         <mat-form-field appearance="fill">
           <mat-label>Producto</mat-label>
           <input matInput formControlName="name" placeholder="Producto" />
@@ -41,76 +41,14 @@
           <mat-label>Total</mat-label>
           <input matInput formControlName="total" placeholder="Total" />
         </mat-form-field>
-        <button mat-raised-button color="warn" type="button" (click)="removeProduct(i)">Eliminar Producto</button>
-        <hr>
+        <button mat-icon-button color="warn" type="button" (click)="removeProduct(i)">
+          <mat-icon>delete</mat-icon>
+        </button>
+
       </div>
     </div>
-    <button mat-raised-button type="button" (click)="addProduct()">Agregar Producto</button>
+    <!-- Botón que abre el modal para agregar un producto -->
+    <button mat-raised-button type="button" (click)="openAddProductModal()">Agregar Producto</button>
     <button mat-raised-button color="primary" type="submit">Guardar Factura</button>
   </form>
-</div>
- -->
-
- <div class="invoice-form">
-  <h3>Nueva Factura</h3>
-  <p><strong>Código de Factura:</strong> {{ newInvoice.invoiceCode }}</p>
-  <p><strong>Fecha:</strong> {{ newInvoice.date }}</p>
-
-  <div class="form-row">
-    <mat-form-field appearance="outline">
-      <mat-label>Nombre del cliente</mat-label>
-      <input matInput [(ngModel)]="newInvoice.customer">
-    </mat-form-field>
-    <mat-form-field appearance="outline">
-      <mat-label>NIT</mat-label>
-      <input matInput [(ngModel)]="newInvoice.nit">
-    </mat-form-field>
-    <mat-form-field appearance="outline">
-      <mat-label>Dirección</mat-label>
-      <input matInput [(ngModel)]="newInvoice.address">
-    </mat-form-field>
-  </div>
-
-  <h3>Productos</h3>
-  <table mat-table [dataSource]="newInvoice.products" class="mat-elevation-z8">
-    <thead>
-      <tr>
-        <th>Producto</th>
-        <th>Precio Unitario</th>
-        <th>Cantidad</th>
-        <th>Total</th>
-        <th>Acciones</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let prod of newInvoice.products; let i = index">
-        <td>
-          <mat-form-field appearance="outline">
-            <input matInput placeholder="Producto" [(ngModel)]="prod.name">
-          </mat-form-field>
-        </td>
-        <td>
-          <mat-form-field appearance="outline">
-            <input matInput type="number" placeholder="Precio Unitario" [(ngModel)]="prod.unitPrice" (ngModelChange)="updateProductTotal(prod)">
-          </mat-form-field>
-        </td>
-        <td>
-          <mat-form-field appearance="outline">
-            <input matInput type="number" placeholder="Cantidad" [(ngModel)]="prod.quantity" (ngModelChange)="updateProductTotal(prod)">
-          </mat-form-field>
-        </td>
-        <td>
-          <mat-form-field appearance="outline">
-            <input matInput [value]="'$' + prod.total" disabled>
-          </mat-form-field>
-        </td>
-        <td>
-          <button mat-raised-button color="warn" (click)="removeProduct(i)">Eliminar</button>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-  <button mat-raised-button (click)="addProduct()" style="margin-top: 8px;">Agregar Producto</button>
-  <h3>Subtotal: ${{ calculateSubtotal() }}</h3>
-  <button mat-raised-button color="primary" (click)="onSaveInvoice()" style="margin-top: 8px;">Guardar Factura</button>
 </div>

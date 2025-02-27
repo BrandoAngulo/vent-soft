@@ -1,0 +1,10 @@
+<div class="container">
+  <mat-card>
+    <mat-card-content>
+      <h2>Módulo de Facturación</h2>
+      <app-invoice-form (addInvoice)="onAddInvoice($event)"></app-invoice-form>
+      <ui-table [data]="invoices" [columns]="tableColumns" [isLoading]="isLoadingInvoices" />
+    </mat-card-content>
+  </mat-card>
+</div>
+
