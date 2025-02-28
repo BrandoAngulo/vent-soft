@@ -12,6 +12,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/vent-soft/client")
+@CrossOrigin
 @Slf4j
 public class ClientController {
 

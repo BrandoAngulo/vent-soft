@@ -4,7 +4,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { RouterModule } from '@angular/router';
-import { Customer } from '../customer.model';
+import { CustomerDTO } from '../customer.model';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 @Component({
@@ -22,7 +22,7 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
   styleUrl: './customer-form.component.css'
 })
 export class CustomerFormComponent {
-  @Output() add = new EventEmitter<Customer>();
+  @Output() add = new EventEmitter<CustomerDTO>();
   message = "";
   customerForm!: FormGroup;
   constructor(private formBuilder: FormBuilder) {
@@ -44,7 +44,7 @@ export class CustomerFormComponent {
       console.log(this.message = "Creating Customer error");
     } else {
       console.log(this.customerForm.value);
-      const customer: Customer = { ...this.customerForm.value,
+      const customer: CustomerDTO = { ...this.customerForm.value,
         city:{
           id: 0,
           code: '122122',

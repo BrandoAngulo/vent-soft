@@ -2,8 +2,9 @@ import { Component, inject, OnInit } from '@angular/core';
 import { TableColumn, UiTableComponent } from '../../shared/components/ui-table/ui-table.component';
 import { timer } from 'rxjs';
 import { CustomerFormComponent } from './customer-form/customer-form.component';
-import { Customer } from './customer.model';
+import { CustomerDTO } from './customer.model';
 import { CustomerService } from '../../shared/services/customer.service';
+import { error } from 'console';
 
 @Component({
   selector: 'app-customer',
@@ -15,11 +16,11 @@ import { CustomerService } from '../../shared/services/customer.service';
   templateUrl: './customer.component.html',
   styleUrl: './customer.component.css'
 })
-export default class CustomerComponent implements OnInit{
-  customers: Customer[] = [];
-  tableColumns: TableColumn<Customer>[] = [];
+export default class CustomerComponent implements OnInit {
+  customers: CustomerDTO[] = [];
+  tableColumns: TableColumn<CustomerDTO>[] = [];
   isloadingCustomer = true;
-  //private customerService = inject(CustomerService);
+  constructor(private customerService: CustomerService) { }
 
   ngOnInit(): void {
     this.getCustomer()
@@ -27,53 +28,16 @@ export default class CustomerComponent implements OnInit{
   }
 
   getCustomer() {
-    //console.log(`Servicio = ${this.customerService}`)
-    timer(2000).subscribe(() => {
+    this.customerService.list().subscribe((customer) => {
       this.isloadingCustomer = false
-      this.customers = [
-        {
-          id: 1,
-          name: 'Armando',
-          lastName: 'Casas',
-          docType: 'Cedula',
-          document: '1122334455',
-          city: { id: 1, code: '5511', name: 'cali' },
-          residence: 'calle4#200-70',
-          cellPhone: '+57-325599666',
-          email: 'amigo@gmail.com',
-          status: true
-        },
-        {
-          id: 2,
-          name: 'Armando',
-          lastName: 'Casas',
-          docType: 'Cedula',
-          document: '1122334455',
-          city: { id: 1, code: '5511', name: 'Pablollin' },
-          residence: 'calle4#200-70',
-          cellPhone: '+57-325599666',
-          email: 'amigo@gmail.com',
-          status: true
-        },
-        {
-          id: 3,
-          name: 'Armando',
-          lastName: 'Casas',
-          docType: 'Cedula',
-          document: '1122334455',
-          city: { id: 1, code: '5511', name: 'Tabogo' },
-          residence: 'calle4#200-70',
-          cellPhone: '+57-325599666',
-          email: 'amigo@gmail.com',
-          status: true
-        }
-      ]
+      this.customers = customer;
+    }, (error) => {
+      console.error('List customer Error :', error)
     })
-
   }
 
-  setTableColumns(){
-    this.tableColumns =[
+  setTableColumns() {
+    this.tableColumns = [
       {
         label: 'Id',
         def: 'id',
@@ -122,7 +86,7 @@ export default class CustomerComponent implements OnInit{
     ]
   }
 
-  addCustomer(customer: Customer) {
+  addCustomer(customer: CustomerDTO) {
     console.log(customer);
     this.customers = [...this.customers, customer];
   }

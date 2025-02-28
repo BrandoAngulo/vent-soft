@@ -10,6 +10,6 @@ INSERT INTO cliente (nombre, apellido, id_ciudad) VALUES ('Oscar','ramirez', 1),
 
 INSERT INTO usuario (nombre) VALUES ('Julian');
 
-INSERT INTO factura(client_id, total, date, invoice_code, status) VALUES (1,2500,'28-05-2024','112', true);
+INSERT INTO factura(client_id, total, date, invoice_code, status) VALUES (1,2500,'2024-02-28','112', true);
 
 -- INSERT INTO itemfactura(product_id) VALUES (1), (2);
