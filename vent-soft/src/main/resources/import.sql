@@ -12,4 +12,4 @@ INSERT INTO usuario (nombre) VALUES ('Julian');
 
 INSERT INTO factura(client_id, total, date, invoice_code, status) VALUES (1,2500,'2024-02-28','112', true);
 
--- INSERT INTO itemfactura(product_id) VALUES (1), (2);
+INSERT INTO itemfactura(id_factura, id_producto) VALUES (1, 1);

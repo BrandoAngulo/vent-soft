@@ -52,12 +52,23 @@ export default class InvoicesComponent implements OnInit {
       { label: 'NIT', def: 'nit', content: (row: Invoice) => row.nit },
       { label: 'Dirección', def: 'address', content: (row: Invoice) => row.address },
       { label: 'Fecha', def: 'date', content: (row: Invoice) => row.date },
-      { label: 'Total', def: 'total', content: (row: Invoice) => row.total }
+      { label: 'Total', def: 'total', content: (row: Invoice) => row.total },
+      { label: 'Acciones', def: 'acciones', content: () => '' }
     ];
   }
 
   onAddInvoice(newInvoice: Invoice): void {
     newInvoice.id = this.invoices.length + 1;
     this.invoices = [...this.invoices, newInvoice];
+  }
+
+  onEditInvoice(invoice: Invoice): void {
+    console.log('Editar factura', invoice);
+    // Lógica para editar la factura
+  }
+
+  onDeleteInvoice(invoice: Invoice): void {
+    console.log('Eliminar factura', invoice);
+    // Lógica para eliminar la factura
   }
 }
