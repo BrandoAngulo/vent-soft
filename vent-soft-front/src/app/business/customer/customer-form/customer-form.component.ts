@@ -25,9 +25,10 @@ export class CustomerFormComponent {
   @Output() add = new EventEmitter<CustomerDTO>();
   message = "";
   customerForm!: FormGroup;
+  isSubmitting = false;
   constructor(private formBuilder: FormBuilder) {
     this.customerForm = this.formBuilder.group({
-      id: ['', [Validators.required, Validators.pattern('^[0-9]+(\\.[0-9]{1,2})?$')]],
+      id: [null],
       name: [''],
       lastName: [''],
       docType: [''],
@@ -36,36 +37,43 @@ export class CustomerFormComponent {
       residence: [''],
       cellPhone: [''],
       email: ['', [Validators.required, Validators.email]],
-      status: [true],
     });
   }
   addCustomer() {
     if (this.customerForm.invalid) {
-      console.log(this.message = "Creating Customer error");
-    } else {
-      console.log(this.customerForm.value);
-      const customer: CustomerDTO = { ...this.customerForm.value,
-        city:{
-          id: 0,
-          code: '122122',
-          name: this.customerForm.value.city,
-        }
+      this.message = "Formulario inválido. Por favor, completa todos los campos requeridos.";
+      console.log(this.message);
+      return;
+    }
+
+    this.isSubmitting = true;
+    const formValue = this.customerForm.value;
+    
+    const customer: CustomerDTO = {
+      ...formValue,
+      status: true,
+      city: {
+        id: 0, // Esto podría venir de un selector de ciudades en el futuro
+        code: '122122', // Esto debería ser dinámico si tienes un sistema de códigos
+        name: formValue.city
       }
+    };
       this.add.emit(customer);
 
       //limpiamos formulario
       this.customerForm.reset({
-        id: [0],
-        name: [''],
-        lastName: [''],
-        docType: [''],
-        document: [''],
-        city: [''],
-        residence: [''],
-        cellPhone: [''],
-        email: [''],
-      })
+        id: null,
+        name: '',
+        lastName: '',
+        docType: '',
+        document: '',
+        city: '',
+        residence: '',
+        cellPhone: '',
+        email: '',
+        status: true
+      });
+      this.isSubmitting = false;
+    this.message = "Cliente enviado para creación";
     }
   }
-
-}

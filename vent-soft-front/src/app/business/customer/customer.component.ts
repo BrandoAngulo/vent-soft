@@ -1,8 +1,9 @@
 import { CustomerDTO } from './customer.dto';
 import { Component, OnInit } from '@angular/core';
-import { CustomerService } from '../../shared/services/customer.service';
+import { CustomerService } from './services/customer.service';
 import { CustomerFormComponent } from './customer-form/customer-form.component';
 import { TableColumn, UiTableComponent } from '../../shared/components/ui-table/ui-table.component';
+import { response } from 'express';
 
 @Component({
   selector: 'app-customer',
@@ -86,9 +87,21 @@ export default class CustomerComponent implements OnInit {
     ]
   }
 
+  isAddingCustomer = false;
+  
   addCustomer(customer: CustomerDTO) {
-    console.log(customer);
-    this.customers = [...this.customers, customer];
+    this.isAddingCustomer = true;
+    this.customerService.create(customer).subscribe({
+      next: (newCustomer) => {
+        this.customers = [...this.customers, newCustomer];
+        console.log('Cliente creado exitosamente:', newCustomer);
+        this.isAddingCustomer = false;
+      },
+      error: (err) => {
+        console.error('Error al crear cliente:', err);
+        this.isAddingCustomer = false;
+      }
+    });
   }
 
   editCustomer(customer: CustomerDTO): void {
@@ -97,7 +110,19 @@ export default class CustomerComponent implements OnInit {
   }
 
   deleteCustomer(customer: CustomerDTO): void {
-    console.log('Eliminar factura', customer);
-    // Lógica para eliminar la factura
+    if (!customer.id) {
+      console.error('Customer not found');
+      return;
+    }
+    
+    this.customerService.delete(customer.id).subscribe({
+      next: (message) => {
+        this.customers = this.customers.filter(c => c.id !== customer.id);
+        console.log('Customer deleted:', message);
+      },
+      error: (err) => {
+        console.error('Customer deleted error: ', err);
+      }
+    });
   }
 }
