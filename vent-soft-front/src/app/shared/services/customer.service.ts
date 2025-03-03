@@ -2,7 +2,7 @@ import { map, Observable } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../../enviroments/enviroment';
-import { CustomerDTO } from '../../business/customer/customer.model';
+import { CustomerDTO } from '../../business/customer/customer.dto';
 
 @Injectable({
   providedIn: 'root'

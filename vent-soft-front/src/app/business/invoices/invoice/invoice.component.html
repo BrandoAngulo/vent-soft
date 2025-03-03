@@ -6,8 +6,8 @@
       <ui-table [data]="invoices" 
       [columns]="tableColumns" 
       [isLoading]="isLoadingInvoices" 
-      (editRow)="onEditInvoice($event)"
-      (deleteRow)="onDeleteInvoice($event)"
+      (editRow)="editInvoice($event)"
+      (deleteRow)="deleteInvoice($event)"
        />
     </mat-card-content>
   </mat-card>

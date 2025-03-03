@@ -4,7 +4,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { RouterModule } from '@angular/router';
-import { CustomerDTO } from '../customer.model';
+import { CustomerDTO } from '../customer.dto';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 @Component({

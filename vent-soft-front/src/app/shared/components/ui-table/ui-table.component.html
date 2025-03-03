@@ -1,6 +1,6 @@
 <div class="table-container">
   <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
-    <!-- Definir dinámicamente las columnas -->
+    
     <ng-container *ngFor="let column of columns" [matColumnDef]="getColumnDef(column.def)">
       <th mat-header-cell *matHeaderCellDef>{{ column.label }}</th>
       <td mat-cell *matCellDef="let row">

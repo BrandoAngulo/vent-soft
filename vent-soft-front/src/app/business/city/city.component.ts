@@ -1,5 +1,5 @@
 import { timer } from 'rxjs';
-import { City } from './city.model';
+import { CityDTO } from './city.dto';
 import { Component, OnInit } from '@angular/core';
 import { CityFormComponent } from './city-form/city-form.component';
 import { TableColumn, UiTableComponent } from '../../shared/components/ui-table/ui-table.component';
@@ -16,8 +16,8 @@ import { TableColumn, UiTableComponent } from '../../shared/components/ui-table/
 })
 export default class CityComponent implements OnInit {
 
-  city: City[] = [];
-  tableColumns: TableColumn<City>[] = [];
+  city: CityDTO[] = [];
+  tableColumns: TableColumn<CityDTO>[] = [];
   isLoadingCity = true;
 
   ngOnInit(): void {
@@ -77,14 +77,29 @@ export default class CityComponent implements OnInit {
         def: 'status',
         content: (row) => row.status,
       },
+      { 
+        label: 'Acciones', 
+        def: 'acciones', 
+        content: () => '' 
+      },
 
     ]
 
   }
 
-  addCity(city: City) {
+  addCity(city: CityDTO) {
     console.log(city);
     this.city = [...this.city, city];
   }
+
+    editCity(cityDTO: CityDTO): void {
+      console.log('Editar factura', cityDTO);
+      // Lógica para editar la factura
+    }
+
+    deleteCity(cityDTO: CityDTO): void {
+      console.log('eliminar factura', cityDTO);
+      // Lógica para editar la factura
+    }
 
 }

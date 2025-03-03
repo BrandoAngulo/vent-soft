@@ -1,10 +1,8 @@
-import { Component, inject, OnInit } from '@angular/core';
-import { TableColumn, UiTableComponent } from '../../shared/components/ui-table/ui-table.component';
-import { timer } from 'rxjs';
-import { CustomerFormComponent } from './customer-form/customer-form.component';
-import { CustomerDTO } from './customer.model';
+import { CustomerDTO } from './customer.dto';
+import { Component, OnInit } from '@angular/core';
 import { CustomerService } from '../../shared/services/customer.service';
-import { error } from 'console';
+import { CustomerFormComponent } from './customer-form/customer-form.component';
+import { TableColumn, UiTableComponent } from '../../shared/components/ui-table/ui-table.component';
 
 @Component({
   selector: 'app-customer',
@@ -28,11 +26,12 @@ export default class CustomerComponent implements OnInit {
   }
 
   getCustomer() {
-    this.customerService.list().subscribe((customer) => {
-      this.isloadingCustomer = false
-      this.customers = customer;
-    }, (error) => {
-      console.error('List customer Error :', error)
+    this.customerService.list().subscribe({
+      next: (customer) => {
+        this.isloadingCustomer = false
+        this.customers = customer;
+      },
+      error: (err) => console.error('List customer Error :', err),
     })
   }
 
@@ -83,11 +82,22 @@ export default class CustomerComponent implements OnInit {
         def: 'status',
         content: (row) => row.status,
       },
+      { label: 'Acciones', def: 'acciones', content: () => '' }
     ]
   }
 
   addCustomer(customer: CustomerDTO) {
     console.log(customer);
     this.customers = [...this.customers, customer];
+  }
+
+  editCustomer(customer: CustomerDTO): void {
+    console.log('Editar factura', customer);
+    // Lógica para editar la factura
+  }
+
+  deleteCustomer(customer: CustomerDTO): void {
+    console.log('Eliminar factura', customer);
+    // Lógica para eliminar la factura
   }
 }

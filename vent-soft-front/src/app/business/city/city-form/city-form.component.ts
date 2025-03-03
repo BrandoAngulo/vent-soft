@@ -1,4 +1,4 @@
-import { City } from '../city.model';
+import { CityDTO } from '../city.dto';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { MatInputModule } from '@angular/material/input';
@@ -22,7 +22,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
   styleUrl: './city-form.component.css'
 })
 export class CityFormComponent {
-  @Output() add = new EventEmitter<City>();
+  @Output() add = new EventEmitter<CityDTO>();
     message = "";
     cityForm!: FormGroup;
     constructor(private formBuilder: FormBuilder) {
@@ -39,7 +39,7 @@ export class CityFormComponent {
         console.log(this.message = "error creating city");
       } else {
         console.log(this.cityForm.value);
-        const city: City = { ...this.cityForm.value }
+        const city: CityDTO = { ...this.cityForm.value }
         this.add.emit(city);
          // Limpia el formulario y restablece los valores iniciales
       this.cityForm.reset({

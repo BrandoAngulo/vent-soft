@@ -1,5 +1,5 @@
 import { timer } from 'rxjs';
-import { Invoice } from './invoice.model';
+import { Invoice } from './invoice.dto';
 import { Component, OnInit } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 import { InvoiceFormComponent } from '../invoice-form/invoice-form.component';
@@ -62,12 +62,12 @@ export default class InvoicesComponent implements OnInit {
     this.invoices = [...this.invoices, newInvoice];
   }
 
-  onEditInvoice(invoice: Invoice): void {
+  editInvoice(invoice: Invoice): void {
     console.log('Editar factura', invoice);
     // Lógica para editar la factura
   }
 
-  onDeleteInvoice(invoice: Invoice): void {
+  deleteInvoice(invoice: Invoice): void {
     console.log('Eliminar factura', invoice);
     // Lógica para eliminar la factura
   }

@@ -1,2 +1,8 @@
 <app-customer-form (add)="addCustomer($event)" />
-<ui-table [data]="customers" [columns]="tableColumns" [isLoading]="isloadingCustomer" />
+<ui-table 
+[data]="customers" 
+[columns]="tableColumns" 
+[isLoading]="isloadingCustomer" 
+(editRow)="editCustomer($event)"
+(deleteRow)="deleteCustomer($event)"
+/>
