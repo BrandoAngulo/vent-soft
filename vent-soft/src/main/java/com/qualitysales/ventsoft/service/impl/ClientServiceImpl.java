@@ -11,10 +11,14 @@ import com.qualitysales.ventsoft.repository.CityRepository;
 import com.qualitysales.ventsoft.repository.ClientRepository;
 import com.qualitysales.ventsoft.service.ClientService;
 import com.qualitysales.ventsoft.utils.HttpClientUtil;
+import com.qualitysales.ventsoft.utils.dto.GenericDTO;
+import com.qualitysales.ventsoft.utils.enums.MessagesEnum;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.internal.bytebuddy.implementation.bytecode.Throw;
+import org.springframework.context.ApplicationContextException;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -133,14 +137,20 @@ public class ClientServiceImpl implements ClientService {
     }
 
     @Override
-    public void deleteClient(Integer id) {
+    public GenericDTO deleteClient(Integer id) {
         Client client = clientRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid client ID"));
         try {
             log.info("deleteClient ok: {}", client);
-            clientRepository.deleteById(client.getId());
+            if (clientRepository.existsById(id)) {
+                clientRepository.deleteById(client.getId());
+                return GenericDTO.genericSuccess(MessagesEnum.REQUEST_SUCCESS, HttpStatus.OK.value());
+            }else {
+
+                throw new ApplicationContextException(MessagesEnum.REQUEST_FAILED.getMessage(), null);
+            }
         } catch (Exception e) {
             log.error("deleteClient Error: {}", e.getMessage());
-            throw new IllegalArgumentException(e);
+            throw new ApplicationContextException(e.getMessage());
         }
 
     }

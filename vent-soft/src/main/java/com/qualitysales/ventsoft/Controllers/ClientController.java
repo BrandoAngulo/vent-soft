@@ -4,6 +4,7 @@ import com.qualitysales.ventsoft.Controllers.DTO.ClientDTO;
 import com.qualitysales.ventsoft.Controllers.DTO.ClientRequestDTO;
 import com.qualitysales.ventsoft.model.Client;
 import com.qualitysales.ventsoft.service.impl.ClientServiceImpl;
+import com.qualitysales.ventsoft.utils.dto.GenericDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -51,8 +52,7 @@ public class ClientController {
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<String> deleteClient(@PathVariable Integer id) {
-        clientService.deleteClient(id);
-        return ResponseEntity.ok().body("Client deleted successfully");
+    public ResponseEntity<GenericDTO> deleteClient(@PathVariable Integer id) {
+        return ResponseEntity.ok(clientService.deleteClient(id));
     }
 }
