@@ -1,8 +1,9 @@
-import { map, Observable } from 'rxjs';
+import { catchError, map, Observable, throwError } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../../../enviroments/enviroment';
 import { CustomerDTO } from '../customer.dto';
+import { ApiResponse } from './apiResponse.dto';
 
 @Injectable({
   providedIn: 'root'
@@ -44,8 +45,13 @@ export class CustomerService {
   }
 
   // Eliminar un cliente
-  delete(id: number): Observable<string> {
-    return this.http.delete<string>(`${this.urlBase}/client/delete/${id}`)
-      .pipe(map(response => response));
+  delete(id: number): Observable<ApiResponse<string>> {
+    return this.http.delete<ApiResponse<string>>(`${this.urlBase}/client/delete/${id}`)
+      .pipe(
+        catchError(error => {
+          console.error('Error deleting user:', error);
+          return throwError(() => new Error('Error deleting user'));
+        })
+      );
   }
 }

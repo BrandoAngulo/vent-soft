@@ -48,14 +48,12 @@ export class CustomerFormComponent {
 
     this.isSubmitting = true;
     const formValue = this.customerForm.value;
-    
+
     const customer: CustomerDTO = {
       ...formValue,
       status: true,
       city: {
-        id: 0, // Esto podría venir de un selector de ciudades en el futuro
-        code: '122122', // Esto debería ser dinámico si tienes un sistema de códigos
-        name: formValue.city
+        id: 2, // Esto podría venir de un selector de ciudades en el futuro
       }
     };
       this.add.emit(customer);

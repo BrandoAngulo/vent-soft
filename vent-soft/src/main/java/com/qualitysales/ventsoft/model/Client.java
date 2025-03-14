@@ -41,7 +41,7 @@ public class Client {
 
     @Override
     public String toString() {
-        return "cliente{" + ", id= " + id + ", name" + name + ", lastName=" + lastName + ", docTipe="
+        return "cliente{" + ", id= " + id + ", name= " + name + ", lastName=" + lastName + ", docTipe="
                 + docTipe + ", email" + email + "}";
     }
 }

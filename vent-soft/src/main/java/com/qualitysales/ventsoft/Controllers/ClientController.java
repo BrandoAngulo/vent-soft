@@ -5,7 +5,9 @@ import com.qualitysales.ventsoft.Controllers.DTO.ClientRequestDTO;
 import com.qualitysales.ventsoft.model.Client;
 import com.qualitysales.ventsoft.service.impl.ClientServiceImpl;
 import com.qualitysales.ventsoft.utils.dto.GenericDTO;
+import com.qualitysales.ventsoft.utils.enums.MessagesEnum;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -41,8 +43,8 @@ public class ClientController {
     }
 
     @PostMapping("/save")
-    public ResponseEntity<ClientDTO> saveClient(@RequestBody Client client) {
-        return ResponseEntity.ok().body(clientService.addClient(client));
+    public ResponseEntity<GenericDTO> saveClient(@RequestBody Client client) {
+        return ResponseEntity.ok(GenericDTO.success(clientService.addClient(client)));
     }
 
     @PutMapping("/update/{id}")
