@@ -3,7 +3,6 @@ import { Component, OnInit } from '@angular/core';
 import { CustomerService } from './services/customer.service';
 import { CustomerFormComponent } from './customer-form/customer-form.component';
 import { TableColumn, UiTableComponent } from '../../shared/components/ui-table/ui-table.component';
-import { response } from 'express';
 import { ApiResponse } from './services/apiResponse.dto';
 
 @Component({
@@ -28,12 +27,16 @@ export default class CustomerComponent implements OnInit {
   }
 
   getCustomer() {
+    this.isloadingCustomer = true;
     this.customerService.list().subscribe({
       next: (customer) => {
-        this.isloadingCustomer = false
         this.customers = customer;
+        this.isloadingCustomer = false
       },
-      error: (err) => console.error('List customer Error :', err),
+      error: (err) => {
+        console.error('List customer Error :', err),
+        this.isloadingCustomer = false;
+      }
     })
   }
 
@@ -94,9 +97,9 @@ export default class CustomerComponent implements OnInit {
     this.isAddingCustomer = true;
     this.customerService.create(customer).subscribe({
       next: (newCustomer) => {
-        this.customers = [...this.customers, newCustomer];
+        this.getCustomer
+        //this.customers = [...this.customers, newCustomer];
         console.log('Cliente creado exitosamente:', newCustomer);
-        console.log();
         this.isAddingCustomer = false;
       },
       error: (err) => {
