@@ -2,7 +2,7 @@ export interface CustomerDTO {
   id: number,
   name: string,
   lastName: string,
-  docType: string,
+  docTipe: string,
   document: string,
   city: {
     id: number,

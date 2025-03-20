@@ -95,7 +95,9 @@ public class ClientServiceImpl implements ClientService {
                 throw new IllegalArgumentException("City is null");
             } else {
                 ClientDTO clientDTO = ClientMapper.MAPPER.toClient(client);
+                System.out.println("clientDTO = " + clientDTO);
                 Client client1 = ClientMapper.MAPPER.toClientDTO(clientDTO);
+                System.out.println("client1 = " + client1);
                 clientRepository.save(client1);
                 log.info("addClient ok: {}", client);
                 return clientDTO;

@@ -28,10 +28,9 @@ export class CustomerFormComponent {
   isSubmitting = false;
   constructor(private formBuilder: FormBuilder) {
     this.customerForm = this.formBuilder.group({
-      id: [null],
       name: [''],
       lastName: [''],
-      docType: [''],
+      docTipe: [''],
       document: [''],
       city: [''],
       residence: [''],
@@ -40,6 +39,7 @@ export class CustomerFormComponent {
     });
   }
   addCustomer() {
+    console.log(this.customerForm)
     if (this.customerForm.invalid) {
       this.message = "Formulario inválido. Por favor, completa todos los campos requeridos.";
       console.log(this.message);
@@ -60,10 +60,9 @@ export class CustomerFormComponent {
 
       //limpiamos formulario
       this.customerForm.reset({
-        id: null,
         name: '',
         lastName: '',
-        docType: '',
+        docTipe: '',
         document: '',
         city: '',
         residence: '',

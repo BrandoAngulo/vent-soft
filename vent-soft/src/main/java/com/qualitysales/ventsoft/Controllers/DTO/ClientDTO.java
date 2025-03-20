@@ -14,5 +14,7 @@ public class ClientDTO {
     private String document;
     private String residence;
     private String cellPhone;
+    private String docTipe;
+    private String email;
 
 }

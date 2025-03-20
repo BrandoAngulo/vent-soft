@@ -59,8 +59,8 @@ export default class CustomerComponent implements OnInit {
       },
       {
         label: 'DocType',
-        def: 'docType',
-        content: (row) => row.docType,
+        def: 'docTipe',
+        content: (row) => row.docTipe,
       },
       {
         label: 'City',
@@ -97,7 +97,7 @@ export default class CustomerComponent implements OnInit {
     this.isAddingCustomer = true;
     this.customerService.create(customer).subscribe({
       next: (newCustomer) => {
-        this.getCustomer
+        this.getCustomer();
         //this.customers = [...this.customers, newCustomer];
         console.log('Cliente creado exitosamente:', newCustomer);
         this.isAddingCustomer = false;
