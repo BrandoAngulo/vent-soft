@@ -2,21 +2,21 @@ import { catchError, map, Observable, throwError } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../../../enviroments/enviroment';
-import { CustomerDTO } from '../customer.dto';
+import { CityDTO } from '../city.dto';
 import { ApiResponse } from '../../../../apiResponse.dto';
 
 @Injectable({
   providedIn: 'root'
 })
-export class CustomerService {
+export class CityService {
   private urlBase = environment.apiUrl;
   constructor(private http: HttpClient) { }
 
-  list(): Observable<CustomerDTO[]> {
-    return this.http.get<CustomerDTO[]>(`${this.urlBase}/client/get-clients`).pipe(map(response => { return response }))
+  list(): Observable<CityDTO[]> {
+    return this.http.get<CityDTO[]>(`${this.urlBase}/city/find-all`).pipe(map(response => { return  response }))
   }
 
-  // Obtener un cliente por ID
+  /* // Obtener un cliente por ID
   getById(id: number): Observable<CustomerDTO> {
     return this.http.get<CustomerDTO>(`${this.urlBase}/client/get-client/${id}`)
       .pipe(map(response => response));
@@ -54,4 +54,4 @@ export class CustomerService {
         })
       );
   }
-}
+ */}

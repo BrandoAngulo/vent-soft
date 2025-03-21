@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { CustomerService } from './services/customer.service';
 import { CustomerFormComponent } from './customer-form/customer-form.component';
 import { TableColumn, UiTableComponent } from '../../shared/components/ui-table/ui-table.component';
-import { ApiResponse } from './services/apiResponse.dto';
+import { ApiResponse } from '../../../apiResponse.dto';
 
 @Component({
   selector: 'app-customer',

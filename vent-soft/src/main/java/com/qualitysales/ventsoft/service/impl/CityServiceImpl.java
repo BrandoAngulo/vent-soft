@@ -41,8 +41,6 @@ public class CityServiceImpl implements CityService {
         List<City> cities = cityRepository.findAll();
         List<CityDTO> cityDTOS = CityMapper.MAPPER.toCities(cities);
         try {
-//            likes("hola", "carlos", "luis");
-            fizzBuzz(3);
             log.info("findCities OK: {}", cities);
             return cityDTOS;
 

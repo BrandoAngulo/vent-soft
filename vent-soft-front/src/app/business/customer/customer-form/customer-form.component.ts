@@ -6,6 +6,9 @@ import { MatInputModule } from '@angular/material/input';
 import { RouterModule } from '@angular/router';
 import { CustomerDTO } from '../customer.dto';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MatSelectModule } from '@angular/material/select';
+import { CityDTO } from '../../city/city.dto';
+import { CityService } from '../../city/services/city.service';
 
 @Component({
   selector: 'app-customer-form',
@@ -16,6 +19,7 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
     ReactiveFormsModule,
     MatInputModule,
     MatButtonModule,
+    MatSelectModule,
     MatSlideToggleModule
   ],
   templateUrl: './customer-form.component.html',
@@ -26,7 +30,12 @@ export class CustomerFormComponent {
   message = "";
   customerForm!: FormGroup;
   isSubmitting = false;
-  constructor(private formBuilder: FormBuilder) {
+  cities: CityDTO[] = [];
+  isLoadingCities = false;
+  constructor(
+    private formBuilder: FormBuilder, 
+    private cityService: CityService
+  ) {
     this.customerForm = this.formBuilder.group({
       name: [''],
       lastName: [''],
@@ -38,6 +47,31 @@ export class CustomerFormComponent {
       email: ['', [Validators.required, Validators.email]],
     });
   }
+
+  ngOnInit(): void {
+    this.getCities();
+  }
+
+  getCities(){
+    this.isLoadingCities = true;
+    this.cityService.list().subscribe({
+      next: (city) =>{
+        this.cities = city;
+        this.isLoadingCities = false;
+        console.log(this.cities = city)
+      },
+      error: (err) => {
+        console.error('Error loading cities:', err);
+        this.message = "Error al cargar las ciudades";
+        this.isLoadingCities = false;
+      }
+    })
+  }
+  // Comparador para mat-select (necesario para objetos)
+  compareCities(city1: CityDTO, city2: CityDTO): boolean {
+    return city1 && city2 ? city1.id === city2.id : city1 === city2;
+  }
+  
   addCustomer() {
     console.log(this.customerForm)
     if (this.customerForm.invalid) {
@@ -52,9 +86,7 @@ export class CustomerFormComponent {
     const customer: CustomerDTO = {
       ...formValue,
       status: true,
-      city: {
-        id: 2, // Esto podría venir de un selector de ciudades en el futuro
-      }
+      city: formValue.city
     };
       this.add.emit(customer);
 

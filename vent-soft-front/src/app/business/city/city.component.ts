@@ -1,8 +1,8 @@
-import { timer } from 'rxjs';
 import { CityDTO } from './city.dto';
 import { Component, OnInit } from '@angular/core';
 import { CityFormComponent } from './city-form/city-form.component';
 import { TableColumn, UiTableComponent } from '../../shared/components/ui-table/ui-table.component';
+import { CityService } from './services/city.service';
 
 @Component({
   selector: 'app-city',
@@ -20,35 +20,25 @@ export default class CityComponent implements OnInit {
   tableColumns: TableColumn<CityDTO>[] = [];
   isLoadingCity = true;
 
+  constructor(private cityService: CityService){}
+
   ngOnInit(): void {
-    this.getCity()
+    this.getCities()
     this.setTableColumns();
   }
 
-  getCity() {
-    timer(2000).subscribe(() => {
-      this.isLoadingCity = false;
-      this.city = [
-        {
-          id: 1,
-          code: '#255',
-          description: 'Tabogo',
-          status: true,
-        },
-        {
-          id: 2,
-          code: '#255',
-          description: 'Cali',
-          status: true,
-        },
-        {
-          id: 3,
-          code: '#255',
-          description: 'Medellin',
-          status: true,
-        },
-
-      ]
+  getCities(){
+    this.isLoadingCity = true;
+    this.cityService.list().subscribe({
+      next: (city) =>{
+        this.city = city;
+        this.isLoadingCity = false;
+        console.log(this.city = city)
+      },
+      error: (err) => {
+        console.error('Error loading cities:', err);
+        this.isLoadingCity = false;
+      }
     })
   }
 
@@ -68,8 +58,8 @@ export default class CityComponent implements OnInit {
 
       {
         label: 'Description',
-        def: 'description',
-        content: (row) => row.description,
+        def: 'name',
+        content: (row) => row.name,
       },
 
       {
