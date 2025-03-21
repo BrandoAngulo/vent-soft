@@ -18,6 +18,6 @@ public class ClientRequestDTO {
     private String residence;
     private String cellPhone;
     private String email;
-    private String estate;
+    private Boolean status;
 
 }

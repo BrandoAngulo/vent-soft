@@ -28,3 +28,8 @@ h4.error {
   margin-bottom: 15px;
   text-align: center;
 }
+
+.status-toggle {
+  margin: 16px 0;
+  display: block;
+}

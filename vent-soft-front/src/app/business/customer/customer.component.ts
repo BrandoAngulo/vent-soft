@@ -4,11 +4,13 @@ import { CustomerService } from './services/customer.service';
 import { CustomerFormComponent } from './customer-form/customer-form.component';
 import { TableColumn, UiTableComponent } from '../../shared/components/ui-table/ui-table.component';
 import { ApiResponse } from '../../../apiResponse.dto';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-customer',
   standalone: true,
   imports: [
+    CommonModule,
     UiTableComponent,
     CustomerFormComponent,
   ],
@@ -19,6 +21,9 @@ export default class CustomerComponent implements OnInit {
   customers: CustomerDTO[] = [];
   tableColumns: TableColumn<CustomerDTO>[] = [];
   isloadingCustomer = true;
+  selectedCustomer: CustomerDTO | null = null; // Cliente seleccionado para edición
+  isAddingCustomer = false; // Controla la visibilidad del formulario
+
   constructor(private customerService: CustomerService) { }
 
   ngOnInit(): void {
@@ -91,14 +96,11 @@ export default class CustomerComponent implements OnInit {
     ]
   }
 
-  isAddingCustomer = false;
-
   addCustomer(customer: CustomerDTO) {
     this.isAddingCustomer = true;
     this.customerService.create(customer).subscribe({
       next: (newCustomer) => {
         this.getCustomer();
-        //this.customers = [...this.customers, newCustomer];
         console.log('Cliente creado exitosamente:', newCustomer);
         this.isAddingCustomer = false;
       },
@@ -110,6 +112,8 @@ export default class CustomerComponent implements OnInit {
   }
 
   editCustomer(customer: CustomerDTO): void {
+    this.selectedCustomer = { ...customer }; // Clonar el objeto para evitar mutaciones directas
+    this.isAddingCustomer = true;
     console.log('Editar factura', customer);
     // Lógica para editar la factura
   }
@@ -130,4 +134,49 @@ export default class CustomerComponent implements OnInit {
       }
     });
   }
+
+  updateCustomer(customer: CustomerDTO): void {
+    if (!customer.id) {
+      console.error('Customer ID not found');
+      return;
+    }
+    this.customerService.update(customer.id, customer).subscribe({
+      next: (updatedCustomer) => {
+        this.getCustomer(); // Refrescar la lista
+        this.isAddingCustomer = false;
+        this.selectedCustomer = null; // Limpiar selección
+        console.log('Cliente actualizado exitosamente:', updatedCustomer);
+      },
+      error: (err) => {
+        console.error('Error al actualizar cliente:', err);
+        this.isAddingCustomer = false;
+      }
+    });
+  }
+
+  updateCustomerStatus(customer: CustomerDTO): void {
+    if (!customer.id) {
+      console.error('Customer ID not found');
+      return;
+    }
+
+    this.customerService.update(customer.id, customer).subscribe({
+      next: (updatedCustomer) => {
+        this.getCustomer(); // Refrescar la lista
+        this.isAddingCustomer = false;
+        this.selectedCustomer = null; // Limpiar selección
+        console.log('Cliente actualizado exitosamente:', updatedCustomer);
+      },
+      error: (err) => {
+        console.error('Error al actualizar estado:', err);
+        // Si hay error, podrías revertir el cambio en la UI
+        const index = this.customers.findIndex(c => c.id === customer.id);
+        if (index !== -1) {
+          this.customers[index].status = !customer.status; // Revertir el cambio
+          this.customers = [...this.customers]; // Forzar actualización
+        }
+      }
+    });
+  }
+
 }

@@ -1,6 +1,5 @@
 package com.qualitysales.ventsoft.service.impl;
 
-import com.qualitysales.ventsoft.Controllers.DTO.CityDTO;
 import com.qualitysales.ventsoft.Controllers.DTO.ClientDTO;
 import com.qualitysales.ventsoft.Controllers.DTO.ClientRequestDTO;
 import com.qualitysales.ventsoft.mapper.CityMapper;
@@ -16,7 +15,6 @@ import com.qualitysales.ventsoft.utils.enums.MessagesEnum;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
-import org.modelmapper.internal.bytebuddy.implementation.bytecode.Throw;
 import org.springframework.context.ApplicationContextException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -88,18 +86,16 @@ public class ClientServiceImpl implements ClientService {
 
     @Override
     public ClientDTO addClient(Client client) {
-        log.info("Client: {}",client);
+        log.info("Client getDocTipe: {}",client);
         City city = cityRepository.findById(client.getCity().getId()).orElseThrow(() -> new IllegalArgumentException("City not found"));
         try {
             if (city == null ) {
                 throw new IllegalArgumentException("City is null");
             } else {
                 ClientDTO clientDTO = ClientMapper.MAPPER.toClient(client);
-                System.out.println("clientDTO = " + clientDTO);
                 Client client1 = ClientMapper.MAPPER.toClientDTO(clientDTO);
-                System.out.println("client1 = " + client1);
                 clientRepository.save(client1);
-                log.info("addClient ok: {}", client);
+                log.info("addClient ok: {}", client1);
                 return clientDTO;
             }
         } catch (Exception e) {
@@ -124,7 +120,7 @@ public class ClientServiceImpl implements ClientService {
             idClient.setResidence(clientrequestDTO.getResidence());
             idClient.setCellPhone(clientrequestDTO.getCellPhone());
             idClient.setEmail(clientrequestDTO.getEmail());
-            idClient.setEstate(clientrequestDTO.getEstate());
+            idClient.setStatus(clientrequestDTO.getStatus());
 
             Client updatedClient = clientRepository.save(idClient);
 

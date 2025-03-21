@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -25,15 +25,18 @@ import { CityService } from '../../city/services/city.service';
   templateUrl: './customer-form.component.html',
   styleUrl: './customer-form.component.css'
 })
-export class CustomerFormComponent {
+export class CustomerFormComponent implements OnInit {
+  @Input() customerEdit: CustomerDTO | null = null;
   @Output() add = new EventEmitter<CustomerDTO>();
+  @Output() update = new EventEmitter<CustomerDTO>();
+
   message = "";
   customerForm!: FormGroup;
   isSubmitting = false;
   cities: CityDTO[] = [];
   isLoadingCities = false;
   constructor(
-    private formBuilder: FormBuilder, 
+    private formBuilder: FormBuilder,
     private cityService: CityService
   ) {
     this.customerForm = this.formBuilder.group({
@@ -50,14 +53,31 @@ export class CustomerFormComponent {
 
   ngOnInit(): void {
     this.getCities();
+    this.loadCustomerData();
   }
 
-  getCities(){
+  loadCustomerData() {
+    if (this.customerEdit && this.cities.length > 0) {
+      this.customerForm.patchValue({
+        name: this.customerEdit.name,
+        lastName: this.customerEdit.lastName,
+        docTipe: this.customerEdit.docTipe,
+        document: this.customerEdit.document,
+        city: this.cities.find(city => city.id === this.customerEdit?.city?.id) || '',
+        residence: this.customerEdit.residence,
+        cellPhone: this.customerEdit.cellPhone,
+        email: this.customerEdit.email
+      })
+    }
+  }
+
+  getCities() {
     this.isLoadingCities = true;
     this.cityService.list().subscribe({
-      next: (city) =>{
+      next: (city) => {
         this.cities = city;
         this.isLoadingCities = false;
+        this.loadCustomerData();
         console.log(this.cities = city)
       },
       error: (err) => {
@@ -71,7 +91,7 @@ export class CustomerFormComponent {
   compareCities(city1: CityDTO, city2: CityDTO): boolean {
     return city1 && city2 ? city1.id === city2.id : city1 === city2;
   }
-  
+
   addCustomer() {
     console.log(this.customerForm)
     if (this.customerForm.invalid) {
@@ -85,11 +105,17 @@ export class CustomerFormComponent {
 
     const customer: CustomerDTO = {
       ...formValue,
+      id: this.customerEdit?.id,
       status: true,
       city: formValue.city
     };
-      this.add.emit(customer);
 
+    if (this.customerEdit) {
+      console.log("update");
+      this.update.emit(customer);
+    } else {
+      console.log("add");
+      this.add.emit(customer);
       //limpiamos formulario
       this.customerForm.reset({
         name: '',
@@ -103,6 +129,6 @@ export class CustomerFormComponent {
         status: true
       });
       this.isSubmitting = false;
-    this.message = "Cliente enviado para creación";
     }
   }
+}

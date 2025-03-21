@@ -15,10 +15,10 @@ export interface TableColumn<T> {
   selector: 'ui-table',
   standalone: true,
   imports: [
-    CommonModule, 
-    MatTableModule, 
-    MatSlideToggleModule, 
-    MatProgressSpinnerModule, 
+    CommonModule,
+    MatTableModule,
+    MatSlideToggleModule,
+    MatProgressSpinnerModule,
     MatIconModule
   ],
   templateUrl: './ui-table.component.html',
@@ -30,6 +30,7 @@ export class UiTableComponent<T> implements OnChanges {
   @Input() isLoading = false;
   @Output() editRow = new EventEmitter<T>();
   @Output() deleteRow = new EventEmitter<T>();
+  @Output() statusChanged = new EventEmitter<T>();
 
   displayedColumns: string[] = [];
   dataSource = new MatTableDataSource<T>([]);
@@ -62,7 +63,8 @@ export class UiTableComponent<T> implements OnChanges {
     const key = field as keyof T;
     if (typeof row[key] === 'boolean') {
       row[key] = !row[key] as any;
-      console.log('Fila actualizada:', row);
+      this.statusChanged.emit(row);
+      console.log('status actualizado:', row);
     } else {
       console.error(`El campo "${String(key)}" no es de tipo booleano.`);
     }
@@ -71,7 +73,7 @@ export class UiTableComponent<T> implements OnChanges {
   onEdit(row: T) {
     this.editRow.emit(row);
   }
-  
+
   onDelete(row: T) {
     this.deleteRow.emit(row);
   }

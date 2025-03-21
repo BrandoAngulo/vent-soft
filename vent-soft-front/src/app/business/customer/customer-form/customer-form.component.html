@@ -13,8 +13,15 @@
     </mat-form-field>
 
     <mat-form-field appearance="fill">
-      <mat-label>Tipe document</mat-label>
-      <input matInput formControlName="docTipe" placeholder="Enter type document" />
+      <mat-label>Doctipe</mat-label>
+      <mat-select formControlName="docTipe">
+        <mat-option value="CC">CC</mat-option>
+        <mat-option value="Pasaporte">Pasaporte</mat-option>
+        <mat-option value="Licencia de conduccion">Licencia de conduccion</mat-option>
+      </mat-select>
+      <mat-error *ngIf="customerForm.get('doctipe')?.hasError('required')">
+        Tipe document is required
+      </mat-error>
     </mat-form-field>
 
     <mat-form-field appearance="fill">
@@ -52,7 +59,7 @@
     </mat-form-field>
 
     <button mat-raised-button color="primary" type="submit" [disabled]="customerForm.invalid || isSubmitting">
-      {{ isSubmitting ? 'Saving...' : 'Save customer' }}
+      {{ isSubmitting ? 'Saving...' : (customerEdit ? 'Update customer' : 'Save customer') }}
     </button>
   </form>
 </div>
