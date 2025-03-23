@@ -22,6 +22,22 @@ export class CityService {
       .pipe(map(response => response));
   }
 
+  // Actualizar un cliente existente
+  update(id: number, city: CityDTO): Observable<CityDTO> {
+    return this.http.put<CityDTO>(`${this.urlBase}/city/update/${id}`, city)
+      .pipe(map(response => response));
+  }
+
+  // Eliminar un cliente
+  delete(id: number): Observable<ApiResponse<string>> {
+    return this.http.delete<ApiResponse<string>>(`${this.urlBase}/city/delete/${id}`)
+      .pipe(
+        catchError(error => {
+          return throwError(() => new Error('Error deleting city'));
+        })
+      );
+  }
+
   /*
 
    // Obtener un cliente por ID
@@ -38,22 +54,5 @@ export class CityService {
         lastName: lastName
       }
     }).pipe(map(response => response));
-  }
-
-  // Actualizar un cliente existente
-  update(id: number, client: CustomerDTO): Observable<CustomerDTO> {
-    return this.http.put<CustomerDTO>(`${this.urlBase}/client/update/${id}`, client)
-      .pipe(map(response => response));
-  }
-
-  // Eliminar un cliente
-  delete(id: number): Observable<ApiResponse<string>> {
-    return this.http.delete<ApiResponse<string>>(`${this.urlBase}/client/delete/${id}`)
-      .pipe(
-        catchError(error => {
-          console.error('Error deleting user:', error);
-          return throwError(() => new Error('Error deleting user'));
-        })
-      );
   }
  */}

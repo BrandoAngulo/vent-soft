@@ -110,8 +110,6 @@ export default class CustomerComponent implements OnInit {
 
   editCustomer(customer: CustomerDTO): void {
     this.selectedCustomer = { ...customer }; // Clonar el objeto para evitar mutaciones directas
-    console.log('Editar factura', customer);
-    // Lógica para editar la factura
   }
 
   deleteCustomer(customer: CustomerDTO): void {
