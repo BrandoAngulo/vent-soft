@@ -3,15 +3,20 @@
   <form [formGroup]="categoryForm" (ngSubmit)="addCategory()">
 
     <mat-form-field appearance="fill">
-      <mat-label>ID</mat-label>
-      <input matInput formControlName="id" type="number" placeholder="Enter id" />
-    </mat-form-field>
-
-    <mat-form-field appearance="fill">
       <mat-label>Description</mat-label>
       <textarea matInput formControlName="description" placeholder="Enter category description"></textarea>
     </mat-form-field>
 
-    <button mat-raised-button color="primary" type="submit">Save category</button>
+    <div class="button-container">
+      <button mat-raised-button color="primary" type="submit" [disabled]="categoryForm.invalid || submit">
+        {{ submit ? 'Guardando...' : (categoryEdit ? 'Actualizar categoria' : 'Añadir categoria') }}
+      </button>
+
+      <button mat-raised-button color="warn" type="button" (click)="categoryForm.reset(); categoryEdit = null"
+        [disabled]="submit">{{ submit ? 'Guardando...' :
+        (categoryEdit ? 'Cancelar' : 'Limpiar campos') }}
+      </button>
+    </div>
+
   </form>
 </div>

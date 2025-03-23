@@ -2,6 +2,7 @@ package com.qualitysales.ventsoft.service;
 
 import com.qualitysales.ventsoft.Controllers.DTO.CategoryDTO;
 import com.qualitysales.ventsoft.model.Category;
+import com.qualitysales.ventsoft.utils.dto.GenericDTO;
 
 import java.util.List;
 
@@ -14,6 +15,6 @@ public interface CategoryService {
 
     CategoryDTO update(Integer id, CategoryDTO categoryDTO);
 
-    void deleteById(Integer id);
+    GenericDTO deleteById(Integer id);
 
 }

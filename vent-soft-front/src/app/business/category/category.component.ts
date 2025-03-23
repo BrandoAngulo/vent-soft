@@ -2,21 +2,26 @@ import { Component, OnInit } from '@angular/core';
 import { UiTableComponent, TableColumn } from '../../shared/components/ui-table/ui-table.component';
 import { timer } from 'rxjs';
 import { CategoryFormComponent } from "./category-form/category-form.component";
-import { Category } from './category.model';
+import { CategoryDTO } from './category.dto';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { CommonModule } from '@angular/common';
+import { CategoryService } from './services/category.service';
+import { ApiResponse } from '../../../apiResponse.dto';
 
 @Component({
   selector: 'app-category',
   standalone: true,
-  imports: [UiTableComponent, CategoryFormComponent, MatProgressSpinnerModule, CommonModule ],
+  imports: [UiTableComponent, CategoryFormComponent, MatProgressSpinnerModule, CommonModule],
   templateUrl: './category.component.html',
   styleUrl: './category.component.css'
 })
 export default class CategoryComponent implements OnInit {
-  categories: Category[] = [];
-  tableColumns: TableColumn<Category>[] = [];
-  isLoadingCategory = true;
+  categories: CategoryDTO[] = [];
+  tableColumns: TableColumn<CategoryDTO>[] = [];
+  loadingCategory = true;
+  selectedCategory: CategoryDTO | null = null;
+
+  constructor(private categoryService: CategoryService) { }
 
   ngOnInit(): void {
     this.getCategories()
@@ -24,29 +29,17 @@ export default class CategoryComponent implements OnInit {
   }
 
   getCategories() {
-    console.log(`Categories: ${this.categories}`);
-    console.log(`isLoadingCategory: ${this.isLoadingCategory}`);
-    timer(2000).subscribe(() => {
-      this.isLoadingCategory = false;
-      this.categories = [
-        {
-          description: 'Repuestos',
-          id: 1,
-          status: true,
-        },
-        {
-          description: 'Tecnologia',
-          id: 2,
-          status: true,
-        },
-        {
-          description: 'Accesorios',
-          id: 3,
-          status: true,
-        },
-
-      ]
-    })
+    this.loadingCategory = true;
+    this.categoryService.list().subscribe({
+      next: (categories) => {
+        this.categories = categories;
+        this.loadingCategory = false;
+      },
+      error: (err) => {
+        console.error('Error loading categories: ', err)
+        this.loadingCategory = false;
+      },
+    });
   }
 
   setTableColumns() {
@@ -58,25 +51,98 @@ export default class CategoryComponent implements OnInit {
       },
 
       {
-        label: 'Description',
+        label: 'Categoria',
         def: 'description',
         content: (row) => row.description,
       },
 
       {
-        label: 'Status',
+        label: 'Estado',
         def: 'status',
         content: (row) => row.status,
       },
+
+      {
+        label: 'Acciones',
+        def: 'acciones',
+        content: () => ''
+      }
 
     ]
 
   }
 
-  addCategory(category: Category) {
+  addCategory(category: CategoryDTO) {
     console.log(category);
-    this.categories = [...this.categories, category];
+    this.categoryService.create(category).subscribe({
+      next: (newCategory) => {
+        this.getCategories();
+        this.selectedCategory = null
+        console.log("categoria creada exitosamente", newCategory);
+      },
+      error: (err) => {
+        console.error("error al crear la categoria: ", err);
+      },
+    })
   }
 
+  editCategory(categoryDTO: CategoryDTO): void {
+    this.selectedCategory = { ...categoryDTO };
+  }
 
+  deleteCategory(categoryDTO: CategoryDTO): void {
+    if (!categoryDTO.id) {
+      console.error('Category not found');
+      return;
+    }
+    this.categoryService.delete(categoryDTO.id).subscribe({
+      next: (response: ApiResponse<string>) => {
+        this.categories = this.categories.filter(category => category.id !== categoryDTO.id);
+        console.log(`Status= ${response.status} Payload= ${response.payload?.messsage}`)
+      },
+      error: (err) => {
+        console.error('Category deleted error: ', err);
+      },
+    });
+  }
+  updateCategory(categoryDTO: CategoryDTO): void {
+    if (!categoryDTO) {
+      console.error("Category not found")
+      return;
+    }
+    this.categoryService.update(categoryDTO.id, categoryDTO).subscribe({
+      next: (updateCategory) => {
+        this.getCategories();
+        this.selectedCategory = null;
+        console.log("category updated successfull: ", updateCategory)
+      },
+      error: (err) => {
+        console.error('Error al actualizar la categoria: ', err);
+      },
+    })
+  }
+
+  updateCategoryStatus(categoryDTO: CategoryDTO): void {
+    if (!categoryDTO.id) {
+      console.error('ID not found');
+      return;
+    }
+
+    this.categoryService.update(categoryDTO.id, categoryDTO).subscribe({
+      next: (updatedCategory) => {
+        this.getCategories(); // Refrescar la lista
+        this.selectedCategory = null; // Limpiar selección
+        console.log('categoria actualizada exitosamente:', updatedCategory);
+      },
+      error: (err) => {
+        console.error('Error al actualizar estado:', err);
+        // Si hay error, podrías revertir el cambio en la UI
+        const index = this.categories.findIndex(category => category.id === categoryDTO.id);
+        if (index !== -1) {
+          this.categories[index].status = !categoryDTO.status; // Revertir el cambio
+          this.categories = [...this.categories]; // Forzar actualización
+        }
+      }
+    });
+  }
 }

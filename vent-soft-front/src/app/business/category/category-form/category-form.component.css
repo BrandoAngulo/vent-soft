@@ -15,3 +15,14 @@ mat-form-field {
 button {
   width: 100%;
 }
+
+.button-container {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px; /* Espacio entre los botones */
+  width: 100%;
+}
+
+.button-container button {
+  flex: 1; /* Ambos botones ocupan el mismo espacio */
+}
