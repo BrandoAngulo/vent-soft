@@ -1,3 +1,15 @@
-<app-supplier-form (add)="addSupplier($event)" />
-<ui-table [data]="suppliers" [columns]="tableColumns" [isLoading]="isLoadingSupplier" />
+<app-supplier-form
+[supplierEdit]="selectedSupplier"
+(add)="addSupplier($event)" 
+(update)="updateSupplier($event)"
+/>
+
+<ui-table 
+[data]="suppliers" 
+[columns]="tableColumns" 
+[isLoading]="loadingSupplier" 
+(editRow)="editSupplier($event)"
+(deleteRow)="deleteSupplier($event)"
+(statusChanged)="updateSupplierStatus($event)"
+/>
 

@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { UiTableComponent, TableColumn } from '../../shared/components/ui-table/ui-table.component';
-import { timer } from 'rxjs';
 import { CategoryFormComponent } from "./category-form/category-form.component";
 import { CategoryDTO } from './category.dto';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
@@ -105,6 +104,7 @@ export default class CategoryComponent implements OnInit {
       },
     });
   }
+  
   updateCategory(categoryDTO: CategoryDTO): void {
     if (!categoryDTO) {
       console.error("Category not found")
