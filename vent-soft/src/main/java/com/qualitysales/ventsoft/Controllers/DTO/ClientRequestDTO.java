@@ -14,6 +14,7 @@ public class ClientRequestDTO {
     private String name;
     private String lastName;
     private String document;
+    private String docTipe;
     private CityDTO city;
     private String residence;
     private String cellPhone;

@@ -22,7 +22,6 @@ export default class CustomerComponent implements OnInit {
   tableColumns: TableColumn<CustomerDTO>[] = [];
   isloadingCustomer = true;
   selectedCustomer: CustomerDTO | null = null; // Cliente seleccionado para edición
-  isAddingCustomer = false; // Controla la visibilidad del formulario
 
   constructor(private customerService: CustomerService) { }
 
@@ -53,42 +52,42 @@ export default class CustomerComponent implements OnInit {
         content: (row) => row.id,
       },
       {
-        label: 'Name',
+        label: 'Nombre',
         def: 'name',
         content: (row) => row.name,
       },
       {
-        label: 'LastName',
+        label: 'Segundo nombre',
         def: 'lastName',
         content: (row) => row.lastName,
       },
       {
-        label: 'DocType',
+        label: 'Tipo documento',
         def: 'docTipe',
         content: (row) => row.docTipe,
       },
       {
-        label: 'City',
+        label: 'Ciudad',
         def: 'city',
         content: (row) => row.city?.name || 'N/A',
       },
       {
-        label: 'Residence',
+        label: 'Residencia',
         def: 'residence',
         content: (row) => row.residence,
       },
       {
-        label: 'CellPhone',
+        label: 'Celular',
         def: 'cellPhone',
         content: (row) => row.cellPhone,
       },
       {
-        label: 'Email',
+        label: 'Correo',
         def: 'email',
         content: (row) => row.email,
       },
       {
-        label: 'Status',
+        label: 'Estado',
         def: 'status',
         content: (row) => row.status,
       },
@@ -97,23 +96,20 @@ export default class CustomerComponent implements OnInit {
   }
 
   addCustomer(customer: CustomerDTO) {
-    this.isAddingCustomer = true;
     this.customerService.create(customer).subscribe({
       next: (newCustomer) => {
         this.getCustomer();
+        this.selectedCustomer = null; // Reinicia el formulario después de agregar
         console.log('Cliente creado exitosamente:', newCustomer);
-        this.isAddingCustomer = false;
       },
       error: (err) => {
         console.error('Error al crear cliente:', err);
-        this.isAddingCustomer = false;
       }
     });
   }
 
   editCustomer(customer: CustomerDTO): void {
     this.selectedCustomer = { ...customer }; // Clonar el objeto para evitar mutaciones directas
-    this.isAddingCustomer = true;
     console.log('Editar factura', customer);
     // Lógica para editar la factura
   }
@@ -143,13 +139,11 @@ export default class CustomerComponent implements OnInit {
     this.customerService.update(customer.id, customer).subscribe({
       next: (updatedCustomer) => {
         this.getCustomer(); // Refrescar la lista
-        this.isAddingCustomer = false;
         this.selectedCustomer = null; // Limpiar selección
         console.log('Cliente actualizado exitosamente:', updatedCustomer);
       },
       error: (err) => {
         console.error('Error al actualizar cliente:', err);
-        this.isAddingCustomer = false;
       }
     });
   }
@@ -163,7 +157,6 @@ export default class CustomerComponent implements OnInit {
     this.customerService.update(customer.id, customer).subscribe({
       next: (updatedCustomer) => {
         this.getCustomer(); // Refrescar la lista
-        this.isAddingCustomer = false;
         this.selectedCustomer = null; // Limpiar selección
         console.log('Cliente actualizado exitosamente:', updatedCustomer);
       },

@@ -16,7 +16,15 @@ export class CityService {
     return this.http.get<CityDTO[]>(`${this.urlBase}/city/find-all`).pipe(map(response => { return  response }))
   }
 
-  /* // Obtener un cliente por ID
+  // Crear un nuevo city
+  create(city: CityDTO): Observable<CityDTO> {
+    return this.http.post<CityDTO>(`${this.urlBase}/city/save`, city)
+      .pipe(map(response => response));
+  }
+
+  /*
+
+   // Obtener un cliente por ID
   getById(id: number): Observable<CustomerDTO> {
     return this.http.get<CustomerDTO>(`${this.urlBase}/client/get-client/${id}`)
       .pipe(map(response => response));
@@ -30,12 +38,6 @@ export class CityService {
         lastName: lastName
       }
     }).pipe(map(response => response));
-  }
-
-  // Crear un nuevo cliente
-  create(client: CustomerDTO): Observable<CustomerDTO> {
-    return this.http.post<CustomerDTO>(`${this.urlBase}/client/save`, client)
-      .pipe(map(response => response));
   }
 
   // Actualizar un cliente existente

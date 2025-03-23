@@ -115,6 +115,7 @@ public class ClientServiceImpl implements ClientService {
         try {
             idClient.setName(clientrequestDTO.getName());
             idClient.setLastName(clientrequestDTO.getLastName());
+            idClient.setDocTipe(clientrequestDTO.getDocTipe());
             idClient.setDocument(clientrequestDTO.getDocument());
             idClient.setCity(city1);
             idClient.setResidence(clientrequestDTO.getResidence());
