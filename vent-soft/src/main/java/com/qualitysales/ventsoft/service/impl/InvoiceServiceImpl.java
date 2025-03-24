@@ -17,6 +17,7 @@ import com.qualitysales.ventsoft.utils.DateUtils;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.*;
@@ -58,11 +59,17 @@ public class InvoiceServiceImpl implements InvoiceService {
         }
     }
 
+    @Transactional(rollbackFor = Exception.class)
     @Override
     public RegisterUptadeInvoiceDTO saveInvoice(Invoice invoice) {
         log.info("saveInvoice ok: {}", invoice.toString());
         try {
             stockValidate(invoice.getItemInvoices());
+
+            // Asegurémonos de que el cliente esté asignado desde el inicio
+            if (invoice.getClient() == null || invoice.getClient().getId() == null) {
+                throw new IllegalArgumentException("El cliente de la factura no está especificado");
+            }
 
             // Guardamos la factura inicialmente
             invoiceRepository.save(invoice);
@@ -87,11 +94,14 @@ public class InvoiceServiceImpl implements InvoiceService {
                 invoice.setTotal(totalInvoice);
             }
 
-            // Volvemos a guardar la factura con el total actualizado
+            // Actualizamos la fecha y el cliente
             invoice.setDate(dateUtils.getLocalDate());
-            Client client = clientRepository.findById(invoice.getId()).orElseThrow(() -> new RuntimeException("Pailas cliente"));
-            System.out.println("client = " + client);
+            // Buscamos el cliente usando su ID correcto
+            Client client = clientRepository.findById(invoice.getClient().getId())
+                    .orElseThrow(() -> new RuntimeException("Cliente no encontrado con ID: " + invoice.getClient().getId()));
             invoice.setClient(client);
+
+            // Volvemos a guardar la factura con el total y cliente actualizados
             invoiceRepository.save(invoice);
 
             // Convertimos la factura a DTO y la retornamos

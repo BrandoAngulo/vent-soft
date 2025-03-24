@@ -37,6 +37,8 @@ export class ProductFormComponent implements OnInit, OnChanges {
   productForm!: FormGroup;
   submit = false;
   categories: CategoryDTO[] = [];
+  filterCategory: CategoryDTO[] = [];
+  filterSupplier: SupplierDTO[] = [];
   suppliers: SupplierDTO[] = [];
   loadCategories = false;
   loadSuppliers = false;
@@ -95,6 +97,10 @@ export class ProductFormComponent implements OnInit, OnChanges {
         status: true,
       });
     }
+    // Inicializar categoriasFiltradas con todas las categorías
+    this.filterCategory = [...this.categories];
+    // Inicializar suppliersFiltrados con todos los vendedores
+    this.filterSupplier = [...this.suppliers];
   }
 
   getCategories() {
@@ -102,6 +108,7 @@ export class ProductFormComponent implements OnInit, OnChanges {
     this.categoryService.list().subscribe({
       next: (category) => {
         this.categories = category;
+        this.filterCategory = [...this.categories]; // Inicializar lista filtrada
         this.loadCategories = false;
         this.loadProductData();
         console.log(this.categories = category);
@@ -119,6 +126,7 @@ export class ProductFormComponent implements OnInit, OnChanges {
     this.supplierService.list().subscribe({
       next: (supplier) => {
         this.suppliers = supplier;
+        this.filterSupplier = [...this.suppliers];
         this.loadSuppliers = false;
         this.loadProductData();
         console.log(this.suppliers = supplier);
@@ -137,6 +145,22 @@ export class ProductFormComponent implements OnInit, OnChanges {
 
   compareCategories(category: CategoryDTO, categories1: CategoryDTO): boolean {
     return category && categories1 ? category.id === categories1.id : category === categories1;
+  }
+
+  filterCategories(evento: Event): void {
+    const filterValue = (evento.target as HTMLInputElement).value.toLowerCase();
+    this.filterCategory = this.categories.filter(category =>
+      category.description.toLowerCase().includes(filterValue) ||
+      category.id.toString().includes(filterValue)
+    );
+  }
+  
+  filterSuppliers(evento: Event): void {
+    const filterValue = (evento.target as HTMLInputElement).value.toLowerCase();
+    this.filterSupplier = this.suppliers.filter(supplier =>
+      supplier.name.toLowerCase().includes(filterValue) ||
+      supplier.id.toString().includes(filterValue)
+    );
   }
 
   addProduct() {
@@ -175,5 +199,7 @@ export class ProductFormComponent implements OnInit, OnChanges {
       supplier: '',
       status: true,
     });
+    this.filterCategory = [...this.categories];
+    this.filterSupplier = [...this.suppliers];
   }
 }
