@@ -15,8 +15,10 @@ public class SupplierDTO {
     private Integer id;
     @NotBlank(message = "el nombre de supplier no debe ser vacia")
     private String name;
+    private String lastName;
     @NotBlank
-    private String phone;
+    private String cellPhone;
     @NotBlank
     private String nit;
+    private Boolean status;
 }

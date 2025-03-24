@@ -1,2 +1,13 @@
-<app-city-form (add)="addCity($event)" />
-<ui-table [data]="city" [columns]="tableColumns" [isLoading]="isLoadingCity"/>
+<app-city-form 
+[cityEdit]="selectedCity"
+(add)="addCity($event)"
+(update)="updateCity($event)"
+/>
+<ui-table 
+[data]="city" 
+[columns]="tableColumns" 
+[isLoading]="isLoadingCity"
+(editRow)="editCity($event)"
+(deleteRow)="deleteCity($event)"
+(statusChanged)="updateCityStatus($event)"
+/>

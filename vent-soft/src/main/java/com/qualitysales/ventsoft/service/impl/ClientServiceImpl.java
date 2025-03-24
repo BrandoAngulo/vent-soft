@@ -1,6 +1,5 @@
 package com.qualitysales.ventsoft.service.impl;
 
-import com.qualitysales.ventsoft.Controllers.DTO.CityDTO;
 import com.qualitysales.ventsoft.Controllers.DTO.ClientDTO;
 import com.qualitysales.ventsoft.Controllers.DTO.ClientRequestDTO;
 import com.qualitysales.ventsoft.mapper.CityMapper;
@@ -11,10 +10,13 @@ import com.qualitysales.ventsoft.repository.CityRepository;
 import com.qualitysales.ventsoft.repository.ClientRepository;
 import com.qualitysales.ventsoft.service.ClientService;
 import com.qualitysales.ventsoft.utils.HttpClientUtil;
+import com.qualitysales.ventsoft.utils.dto.GenericDTO;
+import com.qualitysales.ventsoft.utils.enums.MessagesEnum;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
-import org.modelmapper.internal.bytebuddy.implementation.bytecode.Throw;
+import org.springframework.context.ApplicationContextException;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -84,7 +86,7 @@ public class ClientServiceImpl implements ClientService {
 
     @Override
     public ClientDTO addClient(Client client) {
-        log.info("Client: {}",client);
+        log.info("Client getDocTipe: {}",client);
         City city = cityRepository.findById(client.getCity().getId()).orElseThrow(() -> new IllegalArgumentException("City not found"));
         try {
             if (city == null ) {
@@ -93,7 +95,7 @@ public class ClientServiceImpl implements ClientService {
                 ClientDTO clientDTO = ClientMapper.MAPPER.toClient(client);
                 Client client1 = ClientMapper.MAPPER.toClientDTO(clientDTO);
                 clientRepository.save(client1);
-                log.info("addClient ok: {}", client);
+                log.info("addClient ok: {}", client1);
                 return clientDTO;
             }
         } catch (Exception e) {
@@ -113,12 +115,13 @@ public class ClientServiceImpl implements ClientService {
         try {
             idClient.setName(clientrequestDTO.getName());
             idClient.setLastName(clientrequestDTO.getLastName());
+            idClient.setDocTipe(clientrequestDTO.getDocTipe());
             idClient.setDocument(clientrequestDTO.getDocument());
             idClient.setCity(city1);
             idClient.setResidence(clientrequestDTO.getResidence());
             idClient.setCellPhone(clientrequestDTO.getCellPhone());
             idClient.setEmail(clientrequestDTO.getEmail());
-            idClient.setEstate(clientrequestDTO.getEstate());
+            idClient.setStatus(clientrequestDTO.getStatus());
 
             Client updatedClient = clientRepository.save(idClient);
 
@@ -133,14 +136,20 @@ public class ClientServiceImpl implements ClientService {
     }
 
     @Override
-    public void deleteClient(Integer id) {
+    public GenericDTO deleteClient(Integer id) {
         Client client = clientRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid client ID"));
         try {
             log.info("deleteClient ok: {}", client);
-            clientRepository.deleteById(client.getId());
+            if (clientRepository.existsById(id)) {
+                clientRepository.deleteById(client.getId());
+                return GenericDTO.genericSuccess(MessagesEnum.REQUEST_SUCCESS, HttpStatus.OK.value());
+            }else {
+
+                throw new ApplicationContextException(MessagesEnum.REQUEST_FAILED.getMessage(), null);
+            }
         } catch (Exception e) {
             log.error("deleteClient Error: {}", e.getMessage());
-            throw new IllegalArgumentException(e);
+            throw new ApplicationContextException(e.getMessage());
         }
 
     }

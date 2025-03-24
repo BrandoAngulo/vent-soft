@@ -1,18 +1,32 @@
 <div class="table-container">
   <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
-    <!-- Definir dinámicamente las columnas -->
+    
     <ng-container *ngFor="let column of columns" [matColumnDef]="getColumnDef(column.def)">
       <th mat-header-cell *matHeaderCellDef>{{ column.label }}</th>
       <td mat-cell *matCellDef="let row">
-        <ng-container *ngIf="column.def !== 'status'; else toggle">
-          {{ column.content(row) }}
+        <!-- 1) Si es la columna de acciones, muestra iconos -->
+        <ng-container *ngIf="column.def === 'acciones'; else normalCell">
+          <button mat-icon-button color="primary" (click)="onEdit(row)">
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button mat-icon-button color="warn" (click)="onDelete(row)">
+            <mat-icon>delete</mat-icon>
+          </button>
         </ng-container>
-        <ng-template #toggle>
-          <mat-slide-toggle
-            [checked]="isBoolean(row, column.def)"
-            (change)="toggleStatus(row, column.def)"
-            color="primary"
-          ></mat-slide-toggle>
+        <!-- 2) Si no es la columna de acciones, aplica la lógica normal -->
+        <ng-template #normalCell>
+          <ng-container *ngIf="column.def !== 'status'; else toggle">
+            {{ column.content(row) }}
+          </ng-container>
+          <ng-template #toggle>
+            <ng-container *ngIf="column.def !== 'acciones'">
+              <mat-slide-toggle
+                [checked]="isBoolean(row, column.def)"
+                (change)="toggleStatus(row, column.def)"
+                color="primary"
+              ></mat-slide-toggle>
+            </ng-container>
+          </ng-template>
         </ng-template>
       </td>
     </ng-container>
@@ -26,5 +40,4 @@
   <div class="loading-overlay" *ngIf="isLoading">
     <mat-spinner [diameter]="40"></mat-spinner>
   </div>
-
 </div>

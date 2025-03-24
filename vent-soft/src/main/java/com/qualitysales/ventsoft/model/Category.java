@@ -17,8 +17,7 @@ public class Category {
     private Integer id;
     @Column(name = "descripcion")
     private String description;
-
-
+    private Boolean status;
 }
 
 

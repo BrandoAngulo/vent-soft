@@ -6,8 +6,12 @@ import com.qualitysales.ventsoft.repository.CategoryRepository;
 import com.qualitysales.ventsoft.repository.ProductRepository;
 import com.qualitysales.ventsoft.repository.SupplierRepository;
 import com.qualitysales.ventsoft.service.ProductService;
+import com.qualitysales.ventsoft.utils.dto.GenericDTO;
+import com.qualitysales.ventsoft.utils.enums.MessagesEnum;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationContextException;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -26,7 +30,6 @@ public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
     private final SupplierRepository supplierRepository;
-
     private final CategoryRepository categoryRepository;
 
     @Override
@@ -39,11 +42,13 @@ public class ProductServiceImpl implements ProductService {
                     .map(product -> ProductDTO.builder()
                             .id(product.getId())
                             .name(product.getName())
+                            .itemCode(product.getItemCode())
                             .description(product.getDescription())
                             .supplier(product.getSupplier())
                             .category(product.getCategory())
                             .price(product.getPrice())
                             .stock(product.getStock())
+                            .status(product.getStatus())
                             .build()
                     ).toList();
 
@@ -100,11 +105,13 @@ public class ProductServiceImpl implements ProductService {
             ProductDTO productSave = ProductDTO.builder()
                     .id(product.getId())
                     .name(product.getName())
+                    .itemCode(product.getItemCode())
                     .description(product.getDescription())
                     .category(product.getCategory())
                     .supplier(product.getSupplier())
                     .price(product.getPrice())
                     .stock(product.getStock())
+                    .status(product.getStatus())
                     .build();
             log.info("productSave = " + productSave);
             productRepository.save(product);
@@ -123,11 +130,13 @@ public class ProductServiceImpl implements ProductService {
                 (() -> new RuntimeException("Product not found"));
         try {
             product.setName(productDTO.getName());
+            product.setItemCode(productDTO.getItemCode());
             product.setDescription(productDTO.getDescription());
             product.setSupplier(productDTO.getSupplier());
             product.setCategory(productDTO.getCategory());
             product.setPrice(productDTO.getPrice());
             product.setStock(productDTO.getStock());
+            product.setStatus(productDTO.getStatus());
             log.info("update = " + product);
             return productRepository.save(product);
         } catch (RuntimeException e) {
@@ -137,15 +146,16 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public void deleteById(Integer id) {
+    public GenericDTO deleteById(Integer id) {
         Product product = productRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Error en el id"));
+                .orElseThrow(() -> new ApplicationContextException(MessagesEnum.REQUEST_FAILED.getMessage(), null));
         try {
             log.info("deleteById/product delete successfully: " + product);
             productRepository.deleteById(id);
-        } catch (RuntimeException e) {
+            return GenericDTO.genericSuccess(MessagesEnum.REQUEST_SUCCESS, HttpStatus.OK.value());
+        } catch (Exception e) {
             log.error("deleteBiId: " + product);
-            throw new RuntimeException(e);
+            throw new ApplicationContextException(e.getMessage());
         }
     }
 }

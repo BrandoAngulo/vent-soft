@@ -4,8 +4,12 @@ import com.qualitysales.ventsoft.Controllers.DTO.SupplierDTO;
 import com.qualitysales.ventsoft.model.Supplier;
 import com.qualitysales.ventsoft.repository.SupplierRepository;
 import com.qualitysales.ventsoft.service.SupplierService;
+import com.qualitysales.ventsoft.utils.dto.GenericDTO;
+import com.qualitysales.ventsoft.utils.enums.MessagesEnum;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationContextException;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -26,12 +30,14 @@ public class SupplierServiceImpl implements SupplierService {
         List<Supplier> listSupplier = supplierRepository.findAll();
 
         try {
-            log.info("finByAll: " + listSupplier.stream().map(Supplier::getId).toList());
+            log.info("finByAll: " + listSupplier);
             return listSupplier.stream().map(supplier -> SupplierDTO.builder()
                             .id(supplier.getId())
                             .name(supplier.getName())
-                            .phone(supplier.getCellPhone())
+                            .lastName(supplier.getLastName())
+                            .cellPhone(supplier.getCellPhone())
                             .nit(supplier.getNit())
+                            .status(supplier.getStatus())
                             .build())
                     .toList();
         } catch (RuntimeException e) {
@@ -63,8 +69,10 @@ public class SupplierServiceImpl implements SupplierService {
         try {
             SupplierDTO supplierDto = SupplierDTO.builder()
                     .name(supplier.getName())
-                    .phone(supplier.getCellPhone())
+                    .lastName(supplier.getLastName())
+                    .cellPhone(supplier.getCellPhone())
                     .nit(supplier.getNit())
+                    .status(supplier.getStatus())
                     .build();
             supplierRepository.save(supplier);
             return supplierDto;
@@ -81,8 +89,10 @@ public class SupplierServiceImpl implements SupplierService {
         Supplier supplier = supplierRepository.findById(id).orElseThrow(() -> new RuntimeException("El id no existe"));
         try {
             supplier.setName(supplierDTO.getName());
-            supplier.setCellPhone(supplierDTO.getPhone());
+            supplier.setLastName(supplierDTO.getLastName());
+            supplier.setCellPhone(supplierDTO.getCellPhone());
             supplier.setNit(supplierDTO.getNit());
+            supplier.setStatus(supplierDTO.getStatus());
             log.info("update: " + supplier);
             return supplierRepository.save(supplier);
 
@@ -95,16 +105,16 @@ public class SupplierServiceImpl implements SupplierService {
 
 
     @Override
-    public void deleteById(Integer id) {
+    public GenericDTO deleteById(Integer id) {
         Supplier supplier = supplierRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Error"));
+                .orElseThrow(() -> new ApplicationContextException(MessagesEnum.REQUEST_FAILED.getMessage(), null));
         try {
             log.info("deleteById" + supplier);
             supplierRepository.deleteById(supplier.getId());
+            return GenericDTO.genericSuccess(MessagesEnum.REQUEST_SUCCESS, HttpStatus.OK.value());
         } catch (RuntimeException e) {
             log.error("deleteById" + supplier);
-            throw new RuntimeException(e);
+            throw new ApplicationContextException(e.getMessage());
         }
-
     }
 }

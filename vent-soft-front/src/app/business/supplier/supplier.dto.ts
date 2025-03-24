@@ -1,8 +1,8 @@
-export interface User {
+export interface SupplierDTO {
   id: number;
   name: string;
   lastName: string;
-  code: string;
-  email: string;
+  cellPhone: string;
+  nit: string;
   status: boolean;
 }

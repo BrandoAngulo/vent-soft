@@ -3,17 +3,12 @@
   <form [formGroup]="supplierForm" (ngSubmit)="addSupplier()">
 
     <mat-form-field appearance="fill">
-      <mat-label>ID</mat-label>
-      <input matInput formControlName="id" type="number" placeholder="Enter id" />
-    </mat-form-field>
-
-    <mat-form-field appearance="fill">
-      <mat-label>Name</mat-label>
+      <mat-label>Nombre</mat-label>
       <textarea matInput formControlName="name" placeholder="Enter supplier name"></textarea>
     </mat-form-field>
 
     <mat-form-field appearance="fill">
-      <mat-label>Cellphone</mat-label>
+      <mat-label>Celular</mat-label>
       <textarea matInput formControlName="cellPhone" placeholder="Enter cellphone"></textarea>
     </mat-form-field>
 
@@ -22,6 +17,16 @@
       <textarea matInput formControlName="nit" placeholder="Enter nit"></textarea>
     </mat-form-field>
 
-    <button mat-raised-button color="primary" type="submit">Save supplier</button>
+    <div class="button-container">
+      <button mat-raised-button color="primary" type="submit" [disabled]="supplierForm.invalid || submit">
+        {{ submit ? 'Guardando...' : (supplierEdit ? 'Actualizar vendedor' : 'Añadir vendedor') }}
+      </button>
+
+      <button mat-raised-button color="warn" type="button" (click)="supplierForm.reset(); supplierEdit = null"
+        [disabled]="submit">{{ submit ? 'Guardando...' :
+        (supplierEdit ? 'Cancelar' : 'Limpiar campos') }}
+      </button>
+    </div>
+
   </form>
 </div>

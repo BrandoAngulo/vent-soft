@@ -1,25 +1,40 @@
 .form-container {
   margin: 20px auto;
   padding: 20px;
-  max-width: 500px;
+  max-width: 800px; /* Aumentar el ancho para acomodar elementos en horizontal */
   border: 1px solid #ddd;
   border-radius: 5px;
   background-color: #f9f9f9;
 }
 
+/* Estilos para organizar los campos en una línea */
+form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px; /* Espacio entre elementos */
+  justify-content: space-between;
+}
+
+/* Ajusta el tamaño de los campos en 2 columnas*/
 mat-form-field {
-  width: 100%;
+  flex: 1 1 calc(50% - 15px); /* 2 columnas */
+  min-width: 200px; /* Evita que se vuelvan muy pequeños */
   margin-bottom: 15px;
 }
-
-button {
+/* Ajusta el tamaño de los campos en 3 columnas*/
+/* mat-form-field {
+  flex: 1 1 calc(33.33% - 15px); 
+} */
+/* Estilos para los botones */
+.button-container {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px; /* Espacio entre los botones */
   width: 100%;
 }
 
-.toggle-container {
-  margin: 20px 0;
-  display: flex;
-  align-items: center;
+.button-container button {
+  flex: 1; /* Ambos botones ocupan el mismo espacio */
 }
 
 h4.error {

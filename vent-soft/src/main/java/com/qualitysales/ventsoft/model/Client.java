@@ -11,6 +11,7 @@ import lombok.*;
 @Getter
 @Builder
 @Entity
+@ToString
 @Table(name = "cliente")
 public class Client {
 
@@ -37,11 +38,5 @@ public class Client {
     @Column(name = "correo")
     private String email;
     @Column(name = "estado")
-    private String estate;
-
-    @Override
-    public String toString() {
-        return "cliente{" + ", id= " + id + ", name" + name + ", lastName=" + lastName + ", docTipe="
-                + docTipe + ", email" + email + "}";
-    }
+    private Boolean status;
 }

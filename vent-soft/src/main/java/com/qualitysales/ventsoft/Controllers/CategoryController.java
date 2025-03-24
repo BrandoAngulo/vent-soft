@@ -3,6 +3,7 @@ package com.qualitysales.ventsoft.Controllers;
 import com.qualitysales.ventsoft.Controllers.DTO.CategoryDTO;
 import com.qualitysales.ventsoft.model.Category;
 import com.qualitysales.ventsoft.service.impl.CategoryServiceImpl;
+import com.qualitysales.ventsoft.utils.dto.GenericDTO;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +14,7 @@ import java.util.List;
 @AllArgsConstructor
 @RequestMapping("/api/vent-soft/category")
 @RestController
+@CrossOrigin
 public class CategoryController {
 
     private final CategoryServiceImpl categoryService;
@@ -22,7 +24,7 @@ public class CategoryController {
         return ResponseEntity.ok(categoryService.findById(id));
     }
 
-    @GetMapping("/findAll")
+    @GetMapping("/find-all")
     public ResponseEntity<List<CategoryDTO>> findAll() {
         List<CategoryDTO> categories = categoryService.findAll();
         return ResponseEntity.ok(categories);
@@ -42,11 +44,9 @@ public class CategoryController {
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<String> delete(@PathVariable Integer id) {
+    public ResponseEntity<GenericDTO> delete(@PathVariable Integer id) {
 
-        categoryService.deleteById(id);
-
-        return ResponseEntity.ok("Category Successfully eliminated");
+        return ResponseEntity.ok(categoryService.deleteById(id));
     }
 
 }

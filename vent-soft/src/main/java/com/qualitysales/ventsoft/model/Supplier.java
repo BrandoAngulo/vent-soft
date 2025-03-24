@@ -18,9 +18,13 @@ Supplier {
     private Integer id;
     @Column(name = "nombre")
     private String name;
+    @Column(name = "apellido")
+    private String lastName;
     @Column(name = "telefono")
     private String cellPhone;
     @Column
     private String nit;
+    @Column(name = "estado")
+    private Boolean status;
 
 }

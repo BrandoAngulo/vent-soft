@@ -6,7 +6,9 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Data
+@Getter
+@Setter
+@ToString
 public class ClientDTO {
     private Integer id;
     private String name;
@@ -14,5 +16,8 @@ public class ClientDTO {
     private String document;
     private String residence;
     private String cellPhone;
-
+    private City city;
+    private String docTipe;
+    private String email;
+    private Boolean status;
 }

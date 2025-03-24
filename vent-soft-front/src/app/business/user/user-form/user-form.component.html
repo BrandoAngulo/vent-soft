@@ -3,30 +3,40 @@
   <form [formGroup]="userForm" (ngSubmit)="addUser()">
 
     <mat-form-field appearance="fill">
-      <mat-label>ID</mat-label>
-      <input matInput formControlName="id" type="number" placeholder="Enter id" />
-    </mat-form-field>
-
-    <mat-form-field appearance="fill">
-      <mat-label>Name</mat-label>
+      <mat-label>Nombre</mat-label>
       <input matInput formControlName="name" placeholder="Enter user name" />
     </mat-form-field>
 
     <mat-form-field appearance="fill">
-      <mat-label>LastName</mat-label>
+      <mat-label>Apellido</mat-label>
       <input matInput formControlName="lastName" placeholder="Enter user lastName" />
     </mat-form-field>
 
     <mat-form-field appearance="fill">
-      <mat-label>Code</mat-label>
+      <mat-label>Login</mat-label>
+      <input matInput formControlName="login" placeholder="Enter login" />
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Codigo</mat-label>
       <input matInput formControlName="code" placeholder="Enter code user" />
     </mat-form-field>
 
     <mat-form-field appearance="fill">
-      <mat-label>Email</mat-label>
+      <mat-label>Correo</mat-label>
       <input matInput formControlName="email" type="email" placeholder="enter user email" />
     </mat-form-field>
 
-    <button mat-raised-button color="primary" type="submit">Save Product</button>
+    <div class="button-container">
+      <button mat-raised-button color="primary" type="submit" [disabled]="userForm.invalid || submit">
+        {{ submit ? 'Guardando...' : (userEdit ? 'Actualizar usuario' : 'Añadir usuario') }}
+      </button>
+
+      <button mat-raised-button color="warn" type="button" (click)="userForm.reset(); userEdit = null"
+        [disabled]="submit">{{ submit ? 'Guardando...' :
+        (userEdit ? 'Cancelar' : 'Limpiar campos') }}
+      </button>
+    </div>
+
   </form>
 </div>

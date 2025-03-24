@@ -1,19 +1,26 @@
-import { Component, computed, Input, input, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, computed, EventEmitter, Input, input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { CommonModule } from '@angular/common';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatIconModule } from '@angular/material/icon';
 
 export interface TableColumn<T> {
   label: string;
-  def: keyof T;
+  def: keyof T | 'acciones';
   content: (row: T) => string | null | undefined | number | boolean ;
 }
 
 @Component({
   selector: 'ui-table',
   standalone: true,
-  imports: [CommonModule, MatTableModule, MatSlideToggleModule, MatProgressSpinnerModule],
+  imports: [
+    CommonModule,
+    MatTableModule,
+    MatSlideToggleModule,
+    MatProgressSpinnerModule,
+    MatIconModule
+  ],
   templateUrl: './ui-table.component.html',
   styleUrls: ['./ui-table.component.css'],
 })
@@ -21,6 +28,9 @@ export class UiTableComponent<T> implements OnChanges {
   @Input() data: T[] = [];
   @Input() columns: TableColumn<T>[] = [];
   @Input() isLoading = false;
+  @Output() editRow = new EventEmitter<T>();
+  @Output() deleteRow = new EventEmitter<T>();
+  @Output() statusChanged = new EventEmitter<T>();
 
   displayedColumns: string[] = [];
   dataSource = new MatTableDataSource<T>([]);
@@ -30,7 +40,7 @@ export class UiTableComponent<T> implements OnChanges {
       this.setData();
     }
     if (changes['columns'] && changes['columns'].currentValue) {
-      this.displayedColumns = this.columns.map((col) => col.def.toString());
+      this.displayedColumns = this.columns.map((col) => col.def as string);
     }
   }
 
@@ -38,21 +48,34 @@ export class UiTableComponent<T> implements OnChanges {
     this.dataSource.data = this.data;
   }
 
-  getColumnDef(columnDef: keyof T): string {
-    return columnDef.toString();
+  getColumnDef(columnDef: keyof T | 'acciones'): string {
+    return columnDef as string;
   }
 
-  isBoolean(row: T, field: keyof T): boolean {
-    const value = row[field];
+  isBoolean(row: T, field: keyof T | 'acciones'): boolean {
+    if (field === 'acciones') return false; // 'acciones' no es un campo booleano
+    const value = row[field as keyof T];
     return typeof value === 'boolean' ? value : false;
   }
 
-  toggleStatus<K extends keyof T>(row: T, field: K) {
-    if (typeof row[field] === 'boolean') {
-      row[field] = !row[field] as T[K]; // Cambiar el estado del campo boolean
-      console.log('Row updated:', row);
+  toggleStatus(row: T, field: keyof T | 'acciones') {
+    if (field === 'acciones') return; // No hacer nada para 'acciones'
+    const key = field as keyof T;
+    if (typeof row[key] === 'boolean') {
+      row[key] = !row[key] as any;
+      this.statusChanged.emit(row);
+      console.log('status actualizado:', row);
     } else {
-      console.error(`El campo "${String(field)}" no es de tipo boolean.`);
+      console.error(`El campo "${String(key)}" no es de tipo booleano.`);
     }
   }
+
+  onEdit(row: T) {
+    this.editRow.emit(row);
+  }
+
+  onDelete(row: T) {
+    this.deleteRow.emit(row);
+  }
+
 }

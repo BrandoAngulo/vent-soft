@@ -5,8 +5,12 @@ import com.qualitysales.ventsoft.mapper.CategoryMapper;
 import com.qualitysales.ventsoft.model.Category;
 import com.qualitysales.ventsoft.repository.CategoryRepository;
 import com.qualitysales.ventsoft.service.CategoryService;
+import com.qualitysales.ventsoft.utils.dto.GenericDTO;
+import com.qualitysales.ventsoft.utils.enums.MessagesEnum;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationContextException;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -76,6 +80,7 @@ public class CategoryServiceImpl implements CategoryService {
 
         try {
             category.setDescription(categoryDTO.getDescription());
+            category.setStatus(categoryDTO.getStatus());
             categoryRepository.save(category);
             log.info("update: {}", category);
             return categoryDTO;
@@ -88,18 +93,17 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public void deleteById(Integer id) {
+    public GenericDTO deleteById(Integer id) {
         Category category = categoryRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException(NF));
-
+                .orElseThrow(() -> new ApplicationContextException(MessagesEnum.REQUEST_FAILED.getMessage(), null));
         try {
             log.info("deleteById/ Success{}", category);
             categoryRepository.deleteById(id);
+            return GenericDTO.genericSuccess(MessagesEnum.REQUEST_SUCCESS, HttpStatus.OK.value());
 
-        } catch (IllegalArgumentException e) {
+        } catch (Exception e) {
             log.error("deleteById/throw{}", category);
-            throw new IllegalArgumentException(e);
+            throw new ApplicationContextException(e.getMessage());
         }
-
     }
 }
