@@ -54,15 +54,9 @@ export default class SupplierComponent implements OnInit {
       },
 
       {
-        label: 'Nombre',
+        label: 'Razon social',
         def: 'name',
         content: (row) => row.name
-      },
-
-      {
-        label: 'Apellido',
-        def: 'lastName',
-        content: (row) => row.lastName
       },
 
       {

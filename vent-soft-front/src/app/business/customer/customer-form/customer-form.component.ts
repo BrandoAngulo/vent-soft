@@ -16,10 +16,10 @@ import { CityService } from '../../city/services/city.service';
   imports: [
     CommonModule,
     RouterModule,
-    ReactiveFormsModule,
     MatInputModule,
     MatButtonModule,
     MatSelectModule,
+    ReactiveFormsModule,
     MatSlideToggleModule
   ],
   templateUrl: './customer-form.component.html',

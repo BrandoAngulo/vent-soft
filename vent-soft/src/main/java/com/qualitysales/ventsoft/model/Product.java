@@ -33,6 +33,8 @@ public class Product {
     private BigDecimal price;
     @Column(name = "cantidad", length = 50)
     private Integer stock;
+    @Column(name = "estado")
+    private Boolean status;
     @OneToMany(mappedBy = "product")
     private Set<ItemInvoice> itemInvoices;
 
