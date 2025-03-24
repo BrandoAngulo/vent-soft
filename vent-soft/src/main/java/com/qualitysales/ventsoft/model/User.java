@@ -25,10 +25,11 @@ public class User {
     private String name;
     @Column(name = "apellido")
     private String lastName;
+    private String login;
     @Column(name = "codigo")
     private String code;
     @Column(name = "correo")
     private String email;
     @Column(name = "estado")
-    private String state;
+    private Boolean status;
 }

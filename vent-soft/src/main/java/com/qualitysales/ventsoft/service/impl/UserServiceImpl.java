@@ -5,14 +5,18 @@ import com.qualitysales.ventsoft.mapper.UserMapper;
 import com.qualitysales.ventsoft.model.User;
 import com.qualitysales.ventsoft.repository.UserRepository;
 import com.qualitysales.ventsoft.service.UserService;
+import com.qualitysales.ventsoft.utils.dto.GenericDTO;
+import com.qualitysales.ventsoft.utils.enums.MessagesEnum;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationContextException;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Slf4j
-@Transactional
 @Service
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
@@ -21,6 +25,7 @@ public class UserServiceImpl implements UserService {
         this.userRepository = userRepository;
     }
 
+    @Transactional
     @Override
     public List<UserDTO> listUsers() {
         List<User> userList = userRepository.findAll();
@@ -34,6 +39,7 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+    @Transactional
     @Override
     public UserDTO listUser(Integer id) {
         User user = userRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("User not found"));
@@ -53,9 +59,8 @@ public class UserServiceImpl implements UserService {
         }
         try {
             UserDTO userDTO = UserMapper.convertToDTO(user);
-
+            log.info("saveUser = " + userDTO);
             userRepository.save(user);
-            log.info("saveUser = " + user);
             return userDTO;
 
         } catch (Exception e) {
@@ -66,33 +71,35 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User updateUser(Integer id, UserDTO userDTO) {
-        User existUser = userRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("User not found"));
+        User user = userRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("User not found"));
         try {
-            existUser.setName(userDTO.getName());
-            existUser.setLastName(userDTO.getLastName());
-            existUser.setCode(userDTO.getCode());
-            existUser.setEmail(userDTO.getEmail());
-            existUser.setState(userDTO.getState());
-            log.info("existUserSave = " + existUser);
-            return userRepository.save(existUser);
+            user.setName(userDTO.getName());
+            user.setLastName(userDTO.getLastName());
+            user.setCode(userDTO.getCode());
+            user.setEmail(userDTO.getEmail());
+            user.setLogin(userDTO.getLogin());
+            user.setStatus(userDTO.getStatus());
+            log.info("userSave = " + user);
+            return userRepository.save(user);
 
 
         } catch (Exception e) {
-            log.error("updateUser = " + existUser.toString());
+            log.error("updateUser = " + user);
             throw new IllegalArgumentException("Uncontroller error ");
         }
     }
 
     @Override
-    public void deleteUser(Integer id) {
-        User existUser = userRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("User not found"));
+    public GenericDTO deleteUser(Integer id) {
+        User existUser = userRepository.findById(id).orElseThrow(() ->
+                new ApplicationContextException(MessagesEnum.REQUEST_FAILED.getMessage(), null));
         try {
             userRepository.deleteById(existUser.getId());
+            return GenericDTO.genericSuccess(MessagesEnum.REQUEST_SUCCESS, HttpStatus.OK.value());
 
         } catch (Exception e) {
             log.error("deleteUser = " + existUser.toString());
-            throw new IllegalArgumentException("Uncontroller error ");
+            throw new ApplicationContextException(e.getMessage());
         }
-
     }
 }

@@ -5,10 +5,15 @@ import com.qualitysales.ventsoft.mapper.CityMapper;
 import com.qualitysales.ventsoft.model.City;
 import com.qualitysales.ventsoft.repository.CityRepository;
 import com.qualitysales.ventsoft.service.CityService;
+import com.qualitysales.ventsoft.utils.dto.GenericDTO;
+import com.qualitysales.ventsoft.utils.enums.MessagesEnum;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationContextException;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -22,7 +27,7 @@ public class CityServiceImpl implements CityService {
     public CityDTO findCity(Integer id) {
 
         City cityId = cityRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("id not found"));
-        CityDTO cityDTO = CityMapper.MAPPER.toCityDTO(cityId);
+        CityDTO cityDTO = CityMapper.MAPPER.toCity(cityId);
 
         try {
             log.info("findCity ok: {}", cityDTO);
@@ -38,7 +43,7 @@ public class CityServiceImpl implements CityService {
     @Override
     public List<CityDTO> findCities() {
         List<City> cities = cityRepository.findAll();
-        List<CityDTO> cityDTOS = CityMapper.MAPPER.toCityDTOS(cities);
+        List<CityDTO> cityDTOS = CityMapper.MAPPER.toCities(cities);
         try {
             log.info("findCities OK: {}", cities);
             return cityDTOS;
@@ -53,8 +58,8 @@ public class CityServiceImpl implements CityService {
     @Override
     public CityDTO saveCity(City city) {
         try {
-            CityDTO cityDTO = CityMapper.MAPPER.toCityDTO(city);
             cityRepository.save(city);
+            CityDTO cityDTO = CityMapper.MAPPER.toCity(city);
             log.info("saveCity ok: {}", city);
 
             return cityDTO;
@@ -67,11 +72,7 @@ public class CityServiceImpl implements CityService {
     @Override
     public CityDTO updateCity(Integer id, City city) {
         City findId = cityRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("id not found"));
-        CityDTO cityDTO = CityMapper.MAPPER.toCityDTO(findId);
-        if (findId.getId().equals(city.getId())) {
-            throw new IllegalArgumentException("Id is present");
-        }
-
+        CityDTO cityDTO = CityMapper.MAPPER.toCity(findId);
         try {
             log.info("updateCity ok: {}", city);
             cityDTO.setCode(city.getCode());
@@ -86,14 +87,16 @@ public class CityServiceImpl implements CityService {
     }
 
     @Override
-    public void deleteCity(Integer id) {
-        City findId = cityRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("id not found"));
+    public GenericDTO deleteCity(Integer id) {
+        City findId = cityRepository.findById(id).orElseThrow(() ->
+                new ApplicationContextException(MessagesEnum.REQUEST_FAILED.getMessage(), null));
         try {
             log.info("deleteCity ok: {}", findId);
             cityRepository.delete(findId);
+            return GenericDTO.genericSuccess(MessagesEnum.REQUEST_SUCCESS, HttpStatus.OK.value());
         } catch (Exception e) {
             log.error("deleteCity throw: {}", findId);
-            throw new IllegalArgumentException(e);
+            throw new ApplicationContextException(e.getMessage());
         }
     }
 }

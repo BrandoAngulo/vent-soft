@@ -1,0 +1,54 @@
+<div class="form-container">
+  <h4 class="error">{{ message }}</h4>
+  <form [formGroup]="invoiceForm" (ngSubmit)="onSubmit()">
+    <mat-form-field appearance="fill">
+      <mat-label>Código de Factura</mat-label>
+      <input matInput formControlName="invoiceCode" placeholder="Código" />
+    </mat-form-field>
+    <mat-form-field appearance="fill">
+      <mat-label>Fecha</mat-label>
+      <input matInput formControlName="date" placeholder="Fecha" />
+    </mat-form-field>
+    <mat-form-field appearance="fill">
+      <mat-label>Nombre del cliente</mat-label>
+      <input matInput formControlName="customer" placeholder="Nombre del cliente" />
+    </mat-form-field>
+    <mat-form-field appearance="fill">
+      <mat-label>NIT</mat-label>
+      <input matInput formControlName="nit" placeholder="NIT" />
+    </mat-form-field>
+    <mat-form-field appearance="fill">
+      <mat-label>Dirección</mat-label>
+      <input matInput formControlName="address" placeholder="Dirección" />
+    </mat-form-field>
+
+    <h3>Productos</h3>
+    <div formArrayName="products">
+      <div *ngFor="let prod of products.controls; let i = index" [formGroupName]="i" class="product-row">
+        <mat-form-field appearance="fill">
+          <mat-label>Producto</mat-label>
+          <input matInput formControlName="name" placeholder="Producto" />
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+          <mat-label>Precio Unitario</mat-label>
+          <input matInput type="number" formControlName="unitPrice" placeholder="Precio" (ngModelChange)="updateProductTotal(i)" />
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+          <mat-label>Cantidad</mat-label>
+          <input matInput type="number" formControlName="quantity" placeholder="Cantidad" (ngModelChange)="updateProductTotal(i)" />
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+          <mat-label>Total</mat-label>
+          <input matInput formControlName="total" placeholder="Total" />
+        </mat-form-field>
+        <button mat-icon-button color="warn" type="button" (click)="removeProduct(i)">
+          <mat-icon>delete</mat-icon>
+        </button>
+
+      </div>
+    </div>
+    <!-- Botón que abre el modal para agregar un producto -->
+    <button mat-raised-button type="button" (click)="openAddProductModal()">Agregar Producto</button>
+    <button mat-raised-button color="primary" type="submit">Guardar Factura</button>
+  </form>
+</div>

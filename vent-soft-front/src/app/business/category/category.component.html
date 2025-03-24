@@ -1,0 +1,14 @@
+<app-category-form
+[categoryEdit]="selectedCategory" 
+(add)="addCategory($event)"
+(update)="updateCategory($event)" 
+/>
+<ui-table 
+[data]="categories" 
+[columns]="tableColumns" 
+[isLoading]="loadingCategory"
+(editRow)="editCategory($event)"
+(deleteRow)="deleteCategory($event)"
+(statusChanged)="updateCategoryStatus($event)"
+/>
+

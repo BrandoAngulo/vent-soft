@@ -1,0 +1,72 @@
+<div class="form-container">
+  <h4 class="error">{{ message }}</h4>
+  <form [formGroup]="productForm" (ngSubmit)="addProduct()">
+
+    <mat-form-field appearance="fill">
+      <mat-label>Producto</mat-label>
+      <input matInput formControlName="name" placeholder="Enter product name" />
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Codigo</mat-label>
+      <input matInput formControlName="itemCode" type="number" placeholder="Enter code item" />
+    </mat-form-field>
+
+    <!-- Campo City con mat-select dinámico -->
+    <mat-form-field appearance="fill">
+      <mat-label>Categoria</mat-label>
+      <mat-select formControlName="category" [compareWith]="compareCategories" [disabled]="loadCategories">
+        <mat-option *ngFor="let category of categories" [value]="category">
+          {{ category.description }}
+        </mat-option>
+      </mat-select>
+      <mat-error *ngIf="productForm.get('category')?.hasError('required')">
+        Category is required
+      </mat-error>
+      <mat-hint *ngIf="loadCategories">Loading categories...</mat-hint>
+    </mat-form-field>
+
+    <!-- Select de suppliers -->
+    <mat-form-field appearance="fill">
+      <mat-label>Vendedor</mat-label>
+      <mat-select formControlName="supplier" [compareWith]="compareSuppliers" [disabled]="loadSuppliers">
+        <mat-option *ngFor="let supplier of suppliers" [value]="supplier">
+          {{ supplier.name }}
+        </mat-option>
+      </mat-select>
+      <mat-error *ngIf="productForm.get('supplier')?.hasError('required')">
+        Supplier is required
+      </mat-error>
+      <mat-hint *ngIf="loadSuppliers">Loading categories...</mat-hint>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Precio</mat-label>
+      <input matInput formControlName="price" type="number" placeholder="Enter product price" />
+    </mat-form-field>
+
+
+    <mat-form-field appearance="fill">
+      <mat-label>Inventario</mat-label>
+      <input matInput formControlName="stock" type="number" placeholder="Stock" />
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Descripcion</mat-label>
+      <textarea matInput formControlName="description" placeholder="Enter product description"></textarea>
+    </mat-form-field>
+
+    <div class="button-container">
+      <button mat-raised-button color="primary" type="submit" [disabled]="productForm.invalid || submit">
+        {{ submit ? 'Guardando...' : (productEdit ? 'Actualizar producto' : 'Añadir producto') }}
+      </button>
+
+      <button mat-raised-button color="warn" type="button" 
+      (click)="productForm.reset(); productEdit = null"
+        [disabled]="submit">{{ submit ? 'Saving...' :
+        (productEdit ? 'Cancelar' : 'Limpiar campos') }}
+      </button>
+    </div>
+
+  </form>
+</div>

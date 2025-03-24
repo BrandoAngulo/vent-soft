@@ -3,6 +3,7 @@ package com.qualitysales.ventsoft.Controllers;
 import com.qualitysales.ventsoft.Controllers.DTO.ProductDTO;
 import com.qualitysales.ventsoft.model.Product;
 import com.qualitysales.ventsoft.service.impl.ProductServiceImpl;
+import com.qualitysales.ventsoft.utils.dto.GenericDTO;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -10,7 +11,8 @@ import org.springframework.web.bind.annotation.*;
 import java.math.BigDecimal;
 
 @RestController
-@RequestMapping("/api/ventsoft/product")
+@CrossOrigin
+@RequestMapping("/api/vent-soft/product")
 public class ProductController {
 
     private final ProductServiceImpl productService;
@@ -25,7 +27,7 @@ public class ProductController {
         return ResponseEntity.ok().body(productService.findById(id));
     }
 
-    @GetMapping("/findAll")
+    @GetMapping("/find-all")
     public ResponseEntity<?> getAll() {
         return ResponseEntity.ok(productService.findByAll());
     }
@@ -50,9 +52,8 @@ public class ProductController {
     }
 
     @DeleteMapping("/delete/{id}")
-    public void delete(@PathVariable Integer id) throws Exception {
-        productService.deleteById(id);
+    public ResponseEntity<GenericDTO> delete(@PathVariable Integer id) throws Exception {
+
+        return ResponseEntity.ok(productService.deleteById(id));
     }
-
-
 }

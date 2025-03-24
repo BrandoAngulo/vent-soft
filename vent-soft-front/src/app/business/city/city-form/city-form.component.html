@@ -1,0 +1,26 @@
+<div class="form-container">
+  <h4 class="error">{{ message }}</h4>
+  <form [formGroup]="cityForm" (ngSubmit)="addCity()">
+
+    <mat-form-field appearance="fill">
+      <mat-label>Codigo</mat-label>
+      <textarea matInput formControlName="code" placeholder="Enter code city"></textarea>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Ciudad</mat-label>
+      <textarea matInput formControlName="name" placeholder="Enter city"></textarea>
+    </mat-form-field>
+
+    <div class="button-container">
+      <button mat-raised-button color="primary" type="submit" [disabled]="cityForm.invalid || submit">
+        {{ submit ? 'Guardando...' : (cityEdit ? 'Actualizar ciudad' : 'Guardar ciudad') }}
+      </button>
+
+      <button mat-raised-button color="warn" type="button" (click)="cityForm.reset(); cityEdit = null"
+        [disabled]="submit">{{ submit ? 'Guardando...' :
+        (cityEdit ? 'Cancelar' : 'Limpiar campos') }}
+      </button>
+    </div>
+  </form>
+</div>

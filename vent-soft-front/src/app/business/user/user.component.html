@@ -1,0 +1,14 @@
+<app-user-form 
+[userEdit]="selectedUser"
+(add)="addUser($event)"
+(update)="updateUser($event)" 
+/>
+
+<ui-table 
+[data]="users" 
+[columns]="tableColumns" 
+[isLoading]="loadUser" 
+(editRow)="editUser($event)"
+(deleteRow)="deleteUser($event)"
+(statusChanged)="updateUserStatus($event)"
+/>

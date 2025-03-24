@@ -3,14 +3,16 @@ package com.qualitysales.ventsoft.Controllers;
 import com.qualitysales.ventsoft.Controllers.DTO.CityDTO;
 import com.qualitysales.ventsoft.model.City;
 import com.qualitysales.ventsoft.service.impl.CityServiceImpl;
+import com.qualitysales.ventsoft.utils.dto.GenericDTO;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@CrossOrigin
 @RestController
-@RequestMapping("/api/ventsoft/city")
+@RequestMapping("/api/vent-soft/city")
 public class CityController {
 
     private final CityServiceImpl cityService;
@@ -40,9 +42,8 @@ public class CityController {
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<String> delete(@PathVariable int id) {
-        cityService.deleteCity(id);
-        return ResponseEntity.ok().body("Deleted");
+    public ResponseEntity<GenericDTO> delete(@PathVariable int id) {
+        return ResponseEntity.ok(cityService.deleteCity(id));
     }
 
 }

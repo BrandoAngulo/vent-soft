@@ -1,0 +1,14 @@
+<app-product-form 
+[productEdit]="selectedProduct"
+(add)="addProduct($event)"
+(update)="updateProduct($event)"
+/>
+
+<ui-table 
+[data]="products" 
+[columns]="tableColumns" 
+[isLoading]="loadingProduct" 
+(editRow)="editProduct($event)"
+(deleteRow)="deleteProduct($event)"
+(statusChanged)="updateProductStatus($event)"
+/>

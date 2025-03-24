@@ -3,12 +3,14 @@ package com.qualitysales.ventsoft.Controllers;
 import com.qualitysales.ventsoft.Controllers.DTO.SupplierDTO;
 import com.qualitysales.ventsoft.model.Supplier;
 import com.qualitysales.ventsoft.service.impl.SupplierServiceImpl;
+import com.qualitysales.ventsoft.utils.dto.GenericDTO;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/ventsoft/supplier")
+@RequestMapping("/api/vent-soft/supplier")
+@CrossOrigin
 public class SupplierController {
 
     private final SupplierServiceImpl supplierService;
@@ -23,7 +25,7 @@ public class SupplierController {
         return ResponseEntity.ok(supplierService.findById(id));
     }
 
-    @GetMapping("/findAll")
+    @GetMapping("/find-all")
     public ResponseEntity<?> findAll() {
 
         return ResponseEntity.ok(supplierService.findByAll());
@@ -41,8 +43,7 @@ public class SupplierController {
     }
 
     @DeleteMapping("/delete/{id}")
-    public void deleteById(@PathVariable Integer id) {
-        supplierService.deleteById(id);
+    public ResponseEntity<GenericDTO> deleteById(@PathVariable Integer id){
+        return ResponseEntity.ok(supplierService.deleteById(id));
     }
-
 }

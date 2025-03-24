@@ -1,0 +1,73 @@
+<div class="form-container">
+  <h4 class="error">{{ message }}</h4>
+  <form [formGroup]="customerForm" (ngSubmit)="addCustomer()">
+
+    <mat-form-field appearance="fill">
+      <mat-label>Nombre</mat-label>
+      <input matInput formControlName="name" placeholder="Enter name" />
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Segundo nombre</mat-label>
+      <input matInput formControlName="lastName" placeholder="Enter lastName" />
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Tipo documento</mat-label>
+      <mat-select formControlName="docTipe">
+        <mat-option value="CC">CC</mat-option>
+        <mat-option value="Pasaporte">Pasaporte</mat-option>
+        <mat-option value="Licencia de conduccion">Licencia de conduccion</mat-option>
+      </mat-select>
+      <mat-error *ngIf="customerForm.get('doctipe')?.hasError('required')">
+        Tipe document is required
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Documento</mat-label>
+      <input matInput formControlName="document" placeholder="Enter document" />
+    </mat-form-field>
+
+    <!-- Campo City con mat-select dinámico -->
+    <mat-form-field appearance="fill">
+      <mat-label>Ciudad</mat-label>
+      <mat-select formControlName="city" [compareWith]="compareCities" [disabled]="isLoadingCities">
+        <mat-option *ngFor="let city of cities" [value]="city">
+          {{ city.name }}
+        </mat-option>
+      </mat-select>
+      <mat-error *ngIf="customerForm.get('city')?.hasError('required')">
+        City is required
+      </mat-error>
+      <mat-hint *ngIf="isLoadingCities">Loading cities...</mat-hint>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Residencia</mat-label>
+      <input matInput formControlName="residence" placeholder="Enter residence" />
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Celular</mat-label>
+      <input matInput formControlName="cellPhone" placeholder="Enter cellphone" />
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Correo</mat-label>
+      <input matInput formControlName="email" type="email" placeholder="Enter email" />
+    </mat-form-field>
+
+    <div class="button-container">
+      <button mat-raised-button color="primary" type="submit" [disabled]="customerForm.invalid || isSubmitting">
+        {{ isSubmitting ? 'Guardando...' : (customerEdit ? 'Actualizar cliente' : 'Guardar cliente') }}
+      </button>
+
+      <button mat-raised-button color="warn" type="button" 
+      (click)="customerForm.reset(); customerEdit = null"
+        [disabled]="isSubmitting">{{ isSubmitting ? 'Saving...' :
+        (customerEdit ? 'Cancelar' : 'Limpiar campos') }}
+      </button>
+    </div>
+  </form>
+</div>

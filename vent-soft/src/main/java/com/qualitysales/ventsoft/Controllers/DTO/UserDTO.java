@@ -16,8 +16,8 @@ public class UserDTO {
     @NotBlank
     private String name;
     private String lastName;
+    private String login;
     private String code;
     private String email;
-    private String state;
-
+    private Boolean status;
 }

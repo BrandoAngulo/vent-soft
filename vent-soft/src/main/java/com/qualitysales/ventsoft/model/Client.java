@@ -7,10 +7,11 @@ import lombok.*;
 
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
-@ToString
+@Setter
+@Getter
 @Builder
 @Entity
+@ToString
 @Table(name = "cliente")
 public class Client {
 
@@ -18,16 +19,24 @@ public class Client {
     @Id
     private Integer id;
     @NotBlank
+    @Column(name = "nombre")
     private String name;
     @NotBlank
+    @Column(name = "apellido")
     private String lastName;
+    @Column(name = "tipo_documento")
     private String docTipe;
+    @Column(name = "documento")
     private String document;
     @ManyToOne
     @JoinColumn(name = "id_ciudad")
     private City city;
+    @Column(name = "residencia")
     private String residence;
+    @Column(name = "numero_celular")
     private String cellPhone;
+    @Column(name = "correo")
     private String email;
-    private String estate;
+    @Column(name = "estado")
+    private Boolean status;
 }

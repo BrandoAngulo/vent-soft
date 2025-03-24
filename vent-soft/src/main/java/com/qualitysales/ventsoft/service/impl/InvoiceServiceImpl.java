@@ -1,19 +1,26 @@
 package com.qualitysales.ventsoft.service.impl;
 
 import com.qualitysales.ventsoft.Controllers.DTO.ClientDTO;
-import com.qualitysales.ventsoft.Controllers.DTO.InvoiceDTO;
+import com.qualitysales.ventsoft.Controllers.DTO.RegisterUptadeInvoiceDTO;
 import com.qualitysales.ventsoft.mapper.ClientMapper;
 import com.qualitysales.ventsoft.mapper.InvoiceMapper;
 import com.qualitysales.ventsoft.model.Client;
 import com.qualitysales.ventsoft.model.Invoice;
+import com.qualitysales.ventsoft.model.ItemInvoice;
+import com.qualitysales.ventsoft.model.Product;
 import com.qualitysales.ventsoft.repository.ClientRepository;
 import com.qualitysales.ventsoft.repository.InvoiceRepository;
+import com.qualitysales.ventsoft.repository.ItemInvoiceRepository;
+import com.qualitysales.ventsoft.repository.ProductRepository;
 import com.qualitysales.ventsoft.service.InvoiceService;
+import com.qualitysales.ventsoft.utils.DateUtils;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.math.BigDecimal;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -21,14 +28,17 @@ import java.util.List;
 public class InvoiceServiceImpl implements InvoiceService {
     private final InvoiceRepository invoiceRepository;
     private final ClientRepository clientRepository;
+    private final ItemInvoiceRepository itemInvoiceRepository;
+    private final ProductRepository productRepository;
+    private final DateUtils dateUtils;
 
     @Override
-    public List<InvoiceDTO> getInvoices() {
+    public Set<RegisterUptadeInvoiceDTO> getInvoices() {
         List<Invoice> invoices = invoiceRepository.findAll();
-        List<InvoiceDTO> invoiceDTOList = InvoiceMapper.MAPPER.toInvoiceList(invoices);
+        Set<RegisterUptadeInvoiceDTO> registerUptadeInvoiceDTOList = InvoiceMapper.MAPPER.toInvoiceList(new HashSet<>(invoices));
         try {
-            log.info("getInvoices ok: {}", invoiceDTOList.toString());
-            return invoiceDTOList;
+            log.info("getInvoices ok: {}", registerUptadeInvoiceDTOList.toString());
+            return registerUptadeInvoiceDTOList;
         } catch (RuntimeException e) {
             log.error("getInvoices error: {}", e.getMessage());
             throw new IllegalArgumentException(e);
@@ -36,51 +46,98 @@ public class InvoiceServiceImpl implements InvoiceService {
     }
 
     @Override
-    public InvoiceDTO getInvoice(Integer id) {
-        Invoice invoice = invoiceRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invoice not found"));
-        InvoiceDTO invoiceDTO = InvoiceMapper.MAPPER.toInvoice(invoice);
+    public RegisterUptadeInvoiceDTO getInvoice(Integer id) {
+        Invoice invoice = invoiceRepository.findById(id).orElseThrow(() -> new RuntimeException("Invoice not found"));
+        RegisterUptadeInvoiceDTO registerUptadeInvoiceDTO = InvoiceMapper.MAPPER.toInvoiceDTO(invoice);
         try {
-            log.info("getInvoice ok: {}", invoiceDTO.toString());
-            return invoiceDTO;
-        } catch (Exception e) {
+            log.info("getInvoice ok: {}", invoice);
+            return registerUptadeInvoiceDTO;
+        } catch (RuntimeException e) {
             log.error("getInvoice error: {}", e.getMessage());
-            throw new IllegalArgumentException(e);
+            throw new RuntimeException(e);
         }
     }
 
     @Override
-    public InvoiceDTO saveInvoice(Invoice invoice) {
-
+    public RegisterUptadeInvoiceDTO saveInvoice(Invoice invoice) {
+        log.info("saveInvoice ok: {}", invoice.toString());
         try {
-            InvoiceDTO invoiceDTO = InvoiceMapper.MAPPER.toInvoice(invoice);
+            stockValidate(invoice.getItemInvoices());
+
+            // Guardamos la factura inicialmente
             invoiceRepository.save(invoice);
-            log.info("saveInvoice ok: {}", invoiceDTO.toString());
-            return invoiceDTO;
-        } catch (Exception e) {
+
+            // Si existen ItemInvoices, procesamos los productos y calculamos el total
+            if (!invoice.getItemInvoices().isEmpty()) {
+                Set<ItemInvoice> itemInvoices = invoice.getItemInvoices().stream().map(itemInvoice -> {
+                    Product product = productRepository.findById(itemInvoice.getProduct().getId())
+                            .orElseThrow(() -> new IllegalArgumentException("Product not found with ID: " + itemInvoice.getProduct().getId()));
+
+                    // Actualizamos el stock del producto
+                    product.setStock(product.getStock() - itemInvoice.getAmountSold());
+                    productRepository.save(product); // Guardamos el producto actualizado
+
+                    // Asociamos el ItemInvoice a la factura
+                    itemInvoice.setInvoice(invoice);
+                    return itemInvoiceRepository.save(itemInvoice); // Guardamos cada ItemInvoice
+                }).collect(Collectors.toSet());
+
+                // Calculamos el total de la factura y lo asignamos
+                BigDecimal totalInvoice = calculateInvoiceTotal(itemInvoices);
+                invoice.setTotal(totalInvoice);
+            }
+
+            // Volvemos a guardar la factura con el total actualizado
+            invoice.setDate(dateUtils.getLocalDate());
+            Client client = clientRepository.findById(invoice.getId()).orElseThrow(() -> new RuntimeException("Pailas cliente"));
+            System.out.println("client = " + client);
+            invoice.setClient(client);
+            invoiceRepository.save(invoice);
+
+            // Convertimos la factura a DTO y la retornamos
+            RegisterUptadeInvoiceDTO registerUptadeInvoiceDTO = InvoiceMapper.MAPPER.toInvoiceDTO(invoice);
+            log.info("saveInvoice success: {}", registerUptadeInvoiceDTO);
+            return registerUptadeInvoiceDTO;
+
+        } catch (RuntimeException e) {
             log.error("saveInvoice error: {}", e.getMessage());
             throw new IllegalArgumentException(e);
         }
     }
 
-    @Override
-    public Invoice updateInvoice(Integer id, InvoiceDTO invoiceDTO) {
-        System.out.println("invoice = " + invoiceDTO);
-        Invoice invoiceId = invoiceRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invoice not found"));
-        try {
-            if (invoiceId.getId().equals(id)){
-                log.info("updateInvoice ok: {}", invoiceDTO);
-                invoiceId.setInvoiceCode(invoiceDTO.getInvoiceCode());
-                invoiceId.setClient(invoiceDTO.getClient());
-                invoiceId.setDate(invoiceDTO.getDate());
-                invoiceId.setTotal(invoiceDTO.getTotal());
-                invoiceId.setItemInvoice(invoiceDTO.getItemInvoice());
-                invoiceId.setStatus(invoiceDTO.getStatus());
-                invoiceRepository.save(invoiceId);
-            }else {
-                log.info("updateInvoice error: {}", invoiceDTO);
-                throw new IllegalArgumentException("Invoice id not match");
+    public void stockValidate(Set<ItemInvoice> items){
+        for (ItemInvoice item : items) {
+            Integer idProducto = item.getProduct().getId();
+            Integer cantSold = item.getAmountSold();
+
+            Product product = productRepository.findById(idProducto).orElseThrow(() -> new RuntimeException("Product not found with ID: " + idProducto));
+
+            if (product.getStock() < cantSold) {
+                throw new RuntimeException("Insufficient stock for product: " + product.getName());
             }
-            return invoiceId;
+        }
+    }
+
+    @Override
+    public RegisterUptadeInvoiceDTO updateInvoice(RegisterUptadeInvoiceDTO registerUptadeInvoiceDTO) {
+        log.info("updateInvoice ok: {}", registerUptadeInvoiceDTO);
+        Invoice invoiceId = invoiceRepository.findById(registerUptadeInvoiceDTO.id()).orElseThrow(() -> new IllegalArgumentException("Invoice not found"));
+        Client client = ClientMapper.MAPPER.toClientDTO(registerUptadeInvoiceDTO.client());
+        try {
+            if (invoiceId.getId().equals(registerUptadeInvoiceDTO.id())) {
+                System.out.println("client >>>> entro= " + client);
+                invoiceId.setInvoiceCode(registerUptadeInvoiceDTO.invoiceCode());
+                invoiceId.setDate(registerUptadeInvoiceDTO.date());
+                invoiceId.setClient(client);
+                invoiceId.setTotal(registerUptadeInvoiceDTO.total());
+                invoiceId.setStatus(registerUptadeInvoiceDTO.status());
+                return InvoiceMapper.MAPPER.toInvoiceDTO(invoiceRepository.save(invoiceId));
+            } else {
+
+                throw new IllegalArgumentException("Invoice not found");
+            }
+
+
         } catch (Exception e) {
             log.error("updateInvoice error: {}", e.getMessage());
             throw new IllegalArgumentException(e);
@@ -89,21 +146,15 @@ public class InvoiceServiceImpl implements InvoiceService {
     }
 
     @Override
-    public InvoiceDTO anularInvoice(Integer id, Invoice invoice) {
-            Invoice searchInvoice = invoiceRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invoice not found"));
-            InvoiceDTO invoiceDTO = InvoiceMapper.MAPPER.toInvoice(searchInvoice);
-
+    public boolean anularInvoice(Integer id) {
+        log.info("anularInvoice ok: {}", id);
+        Invoice searchInvoice = invoiceRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invoice not found"));
         try {
-            if (invoice.getId().equals(id)){
-                String active = "I";
-                log.info("anularInvoice ok: {}", invoiceDTO.toString());
-                invoiceDTO.setStatus(active);
-                invoiceRepository.save(searchInvoice);
-            }else {
-                log.info("anularInvoice error: {}", invoiceDTO.toString());
-                throw new IllegalArgumentException("Invoice id not match");
-            }
-            return invoiceDTO;
+            Boolean isActive = searchInvoice.isStatus();
+            searchInvoice.setStatus(Boolean.TRUE.equals(isActive) ? Boolean.FALSE : Boolean.TRUE);
+            invoiceRepository.save(searchInvoice);
+            return searchInvoice.isStatus();
+
         } catch (Exception e) {
             log.error("anularInvoice error: {}", e.getMessage());
             throw new IllegalArgumentException(e);
@@ -112,25 +163,46 @@ public class InvoiceServiceImpl implements InvoiceService {
     }
 
     @Override
-    public List<InvoiceDTO> getInvoicesByCustomerId(Integer customerId) {
+    public Set<RegisterUptadeInvoiceDTO> getInvoicesByCustomerId(Integer customerId) {
         Invoice invoice = invoiceRepository.findById(customerId).orElseThrow(() -> new IllegalArgumentException("Invoice not found"));
-        InvoiceDTO invoiceDTO = InvoiceMapper.MAPPER.toInvoice(invoice);
+        RegisterUptadeInvoiceDTO registerUptadeInvoiceDTO = InvoiceMapper.MAPPER.toInvoiceDTO(invoice);
         Client client = clientRepository.findById(customerId).orElseThrow(() -> new IllegalArgumentException("Client not found"));
         ClientDTO clientDTO = ClientMapper.MAPPER.toClient(client);
         List<Invoice> invoiceList = invoiceRepository.findAll();
-        List<InvoiceDTO> invoiceDTOList = InvoiceMapper.MAPPER.toInvoiceList(invoiceList);
+        Set<RegisterUptadeInvoiceDTO> registerUptadeInvoiceDTOList = InvoiceMapper.MAPPER.toInvoiceList(new HashSet<>(invoiceList));
         try {
-            if(customerId.equals(clientDTO.getId())){
-                log.info("getInvoicesByCustomerId ok: {}", invoiceDTO.toString());
+            if (customerId.equals(clientDTO.getId())) {
+                log.info("getInvoicesByCustomerId ok: {}", registerUptadeInvoiceDTO.toString());
                 invoiceRepository.findInvoiceByClientId(customerId);
-                return invoiceDTOList;
-            }else {
-                log.info("getInvoicesByCustomerId error: {}", invoiceDTO.toString());
+                return registerUptadeInvoiceDTOList;
+            } else {
+                log.info("getInvoicesByCustomerId error: {}", registerUptadeInvoiceDTO.toString());
                 throw new IllegalArgumentException("Customer id not match");
             }
         } catch (Exception e) {
             log.error("getInvoicesByCustomerId error: {}", e.getMessage());
             throw new IllegalArgumentException(e);
+        }
+    }
+
+    private BigDecimal calculateItemTotalPrice(ItemInvoice itemInvoice) {
+        Product product = productRepository.findById(itemInvoice.getProduct().getId()).orElseThrow(() -> new IllegalArgumentException("Product not found"));
+        BigDecimal price = product.getPrice();
+        BigDecimal quantity = new BigDecimal(itemInvoice.getAmountSold());
+
+        return price.multiply(quantity);
+
+    }
+
+    private BigDecimal calculateInvoiceTotal(Set<ItemInvoice> itemInvoices) {
+        try {
+            BigDecimal valorT = itemInvoices.stream().
+                    map(this::calculateItemTotalPrice)
+                    .reduce(BigDecimal.ZERO, BigDecimal::add);
+            System.out.println("valorT>>>> = " + valorT);
+            return valorT;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 }

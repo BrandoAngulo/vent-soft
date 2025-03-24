@@ -5,7 +5,8 @@ import lombok.*;
 
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
+@Setter
+@Getter
 @Builder
 @Entity
 @Table(name = "proveedor")
@@ -17,9 +18,13 @@ Supplier {
     private Integer id;
     @Column(name = "nombre")
     private String name;
+    @Column(name = "apellido")
+    private String lastName;
     @Column(name = "telefono")
-    private String phone;
+    private String cellPhone;
     @Column
     private String nit;
+    @Column(name = "estado")
+    private Boolean status;
 
 }
