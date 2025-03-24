@@ -3,6 +3,7 @@ package com.qualitysales.ventsoft.Controllers;
 import com.qualitysales.ventsoft.Controllers.DTO.UserDTO;
 import com.qualitysales.ventsoft.model.User;
 import com.qualitysales.ventsoft.service.impl.UserServiceImpl;
+import com.qualitysales.ventsoft.utils.dto.GenericDTO;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,6 +12,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/vent-soft/user")
+@CrossOrigin
 public class UserController {
 
     private final UserServiceImpl userService;
@@ -19,7 +21,7 @@ public class UserController {
         this.userService = userService;
     }
 
-    @GetMapping("/findAll")
+    @GetMapping("/find-all")
     public List<UserDTO> listUsers() {
 
         return ResponseEntity.ok(userService.listUsers()).getBody();
@@ -43,9 +45,8 @@ public class UserController {
     }
 
     @DeleteMapping("/delete/{id}")
-    public void delete(@PathVariable Integer id) {
-
-        userService.deleteUser(id);
+    public ResponseEntity<GenericDTO> delete(@PathVariable Integer id) {
+        return ResponseEntity.ok(userService.deleteUser(id));
     }
 
 }
