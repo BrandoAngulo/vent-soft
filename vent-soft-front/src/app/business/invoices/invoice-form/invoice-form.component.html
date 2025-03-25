@@ -13,7 +13,8 @@
       <mat-label>Cliente</mat-label>
       <mat-select formControlName="customer" [compareWith]="compareCustomers" [disabled]="loadingCustomers">
         <mat-option>
-          <input type="text" placeholder="Buscar cliente..." (input)="filterCustomers($event)" (click)="$event.stopPropagation()" />
+          <input type="text" placeholder="Buscar cliente..." (input)="filterCustomers($event)"
+            (click)="$event.stopPropagation()" />
         </mat-option>
         <mat-option *ngFor="let customer of filteredCustomers" [value]="customer">
           {{ customer.name }} ({{ customer.document }})
@@ -47,11 +48,13 @@
         </mat-form-field>
         <mat-form-field appearance="fill">
           <mat-label>Precio Unitario</mat-label>
-          <input matInput type="number" formControlName="unitPrice" placeholder="Precio" (ngModelChange)="updateProductTotal(i)" />
+          <input matInput type="number" formControlName="unitPrice" placeholder="Precio"
+            (ngModelChange)="updateProductTotal(i)" />
         </mat-form-field>
         <mat-form-field appearance="fill">
           <mat-label>Cantidad</mat-label>
-          <input matInput type="number" formControlName="quantity" placeholder="Cantidad" (ngModelChange)="updateProductTotal(i)" />
+          <input matInput type="number" formControlName="quantity" placeholder="Cantidad"
+            (ngModelChange)="updateProductTotal(i)" />
         </mat-form-field>
         <mat-form-field appearance="fill">
           <mat-label>Total</mat-label>
@@ -63,6 +66,15 @@
       </div>
     </div>
     <button mat-raised-button type="button" (click)="openAddProductModal()">Agregar Producto</button>
-    <button mat-raised-button color="primary" type="submit">Guardar Factura</button>
+    <!-- <button mat-raised-button color="primary" type="submit">Guardar Factura</button> -->
+    <div class="button-container">
+      <button mat-raised-button color="primary" type="submit" [disabled]="invoiceForm.invalid">
+        {{ selectedInvoice ? 'Actualizar Factura' : 'Guardar Factura' }}
+      </button>
+
+      <button mat-raised-button color="warn" type="button" (click)="resetForm()" [disabled]="submit">
+        {{ submit ? 'Procesando...' : (selectedInvoice ? 'Cancelar' : 'Limpiar campos') }}
+      </button>
+    </div>
   </form>
 </div>

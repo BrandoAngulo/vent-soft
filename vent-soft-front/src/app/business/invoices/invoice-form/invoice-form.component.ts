@@ -42,13 +42,15 @@ export class InvoiceFormComponent implements OnInit {
   customers: CustomerDTO[] = [];
   filteredCustomers: CustomerDTO[] = [];
   loadingCustomers = false;
+  submit = false;
+
 
   constructor(
     private fb: FormBuilder,
     private dialog: MatDialog,
     private invoiceService: InvoiceService,
     private customerService: CustomerService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.initializeForm();
@@ -173,7 +175,11 @@ export class InvoiceFormComponent implements OnInit {
   }
 
   removeProduct(index: number): void {
-    this.products.removeAt(index);
+    if (index > 0) {
+      this.products.removeAt(index);
+    } else {
+      this.products.clear();
+    }
   }
 
   onSubmit(): void {
@@ -181,6 +187,7 @@ export class InvoiceFormComponent implements OnInit {
       this.message = 'Error en el formulario, verifica los datos.';
       return;
     }
+    this.submit = true; // Desactiva los botones para evitar doble envío
 
     const formValue = this.invoiceForm.getRawValue();
     const subtotal = formValue.products.reduce((sum: number, prod: any) => sum + prod.total, 0);
@@ -206,27 +213,35 @@ export class InvoiceFormComponent implements OnInit {
     };
 
     if (this.selectedInvoice && this.selectedInvoice.id) {
+      // Si hay una factura seleccionada, se actualiza
       this.invoiceService.updateInvoice(this.selectedInvoice.id, invoice).subscribe({
         next: (updatedInvoice) => {
           this.updateInvoice.emit({ id: this.selectedInvoice!.id, invoice: updatedInvoice });
-          this.resetForm();
           this.message = 'Factura actualizada exitosamente';
+          this.resetForm();
         },
         error: (err) => {
           this.message = 'Error al actualizar la factura';
           console.error('Error al actualizar factura:', err);
+        },
+        complete: () => {
+          this.submit = false; // Rehabilita los botones al finalizar
         }
       });
     } else {
+      // Si no hay factura seleccionada, se crea una nueva
       this.invoiceService.saveInvoice(invoice).subscribe({
         next: (newInvoice) => {
           this.addInvoice.emit(newInvoice);
-          this.resetForm();
           this.message = 'Factura creada exitosamente';
+          this.resetForm();
         },
         error: (err) => {
           this.message = 'Error al crear la factura';
           console.error('Error al crear factura:', err);
+        },
+        complete: () => {
+          this.submit = false; // Rehabilita los botones al finalizar
         }
       });
     }
@@ -243,5 +258,8 @@ export class InvoiceFormComponent implements OnInit {
     }
     this.message = '';
     this.filteredCustomers = [...this.customers];
+    this.submit = false;
+    this.selectedInvoice = null;
   }
+
 }
