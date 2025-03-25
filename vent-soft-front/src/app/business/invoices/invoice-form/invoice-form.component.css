@@ -51,3 +51,29 @@ h4.error {
 .product-row mat-form-field {
   flex: 1;
 }
+
+/* Asegurarse de que la entrada de búsqueda encaje bien dentro del mat-option */
+mat-option input {
+  width: 100%;
+  padding: 8px;
+  box-sizing: border-box;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+/* Evitar que el mat-select se cierre al hacer clic en la entrada */
+mat-option[disabled] {
+  pointer-events: auto !important;
+}
+
+/* Estilos para los botones */
+.button-container {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px; /* Espacio entre los botones */
+  width: 100%;
+}
+
+.button-container button {
+  flex: 1; /* Ambos botones ocupan el mismo espacio */
+}

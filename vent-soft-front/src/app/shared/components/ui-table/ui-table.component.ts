@@ -8,7 +8,7 @@ import { MatIconModule } from '@angular/material/icon';
 export interface TableColumn<T> {
   label: string;
   def: keyof T | 'acciones';
-  content: (row: T) => string | null | undefined | number | boolean ;
+  content: (row: T) => string | null | undefined | number | boolean;
 }
 
 @Component({

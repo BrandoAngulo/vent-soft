@@ -10,8 +10,20 @@
       <input matInput formControlName="date" placeholder="Fecha" />
     </mat-form-field>
     <mat-form-field appearance="fill">
-      <mat-label>Nombre del cliente</mat-label>
-      <input matInput formControlName="customer" placeholder="Nombre del cliente" />
+      <mat-label>Cliente</mat-label>
+      <mat-select formControlName="customer" [compareWith]="compareCustomers" [disabled]="loadingCustomers">
+        <mat-option>
+          <input type="text" placeholder="Buscar cliente..." (input)="filterCustomers($event)" (click)="$event.stopPropagation()" />
+        </mat-option>
+        <mat-option *ngFor="let customer of filteredCustomers" [value]="customer">
+          {{ customer.name }} ({{ customer.document }})
+        </mat-option>
+        <mat-option *ngIf="filteredCustomers.length === 0" [disabled]="true">
+          No se encontraron clientes
+        </mat-option>
+      </mat-select>
+      <mat-error *ngIf="invoiceForm.get('customer')?.hasError('required')">El cliente es obligatorio</mat-error>
+      <mat-hint *ngIf="loadingCustomers">Cargando clientes...</mat-hint>
     </mat-form-field>
     <mat-form-field appearance="fill">
       <mat-label>NIT</mat-label>
@@ -21,10 +33,18 @@
       <mat-label>Dirección</mat-label>
       <input matInput formControlName="address" placeholder="Dirección" />
     </mat-form-field>
+    <mat-form-field appearance="fill">
+      <mat-label>Email</mat-label>
+      <input matInput formControlName="email" placeholder="Email" />
+    </mat-form-field>
 
     <h3>Productos</h3>
     <div formArrayName="products">
       <div *ngFor="let prod of products.controls; let i = index" [formGroupName]="i" class="product-row">
+        <mat-form-field appearance="fill">
+          <mat-label>ID Producto</mat-label>
+          <input matInput formControlName="productId" placeholder="ID" />
+        </mat-form-field>
         <mat-form-field appearance="fill">
           <mat-label>Producto</mat-label>
           <input matInput formControlName="name" placeholder="Producto" />
@@ -44,10 +64,8 @@
         <button mat-icon-button color="warn" type="button" (click)="removeProduct(i)">
           <mat-icon>delete</mat-icon>
         </button>
-
       </div>
     </div>
-    <!-- Botón que abre el modal para agregar un producto -->
     <button mat-raised-button type="button" (click)="openAddProductModal()">Agregar Producto</button>
     <button mat-raised-button color="primary" type="submit">Guardar Factura</button>
   </form>

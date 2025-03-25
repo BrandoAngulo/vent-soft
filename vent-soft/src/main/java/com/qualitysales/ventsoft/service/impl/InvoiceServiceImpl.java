@@ -14,8 +14,12 @@ import com.qualitysales.ventsoft.repository.ItemInvoiceRepository;
 import com.qualitysales.ventsoft.repository.ProductRepository;
 import com.qualitysales.ventsoft.service.InvoiceService;
 import com.qualitysales.ventsoft.utils.DateUtils;
+import com.qualitysales.ventsoft.utils.dto.GenericDTO;
+import com.qualitysales.ventsoft.utils.enums.MessagesEnum;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationContextException;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -129,9 +133,9 @@ public class InvoiceServiceImpl implements InvoiceService {
     }
 
     @Override
-    public RegisterUptadeInvoiceDTO updateInvoice(RegisterUptadeInvoiceDTO registerUptadeInvoiceDTO) {
+    public RegisterUptadeInvoiceDTO updateInvoice(Integer id, RegisterUptadeInvoiceDTO registerUptadeInvoiceDTO) {
         log.info("updateInvoice ok: {}", registerUptadeInvoiceDTO);
-        Invoice invoiceId = invoiceRepository.findById(registerUptadeInvoiceDTO.id()).orElseThrow(() -> new IllegalArgumentException("Invoice not found"));
+        Invoice invoiceId = invoiceRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invoice not found"));
         Client client = ClientMapper.MAPPER.toClientDTO(registerUptadeInvoiceDTO.client());
         try {
             if (invoiceId.getId().equals(registerUptadeInvoiceDTO.id())) {
@@ -156,18 +160,20 @@ public class InvoiceServiceImpl implements InvoiceService {
     }
 
     @Override
-    public boolean anularInvoice(Integer id) {
+    public GenericDTO anularInvoice(Integer id) {
         log.info("anularInvoice ok: {}", id);
-        Invoice searchInvoice = invoiceRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invoice not found"));
+        Invoice searchInvoice = invoiceRepository.findById(id).orElseThrow(
+                () -> new ApplicationContextException(MessagesEnum.REQUEST_FAILED.getMessage(), null));
         try {
             Boolean isActive = searchInvoice.isStatus();
             searchInvoice.setStatus(Boolean.TRUE.equals(isActive) ? Boolean.FALSE : Boolean.TRUE);
             invoiceRepository.save(searchInvoice);
-            return searchInvoice.isStatus();
+            searchInvoice.isStatus();
+            return GenericDTO.genericSuccess(MessagesEnum.REQUEST_SUCCESS, HttpStatus.OK.value());
 
         } catch (Exception e) {
             log.error("anularInvoice error: {}", e.getMessage());
-            throw new IllegalArgumentException(e);
+            throw new ApplicationContextException(e.getMessage());
         }
 
     }
