@@ -4,7 +4,7 @@ import { InvoiceDTO } from "./invoice.dto";
 export interface ItemInvoiceDTO {
   id: number;
   product: ProductDTO;
-  unitPrice: number;
+  price: number;
   invoice: InvoiceDTO;
   amountSold: number;
   total: number;

@@ -7,7 +7,7 @@ export interface InvoiceDTO {
   client: CustomerDTO;
   nit: string;
   email: string;
-  cellphone: string;
+  cellPhone: string;
   address: string;
   date: string;
   total: number;

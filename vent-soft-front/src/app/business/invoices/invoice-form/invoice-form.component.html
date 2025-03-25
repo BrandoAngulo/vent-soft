@@ -34,17 +34,13 @@
       <input matInput formControlName="address" placeholder="Dirección" />
     </mat-form-field>
     <mat-form-field appearance="fill">
-      <mat-label>Email</mat-label>
-      <input matInput formControlName="email" placeholder="Email" />
+      <mat-label>Celular</mat-label>
+      <input matInput formControlName="cellPhone" placeholder="cellPhone" />
     </mat-form-field>
 
     <h3>Productos</h3>
     <div formArrayName="products">
       <div *ngFor="let prod of products.controls; let i = index" [formGroupName]="i" class="product-row">
-        <mat-form-field appearance="fill">
-          <mat-label>ID Producto</mat-label>
-          <input matInput formControlName="productId" placeholder="ID" />
-        </mat-form-field>
         <mat-form-field appearance="fill">
           <mat-label>Producto</mat-label>
           <input matInput formControlName="name" placeholder="Producto" />

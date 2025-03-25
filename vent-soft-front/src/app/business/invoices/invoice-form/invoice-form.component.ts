@@ -68,7 +68,7 @@ export class InvoiceFormComponent implements OnInit {
       customer: [null, Validators.required], // Cambiado a objeto CustomerDTO
       nit: ['', Validators.required],
       address: ['', Validators.required],
-      email: ['', [Validators.required, Validators.email]],
+      cellPhone: ['', [Validators.required]],
       products: this.fb.array([])
     });
 
@@ -78,7 +78,7 @@ export class InvoiceFormComponent implements OnInit {
         this.invoiceForm.patchValue({
           nit: customer.document,
           address: customer.residence,
-          email: customer.email
+          cellPhone: customer.cellPhone
         });
       }
     });
@@ -122,22 +122,24 @@ export class InvoiceFormComponent implements OnInit {
         invoiceCode: this.selectedInvoice.invoiceCode,
         date: typeof this.selectedInvoice.date === 'string' ? this.selectedInvoice.date : this.selectedInvoice.date,
         customer: selectedCustomer,
-        nit: this.selectedInvoice.nit,
-        address: this.selectedInvoice.address,
-        email: this.selectedInvoice.email
+        nit: selectedCustomer?.document,
+        address: selectedCustomer?.residence,
+        cellPhone: selectedCustomer?.cellPhone
       });
 
       while (this.products.length !== 0) {
         this.products.removeAt(0);
       }
       (this.selectedInvoice.itemInvoices || []).forEach((item: ItemInvoiceDTO) => {
-        this.products.push(this.fb.group({
+        const group = this.fb.group({
           productId: [item.product.id, Validators.required],
           name: [item.product.name, Validators.required],
-          unitPrice: [item.unitPrice, [Validators.required, Validators.min(0)]],
+          unitPrice: [item.product.price, [Validators.required, Validators.min(0)]],
           quantity: [item.amountSold, [Validators.required, Validators.min(1)]],
-          total: [{ value: item.total, disabled: true }]
-        }));
+          total: [{ value: item.product.price * item.amountSold, disabled: true }]
+        });
+        this.products.push(group);
+        group.get('unitPrice')?.disable();
       });
     }
   }
@@ -200,10 +202,8 @@ export class InvoiceFormComponent implements OnInit {
         total: p.total
       })),
       status: true,
-      cellphone: this.selectedInvoice?.client?.cellPhone || 'N/A',
+      cellPhone: this.selectedInvoice?.client?.cellPhone || 'N/A',
     };
-
-    console.log("invoice>>: ",invoice)
 
     if (this.selectedInvoice && this.selectedInvoice.id) {
       this.invoiceService.updateInvoice(this.selectedInvoice.id, invoice).subscribe({
