@@ -13,3 +13,26 @@ INSERT INTO usuario (nombre) VALUES ('Julian');
 INSERT INTO factura(client_id, total, date, invoice_code, status) VALUES (1,2500,'2024-02-28','112', true);
 
 INSERT INTO itemfactura(id_factura, id_producto) VALUES (1, 1);
+
+CREATE TABLE roles
+(
+    id          SERIAL PRIMARY KEY,
+    descripcion VARCHAR(50) UNIQUE NOT NULL
+);
+CREATE TABLE usuario_roles
+(
+    usuario_id INTEGER NOT NULL,
+    rol_id     INTEGER NOT NULL,
+    PRIMARY KEY (usuario_id, rol_id),
+    FOREIGN KEY (usuario_id) REFERENCES usuario (id),
+    FOREIGN KEY (rol_id) REFERENCES roles (id)
+);
+
+-- Datos de prueba
+INSERT INTO roles (descripcion)
+VALUES ('ROLE_ADMIN'),
+       ('ROLE_USER');
+INSERT INTO usuario (login, pass)
+VALUES ('admin', '$2a$15$v.U4i22NPHOD4dmCOxf4NesQzrYYj7HeAuCLPuon5a05e91QU9Tr2'); -- Usa BCrypt 112233
+INSERT INTO usuario_roles (usuario_id, rol_id)
+VALUES (4, 1); -- admin tiene ROLE_ADMIN
