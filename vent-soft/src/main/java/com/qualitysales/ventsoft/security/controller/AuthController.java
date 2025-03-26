@@ -1,56 +1,27 @@
 package com.qualitysales.ventsoft.security.controller;
 
-import com.qualitysales.ventsoft.security.dto.JwtResponseDTO;
 import com.qualitysales.ventsoft.security.dto.LoginRequestDTO;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
-import org.springframework.beans.factory.annotation.Value;
+import com.qualitysales.ventsoft.security.service.impl.AuthenticationServiceImpl;
+import com.qualitysales.ventsoft.utils.dto.GenericDTO;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping("/api/vent-soft/auth")
 public class AuthController {
 
-    private final AuthenticationManager authenticationManager;
+      private final AuthenticationServiceImpl authenticationService;
 
-    @Value("${jwt.secret}")
-    private String SECRET_KEY;
-
-    @Value("${jwt.expiration}")
-    private long EXPIRATION_TIME;
-
-    public AuthController(AuthenticationManager authenticationManager) {
-        this.authenticationManager = authenticationManager;
+    public AuthController(AuthenticationServiceImpl authenticationService) {
+        this.authenticationService = authenticationService;
     }
 
     @PostMapping("/login")
-    public ResponseEntity<JwtResponseDTO> login(@RequestBody LoginRequestDTO loginRequestDTO) {
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(loginRequestDTO.login(), loginRequestDTO.password()));
-        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+    public ResponseEntity<GenericDTO> login(@RequestBody LoginRequestDTO loginRequestDTO) {
 
-        Map<String, Object> claims = new HashMap<>();
-        claims.put("roles", userDetails.getAuthorities());
-        String token = Jwts.builder()
-                .setClaims(claims)
-                .setSubject(userDetails.getUsername())
-                .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
-                .signWith(SignatureAlgorithm.HS512, SECRET_KEY.getBytes())
-                .compact();
-
-        return ResponseEntity.ok(new JwtResponseDTO(token));
+        return ResponseEntity.ok().body(GenericDTO.success(this.authenticationService.login(loginRequestDTO)));
     }
 }

@@ -1,5 +1,6 @@
 package com.qualitysales.ventsoft.Controllers.DTO;
 
+import com.qualitysales.ventsoft.model.Role;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -20,4 +21,5 @@ public class UserDTO {
     private String code;
     private String email;
     private Boolean status;
+    private Role rol;
 }

@@ -225,11 +225,11 @@ export class InvoiceFormComponent implements OnInit {
           console.error('Error al actualizar factura:', err);
         },
         complete: () => {
-          this.submit = false; // Rehabilita los botones al finalizar
+          this.submit = false; 
         }
       });
     } else {
-      // Si no hay factura seleccionada, se crea una nueva
+
       this.invoiceService.saveInvoice(invoice).subscribe({
         next: (newInvoice) => {
           this.addInvoice.emit(newInvoice);
@@ -241,7 +241,7 @@ export class InvoiceFormComponent implements OnInit {
           console.error('Error al crear factura:', err);
         },
         complete: () => {
-          this.submit = false; // Rehabilita los botones al finalizar
+          this.submit = false;
         }
       });
     }
