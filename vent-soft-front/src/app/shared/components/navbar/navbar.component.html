@@ -1,0 +1,13 @@
+<mat-toolbar color="primary">
+  <span>Vent Soft</span>
+  <span class="flex-1"></span>
+  <button mat-button *ngIf="authService.isLoggedIn()" routerLink="/dashboard">Dashboard</button>
+  <button mat-button *ngIf="authService.isLoggedIn()" routerLink="/invoice">Facturas</button>
+  <button mat-button *ngIf="authService.isLoggedIn()" routerLink="/product">Productos</button>
+  <button mat-button *ngIf="authService.isLoggedIn()" routerLink="/customer">Clientes</button>
+  <button mat-button *ngIf="authService.isLoggedIn()" routerLink="/category">Categorías</button>
+  <button mat-button *ngIf="authService.isLoggedIn()" routerLink="/city">Ciudades</button>
+  <button mat-button *ngIf="authService.isLoggedIn()" routerLink="/supplier">Proveedores</button>
+  <button mat-button *ngIf="authService.hasRole('ROLE_ADMIN')" routerLink="/user">Usuarios</button>
+  <button mat-button *ngIf="authService.isLoggedIn()" (click)="logout()">Cerrar Sesión</button>
+</mat-toolbar>

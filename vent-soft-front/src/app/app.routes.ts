@@ -1,9 +1,17 @@
 import { Routes } from '@angular/router';
+import { AuthGuard } from './business/auth/auth.guard';
 
 export const routes: Routes = [
+  // Ruta de login (fuera del layout, no requiere autenticación)
+  {
+    path: 'login',
+    loadComponent: () => import('./business/auth/login/login.component')
+  },
+  // Rutas protegidas dentro del layout
   {
     path: '',
     loadComponent: () => import('./shared/components/layout/layout.component'),
+    canActivate: [AuthGuard], // Proteger todas las rutas dentro del layout
     children: [
       {
         path: 'dashboard',
@@ -15,7 +23,7 @@ export const routes: Routes = [
       },
       {
         path: 'customer',
-        loadComponent: () => import('./business/customer/customer.component'),
+        loadComponent: () => import('./business/customer/customer.component')
       },
       {
         path: 'city',
@@ -23,19 +31,20 @@ export const routes: Routes = [
       },
       {
         path: 'invoice',
-        loadComponent: () => import('./business/invoices/invoice/invoice.component'),
+        loadComponent: () => import('./business/invoices/invoice/invoice.component')
       },
       {
         path: 'product',
-        loadComponent: () => import('./business/product/product.component'),
+        loadComponent: () => import('./business/product/product.component')
       },
       {
         path: 'supplier',
-        loadComponent: () => import('./business/supplier/supplier.component'),
+        loadComponent: () => import('./business/supplier/supplier.component')
       },
       {
         path: 'user',
         loadComponent: () => import('./business/user/user.component')
+        // No añadimos restricción de ROLE_USER, ya que es un módulo administrativo
       },
       {
         path: '',
@@ -44,8 +53,9 @@ export const routes: Routes = [
       }
     ]
   },
+  // Redirigir a login si la ruta no existe
   {
     path: '**',
-    redirectTo: 'dashboard'
+    redirectTo: 'login'
   }
 ];
