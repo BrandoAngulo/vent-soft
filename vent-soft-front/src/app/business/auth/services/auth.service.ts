@@ -65,6 +65,13 @@ export class AuthService {
     return this.getRoles().includes(role);
   }
 
+    if (!token || typeof token !== 'string') {
+      return false;
+    }
+    const parts = token.split('.');
+    return parts.length === 3; // Un JWT válido debe tener 3 partes (header, payload, signature)
+  }
+
   private setRolesFromToken(token: string): void {
     try {
       const payload = JSON.parse(atob(token.split('.')[1]));

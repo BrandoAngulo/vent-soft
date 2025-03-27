@@ -36,6 +36,7 @@ export class UserFormComponent implements OnInit, OnChanges {
       name: [''],
       lastName: [''],
       login: [''],
+      passwrod: [''],
       code: [''],
       email: ['', [Validators.required, Validators.email]],
       status: [true],
@@ -58,6 +59,7 @@ export class UserFormComponent implements OnInit, OnChanges {
         name: this.userEdit?.name,
         lastName: this.userEdit?.lastName,
         login: this.userEdit?.login,
+        password: this.userEdit?.password,
         code: this.userEdit?.code,
         email: this.userEdit?.email,
       });
@@ -66,6 +68,7 @@ export class UserFormComponent implements OnInit, OnChanges {
         name: '',
         lastName: '',
         login: '',
+        password: '',
         code: '',
         email: '',
         status: true,
@@ -97,6 +100,7 @@ export class UserFormComponent implements OnInit, OnChanges {
       name: '',
       lastName: '',
       login: '',
+      password: '',
       code: '',
       email: '',
     });

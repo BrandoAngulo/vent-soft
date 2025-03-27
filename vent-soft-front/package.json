@@ -1,14 +1,15 @@
 {
   "name": "vent-soft-front",
   "version": "0.0.0",
-  "scripts": {
-    "ng": "ng",
-    "start": "ng serve",
-    "build": "ng build",
-    "watch": "ng build --watch --configuration development",
-    "test": "ng test",
-    "serve:ssr:vent-soft-front": "node dist/vent-soft-front/server/server.mjs"
-  },
+"scripts": {
+  "ng": "ng",
+  "start": "ng serve",
+  "build": "ng build",
+  "build:ssr": "ng build && ng run vent-soft-front:server",
+  "serve:ssr": "node dist/vent-soft-front/server/server.mjs",
+  "watch": "ng build --watch --configuration development",
+  "test": "ng test"
+},
   "private": true,
   "dependencies": {
     "@angular/animations": "^18.2.0",
