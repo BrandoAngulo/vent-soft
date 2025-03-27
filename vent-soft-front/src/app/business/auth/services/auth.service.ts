@@ -65,6 +65,7 @@ export class AuthService {
     return this.getRoles().includes(role);
   }
 
+  private validToken(token: string): boolean {
     if (!token || typeof token !== 'string') {
       return false;
     }
