@@ -29,11 +29,26 @@ export default class UserComponent implements OnInit {
   ngOnInit(): void {
     this.getUsers()
     this.setTableColumns()
+    this
   }
 
   getUsers() {
     this.loadUser = true;
     this.userService.list().subscribe({
+      next: (users) => {
+        this.users = users;
+        this.loadUser = false;
+      },
+      error: (err) => {
+        console.error('Error loading users: ', err)
+        this.loadUser = false;
+      },
+    });
+  }
+
+  getRoles() {
+    this.loadUser = true;
+    this.().subscribe({
       next: (users) => {
         this.users = users;
         this.loadUser = false;
