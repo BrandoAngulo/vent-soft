@@ -6,6 +6,9 @@ import { RouterModule } from '@angular/router';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { RolesDTO } from './roles.dto';
+import { UserService } from '../services/user.service';
+import { MatSelectModule } from '@angular/material/select';
 
 @Component({
   selector: 'app-user-form',
@@ -15,6 +18,7 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
     RouterModule,
     MatInputModule,
     MatButtonModule,
+    MatSelectModule,
     ReactiveFormsModule,
     MatSlideToggleModule
   ],
@@ -30,13 +34,20 @@ export class UserFormComponent implements OnInit, OnChanges {
   message = "";
   userForm!: FormGroup;
   submit = false;
+  roles: RolesDTO[] = [];
+  filterRol: RolesDTO[] = [];
+  loadRoles = false;
 
-  constructor(private formBuilder: FormBuilder) {
+  constructor(
+    private formBuilder: FormBuilder,
+    private userService: UserService,
+  ) {
     this.userForm = this.formBuilder.group({
       name: [''],
       lastName: [''],
       login: [''],
-      passwrod: [''],
+      roles: [''],
+      password: [''],
       code: [''],
       email: ['', [Validators.required, Validators.email]],
       status: [true],
@@ -45,12 +56,14 @@ export class UserFormComponent implements OnInit, OnChanges {
 
   ngOnInit(): void {
     this.loadUserData();
+    this.getRoles();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['userEdit']) {
       this.loadUserData();
     }
+
   }
 
   loadUserData() {
@@ -74,6 +87,7 @@ export class UserFormComponent implements OnInit, OnChanges {
         status: true,
       });
     }
+    this.filterRol = [...this.roles];
   }
 
   addUser() {
@@ -104,6 +118,37 @@ export class UserFormComponent implements OnInit, OnChanges {
       code: '',
       email: '',
     });
+    this.filterRol = [...this.roles];
+  }
+
+  getRoles() {
+    this.loadRoles = true;
+
+    this.userService.listRoles().subscribe({
+      next: (roles) => {
+        this.roles = roles;
+        this.filterRol = [...this.roles];
+        this.loadRoles = false;
+        this.loadUserData();
+      },
+      error: (err) => {
+        console.error('Error loading roles: ', err)
+        this.loadRoles = false;
+      },
+    });
+
+  }
+
+    compareRoles(rol: RolesDTO, rol1: RolesDTO): boolean {
+      return rol && rol1 ? rol.id === rol1.id : rol === rol1;
+    }
+
+  filterRoles(evento: Event): void {
+    const filterValue = (evento.target as HTMLInputElement).value.toLowerCase();
+    this.filterRol = this.roles.filter(rol =>
+      rol.description.toLowerCase().includes(filterValue) ||
+      rol.id.toString().includes(filterValue)
+    );
   }
 }
 

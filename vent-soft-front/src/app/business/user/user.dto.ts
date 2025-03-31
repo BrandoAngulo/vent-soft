@@ -8,6 +8,6 @@ export interface UserDTO {
   password: string,
   code: string;
   email: string;
-  roles: RolesDTO[];
+  roles: RolesDTO;
   status: boolean;
 }

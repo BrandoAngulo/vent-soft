@@ -46,20 +46,6 @@ export default class UserComponent implements OnInit {
     });
   }
 
-  getRoles() {
-    this.loadUser = true;
-    this.().subscribe({
-      next: (users) => {
-        this.users = users;
-        this.loadUser = false;
-      },
-      error: (err) => {
-        console.error('Error loading users: ', err)
-        this.loadUser = false;
-      },
-    });
-  }
-
   setTableColumns() {
     this.tableColumns = [
       {

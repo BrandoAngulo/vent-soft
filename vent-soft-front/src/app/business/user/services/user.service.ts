@@ -41,11 +41,11 @@ export class UserService {
       );
   }
 
-  listRoles(): Observable<ApiResponse<string>> {
-    return this.http.get<ApiResponse<string>>(`${this.urlBase}/roles/find-all`)
+  listRoles(): Observable<RolesDTO[]> {
+    return this.http.get<{status: number, payload: RolesDTO[]}>(`${this.urlBase}/roles/find-all`)
       .pipe(
         map(response => {
-          return response
+          return response.payload
         })
       );
   }

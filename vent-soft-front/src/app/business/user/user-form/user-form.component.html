@@ -18,6 +18,27 @@
     </mat-form-field>
 
     <mat-form-field appearance="fill">
+      <mat-label>Roles</mat-label>
+      <mat-select formControlName="roles" [compareWith]="compareRoles" [disabled]="loadRoles" #rolesSelect>
+        <!-- Entrada de búsqueda -->
+        <mat-option>
+          <input type="text" placeholder="Buscar roles.." (input)="filterRoles($event)" (click)="$event.stopPropagation()" />
+        </mat-option>
+        <!-- Opciones -->
+        <mat-option *ngFor="let roles of filterRol" [value]="roles">
+          {{ roles.description }}
+        </mat-option>
+        <mat-option *ngIf="filterRol.length === 0" [disabled]="true">
+          No se encontraron roles
+        </mat-option>
+      </mat-select>
+      <mat-error *ngIf="userForm.get('roles')?.hasError('required')">
+        El rol es obligatorio
+      </mat-error>
+      <mat-hint *ngIf="loadRoles">Cargando roles...</mat-hint>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
       <mat-label>Contraseña</mat-label>
       <input matInput formControlName="password" placeholder="Ingresa la contraseña" />
     </mat-form-field>
