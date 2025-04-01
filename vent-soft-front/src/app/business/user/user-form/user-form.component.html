@@ -19,7 +19,7 @@
 
     <mat-form-field appearance="fill">
       <mat-label>Roles</mat-label>
-      <mat-select formControlName="roles" [compareWith]="compareRoles" [disabled]="loadRoles" #rolesSelect>
+      <mat-select formControlName="roles" [compareWith]="compareRoles" [multiple]="true" [disabled]="loadRoles" #rolesSelect>
         <!-- Entrada de búsqueda -->
         <mat-option>
           <input type="text" placeholder="Buscar roles.." (input)="filterRoles($event)" (click)="$event.stopPropagation()" />

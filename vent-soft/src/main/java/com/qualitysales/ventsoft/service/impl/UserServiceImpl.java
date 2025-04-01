@@ -4,14 +4,17 @@ import com.qualitysales.ventsoft.Controllers.DTO.UserDTO;
 import com.qualitysales.ventsoft.mapper.UserMapper;
 import com.qualitysales.ventsoft.model.User;
 import com.qualitysales.ventsoft.repository.UserRepository;
+import com.qualitysales.ventsoft.security.config.SecurityConfig;
 import com.qualitysales.ventsoft.service.UserService;
 import com.qualitysales.ventsoft.utils.dto.GenericDTO;
 import com.qualitysales.ventsoft.utils.enums.MessagesEnum;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContextException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,9 +23,12 @@ import java.util.List;
 @Service
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
+    @Autowired
+    private final PasswordEncoder passwordEncoder;
 
-    public UserServiceImpl(UserRepository userRepository) {
+    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Transactional
@@ -57,7 +63,7 @@ public class UserServiceImpl implements UserService {
             log.error("saveUser = " + user);
             throw new IllegalArgumentException("Username is null ");
         }
-        try {
+        try {user.setPassword(passwordEncoder.encode(user.getPassword()));
             UserDTO userDTO = UserMapper.convertToDTO(user);
             log.info("saveUser = " + userDTO);
             userRepository.save(user);
@@ -79,7 +85,9 @@ public class UserServiceImpl implements UserService {
             user.setCode(userDTO.getCode());
             user.setEmail(userDTO.getEmail());
             user.setLogin(userDTO.getLogin());
-            user.setPassword(userDTO.getPassword());
+            if (userDTO.getPassword() != null && !userDTO.getPassword().isEmpty()) {
+            user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
+            }
             user.setRoles(userDTO.getRoles());
             user.setStatus(userDTO.getStatus());
             log.info("userSave = " + user);

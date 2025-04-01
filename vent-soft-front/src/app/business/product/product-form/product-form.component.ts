@@ -154,7 +154,7 @@ export class ProductFormComponent implements OnInit, OnChanges {
       category.id.toString().includes(filterValue)
     );
   }
-  
+
   filterSuppliers(evento: Event): void {
     const filterValue = (evento.target as HTMLInputElement).value.toLowerCase();
     this.filterSupplier = this.suppliers.filter(supplier =>

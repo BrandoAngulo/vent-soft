@@ -60,7 +60,7 @@ export class UserFormComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['userEdit']) {
+    if (changes['userEdit'] && this.roles.length > 0) {
       this.loadUserData();
     }
 
@@ -72,7 +72,7 @@ export class UserFormComponent implements OnInit, OnChanges {
         name: this.userEdit?.name,
         lastName: this.userEdit?.lastName,
         login: this.userEdit?.login,
-        password: this.userEdit?.password,
+        roles: this.userEdit.roles,
         code: this.userEdit?.code,
         email: this.userEdit?.email,
       });
@@ -100,8 +100,10 @@ export class UserFormComponent implements OnInit, OnChanges {
     const user: UserDTO = {
       ...formValue,
       id: this.userEdit?.id,
+      roles: formValue.roles,
       status: true
     }
+    console.log("Datos enviados: ", JSON.stringify(user));
     if (this.userEdit) {
       console.log("Actualizar");
       this.update.emit(user);
