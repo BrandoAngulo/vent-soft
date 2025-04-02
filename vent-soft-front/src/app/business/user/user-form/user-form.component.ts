@@ -9,6 +9,8 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { RolesDTO } from './roles.dto';
 import { UserService } from '../services/user.service';
 import { MatSelectModule } from '@angular/material/select';
+import { AlertService } from '../../../shared/services/alert.service';
+import { FormUtilsService } from '../../../shared/utils/form-utils.service';
 
 @Component({
   selector: 'app-user-form',
@@ -41,17 +43,19 @@ export class UserFormComponent implements OnInit, OnChanges {
   constructor(
     private formBuilder: FormBuilder,
     private userService: UserService,
+    private formUtilsService: FormUtilsService,
+    private alertService: AlertService,
   ) {
     this.userForm = this.formBuilder.group({
-      name: [''],
-      lastName: [''],
-      login: [''],
-      roles: [''],
+      name: ['', Validators.required],
+      lastName: ['', Validators.required],
+      login: ['', Validators.required],
+      roles: ['', Validators.required],
       password: [''],
-      code: [''],
+      code: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
-      status: [true],
     });
+    this.formUtilsService.AutoFirstWordMayus(this.userForm);
   }
 
   ngOnInit(): void {
@@ -72,10 +76,12 @@ export class UserFormComponent implements OnInit, OnChanges {
         name: this.userEdit?.name,
         lastName: this.userEdit?.lastName,
         login: this.userEdit?.login,
+        password: '',
         roles: this.userEdit.roles,
         code: this.userEdit?.code,
         email: this.userEdit?.email,
       });
+      this.passwordValidation(false);
     } else {
       this.userForm.reset({
         name: '',
@@ -86,9 +92,23 @@ export class UserFormComponent implements OnInit, OnChanges {
         email: '',
         status: true,
       });
+      this.passwordValidation(true);
     }
     this.filterRol = [...this.roles];
   }
+
+    /** Configura la validación del password */
+    private passwordValidation(newUser: boolean) {
+      const passwordControl = this.userForm.get('password');
+      if (passwordControl) {
+        if (newUser) {
+          passwordControl.setValidators([Validators.required]); //  Requerido al crear
+        } else {
+          passwordControl.clearValidators(); // No requerido al editar
+        }
+        passwordControl.updateValueAndValidity(); // Actualizar validaciones
+      }
+    }
 
   addUser() {
     if (this.userForm.invalid) {
@@ -101,14 +121,15 @@ export class UserFormComponent implements OnInit, OnChanges {
       ...formValue,
       id: this.userEdit?.id,
       roles: formValue.roles,
+      password: formValue.password,
       status: true
     }
     console.log("Datos enviados: ", JSON.stringify(user));
     if (this.userEdit) {
-      console.log("Actualizar");
+      this.alertService.showSuccess();
       this.update.emit(user);
     } else {
-      console.log("Agregar");
+      this.alertService.showSuccess();
       this.add.emit(user);
     }
     this.submit = false;

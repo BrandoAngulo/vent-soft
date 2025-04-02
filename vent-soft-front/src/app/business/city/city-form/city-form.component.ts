@@ -6,6 +6,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AlertService } from '../../../shared/services/alert.service';
+import { FormUtilsService } from '../../../shared/utils/form-utils.service';
 
 @Component({
   selector: 'app-city-form',
@@ -17,6 +19,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
     MatButtonModule,
     ReactiveFormsModule,
     MatSlideToggleModule,
+
   ],
   templateUrl: './city-form.component.html',
   styleUrl: './city-form.component.css'
@@ -25,16 +28,21 @@ export class CityFormComponent implements OnInit, OnChanges {
   @Output() add = new EventEmitter<CityDTO>();
   @Input() cityEdit: CityDTO | null = null;
   @Output() update = new EventEmitter<CityDTO>;
-  
+
   submit = false;
   message = "";
   cityForm!: FormGroup;
 
-  constructor(private formBuilder: FormBuilder) {
+  constructor(
+    private formBuilder: FormBuilder,
+    private alertService: AlertService,
+    private formUtilsService: FormUtilsService,
+  ) {
     this.cityForm = this.formBuilder.group({
-      name: [''],
-      code: [''],
+      name: ['', Validators.required],
+      code: ['', Validators.required],
     });
+    this.formUtilsService.AutoFirstWordMayus(this.cityForm);
   }
 
   ngOnInit(): void {
@@ -76,10 +84,10 @@ export class CityFormComponent implements OnInit, OnChanges {
     }
 
     if (this.cityEdit) {
-      console.log("Actualizar");
       this.update.emit(city);
+      this.alertService.showSuccess()
     } else {
-      console.log("Agregar");
+      this.alertService.showSuccess()
       this.add.emit(city);
     }
     this.submit = false;

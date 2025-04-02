@@ -49,11 +49,6 @@ export default class UserComponent implements OnInit {
   setTableColumns() {
     this.tableColumns = [
       {
-        label: 'Id',
-        def: 'id',
-        content: (row) => row.id,
-      },
-      {
         label: 'Nombre',
         def: 'name',
         content: (row) => row.name,

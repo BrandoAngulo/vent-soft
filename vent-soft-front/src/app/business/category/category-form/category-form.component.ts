@@ -6,6 +6,8 @@ import { RouterModule } from '@angular/router';
 import { CategoryDTO } from '../category.dto';
 import { CommonModule } from '@angular/common';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { FormUtilsService } from '../../../shared/utils/form-utils.service';
+import { AlertService } from '../../../shared/services/alert.service';
 
 @Component({
   selector: 'app-category-form',
@@ -31,11 +33,16 @@ export class CategoryFormComponent implements OnInit, OnChanges {
   categoryForm!: FormGroup;
   submit = false;
 
-  constructor(private formBuilder: FormBuilder) {
+  constructor(
+    private formBuilder: FormBuilder,
+    private formUtilsService: FormUtilsService,
+    private alertService: AlertService,
+
+  ) {
     this.categoryForm = this.formBuilder.group({
-      description: [''],
-      status: [true],
+      description: ['', Validators.required],
     });
+    this.formUtilsService.AutoFirstWordMayus(this.categoryForm);
   }
 
   ngOnInit(): void {
@@ -74,10 +81,10 @@ export class CategoryFormComponent implements OnInit, OnChanges {
       status: true
     }
     if (this.categoryEdit) {
-      console.log("Actualizar");
+      this.alertService.showSuccess();
       this.update.emit(category);
     } else {
-      console.log("Agregar");
+      this.alertService.showSuccess();
       this.add.emit(category);
     }
     this.submit = false;

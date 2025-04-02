@@ -3,18 +3,18 @@
   <form [formGroup]="supplierForm" (ngSubmit)="addSupplier()">
 
     <mat-form-field appearance="fill">
-      <mat-label>Nombre</mat-label>
-      <textarea matInput formControlName="name" placeholder="Enter supplier name"></textarea>
+      <mat-label>Razon social</mat-label>
+      <input matInput formControlName="name" placeholder="Digita la Razon social">
     </mat-form-field>
 
     <mat-form-field appearance="fill">
       <mat-label>Celular</mat-label>
-      <textarea matInput formControlName="cellPhone" placeholder="Enter cellphone"></textarea>
+      <input matInput formControlName="cellPhone" placeholder="Digita el numero celular">
     </mat-form-field>
 
     <mat-form-field appearance="fill">
       <mat-label>Nit</mat-label>
-      <textarea matInput formControlName="nit" placeholder="Enter nit"></textarea>
+      <input matInput formControlName="nit" placeholder="Digita el nit">
     </mat-form-field>
 
     <div class="button-container">
