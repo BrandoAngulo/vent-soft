@@ -1,3 +1,6 @@
 :host {
     @apply flex flex-col min-h-screen;
   }
+  div {
+    transition: margin-left 0.3s ease-in-out;
+  }

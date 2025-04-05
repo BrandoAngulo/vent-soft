@@ -28,6 +28,12 @@ public enum ErrorMessageEnum {
             "500",
             "Error no controlado",
             "Comuniquese con el administrador del sistema"
+    ),
+
+    TOKEN_EXPIRED(
+            "4",
+            "Iniciar sesion de nuevo",
+            "Token expirado"
     );
     private final String code;
     private final String recommendation;
