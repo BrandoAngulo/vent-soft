@@ -1,32 +1,42 @@
+import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Component, HostListener } from '@angular/core';
+import { MatIconModule } from '@angular/material/icon';
 import { RouterLink, RouterLinkActive } from '@angular/router';
+import { Observable, Subscription } from 'rxjs';
+import { AuthService } from '../../../business/auth/services/auth.service';
 
 @Component({
   selector: 'app-sidebar',
   standalone: true,
-  imports: [RouterLink, RouterLinkActive, CommonModule],
+  imports: [RouterLink, RouterLinkActive, CommonModule, MatIconModule],
   templateUrl: './sidebar.component.html',
   styleUrl: './sidebar.component.css'
 })
 export class SidebarComponent {
-  isSidebarOpen = true; // Por defecto: abierto en pantallas grandes
+  isSidebarOpen = true;
+  hoverTimeout: any;
+  login$: Observable<string | null> | undefined;
 
-  constructor() {
-    this.checkScreenSize();
+  constructor(private authService: AuthService) { }
+
+  ngOnInit(): void {
+    this.login$ = this.authService.getLogin();
+    setTimeout(() => {
+      this.isSidebarOpen = false;
+    }, 500);
   }
 
-  @HostListener('window:resize', ['$event'])
-  onResize(event: Event) {
-    this.checkScreenSize();
+  onMouseEnter() {
+    clearTimeout(this.hoverTimeout);
+    this.hoverTimeout = setTimeout(() => {
+      this.isSidebarOpen = true;
+    }, 100);
   }
 
-  checkScreenSize() {
-    // Oculta el sidebar por defecto en pantallas pequeñas (menos de 1280px, el breakpoint 'xl' de Tailwind)
-    this.isSidebarOpen = window.innerWidth >= 1280;
-  }
-
-  toggleSidebar() {
-    this.isSidebarOpen = !this.isSidebarOpen;
+  onMouseLeave() {
+    clearTimeout(this.hoverTimeout);
+    this.hoverTimeout = setTimeout(() => {
+      this.isSidebarOpen = false;
+    }, 300);
   }
 }

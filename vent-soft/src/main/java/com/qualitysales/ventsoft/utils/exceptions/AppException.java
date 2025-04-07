@@ -36,7 +36,7 @@ public class AppException extends Exception {
     }
 
     public GenericDTO getException() {
-        return GenericDTO.error(ErrorMessageEnum.TOKEN_EXPIRED, HttpStatus.UNAUTHORIZED.value());
+        return GenericDTO.error(ErrorMessageEnum.INVALID_TOKEN, HttpStatus.UNAUTHORIZED.value());
     }
 
 }

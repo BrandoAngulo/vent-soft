@@ -1,3 +1,80 @@
+:host {
+  display: block;
+}
+
 aside {
-  transition: transform 0.3s ease-in-out;
+  transition: all 0.3s ease-in-out;
+  z-index: 1000;
+  position: fixed;
+  top: 1rem;
+  left: 1rem;
+  height: calc(100vh - 2rem);
+  display: flex; /* Hacer que el aside sea un contenedor flex */
+  flex-direction: column; /* Organizar los elementos en columna */
+}
+
+/* Estilos para el header del sidebar */
+aside .relative {
+  padding: 1rem;
+  justify-content: space-between;
+}
+
+/* Estilos para el contenedor del menú */
+aside .m-4 {
+  margin: 0.5rem;
+  flex: 1; /* Hacer que el contenedor del menú ocupe todo el espacio disponible */
+  display: flex; /* Hacer que este contenedor también sea flex */
+  flex-direction: column; /* Organizar en columna */
+}
+
+/* Estilos para la lista del menú */
+aside .m-4 ul {
+  flex: 1; /* La lista ocupa todo el espacio disponible */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around; /* Distribuir los ítems uniformemente */
+  gap: 0; /* Eliminar el gap fijo para que space-around controle el espaciado */
+}
+
+/* Estilos para los ítems del menú */
+aside .flex.items-center {
+  padding: 0.5rem;
+  justify-content: flex-start;
+}
+
+/* Asegurar que los íconos no se corten */
+aside mat-icon {
+  font-size: 24px;
+  width: 24px;
+  height: 24px;
+  line-height: 24px;
+  margin-right: 0.5rem;
+}
+
+/* Estilos específicos cuando el sidebar está colapsado (w-16) */
+aside.w-16 .relative,
+aside.w-16 .flex.items-center {
+  padding: 0.5rem;
+  justify-content: center;
+}
+
+aside.w-16 mat-icon {
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+  line-height: 20px;
+  margin-right: 0;
+}
+
+/* Estilos específicos cuando el sidebar está abierto (w-72) */
+aside.w-72 .relative {
+  padding: 1rem 1.5rem;
+}
+
+aside.w-72 .m-4 {
+  margin: 1rem 1.5rem;
+}
+
+aside.w-72 .flex.items-center {
+  padding: 0.5rem 1.5rem;
 }

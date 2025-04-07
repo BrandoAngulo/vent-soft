@@ -38,21 +38,4 @@ export class CityService {
       );
   }
 
-  /*
-
-   // Obtener un cliente por ID
-  getById(id: number): Observable<CustomerDTO> {
-    return this.http.get<CustomerDTO>(`${this.urlBase}/client/get-client/${id}`)
-      .pipe(map(response => response));
-  }
-
-  // Obtener clientes por nombre y apellido
-  getByName(name: string, lastName: string): Observable<CustomerDTO[]> {
-    return this.http.get<CustomerDTO[]>(`${this.urlBase}/client/get-clients-by-name`, {
-      params: {
-        name: name,
-        lastName: lastName
-      }
-    }).pipe(map(response => response));
-  }
- */}
+ }

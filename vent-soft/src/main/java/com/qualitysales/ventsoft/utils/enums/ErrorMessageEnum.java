@@ -30,8 +30,8 @@ public enum ErrorMessageEnum {
             "Comuniquese con el administrador del sistema"
     ),
 
-    TOKEN_EXPIRED(
-            "4",
+    INVALID_TOKEN(
+            "401",
             "Iniciar sesion de nuevo",
             "Token expirado"
     );
