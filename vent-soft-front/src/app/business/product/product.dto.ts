@@ -3,6 +3,7 @@ import { SupplierDTO } from "../supplier/supplier.dto";
 
 export interface ProductDTO {
   id: number;
+  date: string;
   name: string;
   itemCode: number;
   description: string;

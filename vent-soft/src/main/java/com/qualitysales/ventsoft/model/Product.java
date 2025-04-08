@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.Set;
 
 @AllArgsConstructor
@@ -17,6 +18,8 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     private Integer id;
+    @Column(name = "fecha", length = 20)
+    private LocalDate date;
     @Column(name = "codigo_producto", length = 50)
     private Integer itemCode;
     @Column(name = "nombre", length = 50)
