@@ -9,12 +9,15 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
+
 @Builder
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class ProductDTO {
     private Integer id;
+    private LocalDate date;
     @NotBlank(message = "Nombre no debe estar en blanco")
     private String name;
     private Integer itemCode;

@@ -6,6 +6,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormUtilsService } from '../../../shared/utils/form-utils.service';
+import { AlertService } from '../../../shared/services/alert.service';
 
 @Component({
   selector: 'app-supplier-form',
@@ -31,20 +33,24 @@ export class SupplierFormComponent implements OnInit, OnChanges{
   supplierForm!: FormGroup;
   submit = false;
 
-  constructor(private formBuilder: FormBuilder) {
+  constructor(
+    private formBuilder: FormBuilder,
+    private formUtilsService: FormUtilsService,
+    private alertService: AlertService,
+
+  ) {
     this.supplierForm = this.formBuilder.group({
-      name: [''],
-      lastName: [''],
-      cellPhone: [''],
-      nit: [''],
-      status: [true],
+      name: ['', Validators.required],
+      cellPhone: ['', Validators.required],
+      nit: ['', Validators.required],
     });
+    this.formUtilsService.AutoFirstWordMayus(this.supplierForm);
   }
 
     ngOnInit(): void {
       this.loadSupplierData();
     }
-  
+
     ngOnChanges(changes: SimpleChanges): void {
       if (changes['supplierEdit']) {
         this.loadSupplierData();
@@ -65,7 +71,6 @@ export class SupplierFormComponent implements OnInit, OnChanges{
           lastName: '',
           cellPhone: '',
           nit: '',
-          status: true,
         });
       }
     }
@@ -83,10 +88,10 @@ export class SupplierFormComponent implements OnInit, OnChanges{
           status: true
         }
         if (this.supplierEdit) {
-          console.log("Actualizar");
+          this.alertService.showSuccess();
           this.update.emit(supplier);
         } else {
-          console.log("Agregar");
+          this.alertService.showSuccess();
           this.add.emit(supplier);
         }
         this.submit = false;

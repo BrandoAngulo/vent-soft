@@ -1,5 +1,6 @@
 package com.qualitysales.ventsoft.utils.exceptions;
 
+import com.qualitysales.ventsoft.utils.dto.GenericDTO;
 import com.qualitysales.ventsoft.utils.enums.ErrorMessageEnum;
 import lombok.Getter;
 import lombok.Setter;
@@ -13,6 +14,7 @@ public class AppException extends Exception {
     private final String[] parametros;
 
     public AppException(ErrorMessageEnum errorMessagesEnum, Integer status, String... parametros) {
+        super(errorMessagesEnum.getMessage());
         this.errorMessagesEnum = errorMessagesEnum;
         this.status = status;
         this.parametros = parametros;
@@ -31,6 +33,10 @@ public class AppException extends Exception {
             return appException;
         }
         return new AppException(ErrorMessageEnum.ERROR_DESCONOCIDO, HttpStatus.BAD_REQUEST.value());
+    }
+
+    public GenericDTO getException() {
+        return GenericDTO.error(ErrorMessageEnum.INVALID_TOKEN, HttpStatus.UNAUTHORIZED.value());
     }
 
 }

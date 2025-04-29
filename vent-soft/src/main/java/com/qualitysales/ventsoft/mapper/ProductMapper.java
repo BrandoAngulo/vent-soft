@@ -1,5 +1,6 @@
 package com.qualitysales.ventsoft.mapper;
 
+import com.qualitysales.ventsoft.Controllers.DTO.ProductDTO;
 import com.qualitysales.ventsoft.Controllers.DTO.ProductResponseDTO;
 import com.qualitysales.ventsoft.model.Product;
 import org.mapstruct.Mapper;
@@ -15,5 +16,8 @@ public interface ProductMapper {
 
     @Mapping(source = "itemCode", target = "itemCode")
     Product productResponseDTOToProduct(ProductResponseDTO productResponseDTO);
+
+    @Mapping(source = "itemCode", target = "itemCode")
+    Product productDTOToProduct(ProductDTO productDTO);
 
 }

@@ -47,17 +47,12 @@ export default class CustomerComponent implements OnInit {
   setTableColumns() {
     this.tableColumns = [
       {
-        label: 'Id',
-        def: 'id',
-        content: (row) => row.id,
-      },
-      {
         label: 'Nombre',
         def: 'name',
         content: (row) => row.name,
       },
       {
-        label: 'Segundo nombre',
+        label: 'Apellido',
         def: 'lastName',
         content: (row) => row.lastName,
       },

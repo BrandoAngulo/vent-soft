@@ -1,3 +1,20 @@
 :host {
-    @apply flex flex-col min-h-screen;
-  }
+  display: block;
+}
+
+.min-h-screen {
+  position: relative;
+}
+
+/* Contenedor principal */
+.flex-1 {
+  transition: margin-left 0.3s ease-in-out;
+  z-index: 10;
+  padding-left: 1rem; /* Añadir padding para que el contenido no quede pegado al sidebar */
+}
+
+/* Asegurar que el nav dentro del contenedor principal respete el espacio */
+.flex-1 nav {
+  width: 100%;
+  box-sizing: border-box; /* Asegurar que el padding no cause desbordamiento */
+}

@@ -46,12 +46,6 @@ export default class CityComponent implements OnInit {
   setTableColumns() {
     this.tableColumns = [
       {
-        label: 'Id',
-        def: 'id',
-        content: (row) => row.id,
-      },
-
-      {
         label: 'Codigo',
         def: 'code',
         content: (row) => row.code,
@@ -63,11 +57,6 @@ export default class CityComponent implements OnInit {
         content: (row) => row.name,
       },
 
-      {
-        label: 'estado',
-        def: 'status',
-        content: (row) => row.status,
-      },
       {
         label: 'Acciones',
         def: 'acciones',
@@ -121,36 +110,12 @@ export default class CityComponent implements OnInit {
       next: (updatedCity) =>{
         this.getCities();
         this.selectedCity = null;
-        console.log('city actualizada exitosamente:', updatedCity);
+        console.log('city actualizada:', updatedCity);
       },
       error: (err) =>{
         console.error('Error al actualizar la ciudad: ', err);
       }
     });
   }
-
-  updateCityStatus(cityDTO: CityDTO): void {
-      if (!cityDTO.id) {
-        console.error('ID not found');
-        return;
-      }
-  
-      this.cityService.update(cityDTO.id, cityDTO).subscribe({
-        next: (updatedCity) => {
-          this.getCities(); // Refrescar la lista
-          this.selectedCity = null; // Limpiar selección
-          console.log('ciudad actualizada exitosamente:', updatedCity);
-        },
-        error: (err) => {
-          console.error('Error al actualizar estado:', err);
-          // Si hay error, podrías revertir el cambio en la UI
-          const index = this.city.findIndex(c => c.id === cityDTO.id);
-          if (index !== -1) {
-            this.city[index].status = !cityDTO.status; // Revertir el cambio
-            this.city = [...this.city]; // Forzar actualización
-          }
-        }
-      });
-    }
 
 }

@@ -14,6 +14,7 @@ export class AuthService {
   private apiUrl = `${environment.apiUrl}/auth`;
   private tokenSubject = new BehaviorSubject<string | null>(null);
   private rolesSubject = new BehaviorSubject<string[]>([]);
+  private loginSubject = new BehaviorSubject<string | null>(null);
 
   constructor(
     private http: HttpClient,
@@ -21,21 +22,26 @@ export class AuthService {
   ) {
     if (isPlatformBrowser(this.platformId)) {
       const token = localStorage.getItem('token');
-      this.tokenSubject.next(token);
+      const login = localStorage.getItem('login');
       if (token) {
+        this.tokenSubject.next(token);
         this.setRolesFromToken(token);
       }
+      this.loginSubject.next(login);
     }
   }
 
   login(credentials: LoginRequestDTO): Observable<JwtResponseDTO> {
     return this.http.post<JwtResponseDTO>(`${this.apiUrl}/login`, credentials).pipe(
       tap(response => {
-        const token = response.payload.token; // Acceder al token dentro de payload
+        const token = response.payload.token;
+        const login = response.payload.login;
         if (isPlatformBrowser(this.platformId)) {
           localStorage.setItem('token', token);
+          localStorage.setItem('login', login);
         }
         this.tokenSubject.next(token);
+        this.loginSubject.next(login);
         this.setRolesFromToken(token);
       })
     );
@@ -44,8 +50,10 @@ export class AuthService {
   logout(): void {
     if (isPlatformBrowser(this.platformId)) {
       localStorage.removeItem('token');
+      localStorage.removeItem('login');
     }
     this.tokenSubject.next(null);
+    this.loginSubject.next(null);
     this.rolesSubject.next([]);
   }
 
@@ -57,6 +65,10 @@ export class AuthService {
     return this.rolesSubject.value;
   }
 
+  getLogin(): Observable<string | null> {
+    return this.loginSubject.asObservable();
+  }
+
   isLoggedIn(): boolean {
     return !!this.getToken();
   }
@@ -65,12 +77,30 @@ export class AuthService {
     return this.getRoles().includes(role);
   }
 
-  private validToken(token: string): boolean {
+  // Método opcional para verificar la caducidad en el frontend (como optimización)
+  isTokenValid(token: string): boolean {
     if (!token || typeof token !== 'string') {
       return false;
     }
+
     const parts = token.split('.');
-    return parts.length === 3; // Un JWT válido debe tener 3 partes (header, payload, signature)
+    if (parts.length !== 3) {
+      return false;
+    }
+
+    try {
+      const payload = JSON.parse(atob(parts[1]));
+      const exp = payload.exp;
+      if (!exp) {
+        return false;
+      }
+
+      const now = Math.floor(Date.now() / 1000);
+      return now < exp;
+    } catch (error) {
+      console.error('Error decoding token:', error);
+      return false;
+    }
   }
 
   private setRolesFromToken(token: string): void {

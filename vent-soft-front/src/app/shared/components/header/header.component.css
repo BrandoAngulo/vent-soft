@@ -1,0 +1,40 @@
+header {
+  z-index: 500; /* Correcto: menor que el sidebar (1000) */
+  position: relative;
+  padding: 1rem 1.5rem;
+  background-color: #ffffff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Asegurar que el contenedor flex respete el espacio */
+header .flex {
+  gap: 1rem;
+  width: 100%; /* Asegurar que ocupe el ancho disponible */
+}
+
+/* Ajustar el breadcrumb */
+header nav.w-max {
+  margin-left: 0; /* Evitar márgenes adicionales que puedan interferir */
+  padding-left: 0;
+}
+
+/* Estilos para el texto del breadcrumb */
+header nav p {
+  margin: 0; /* Eliminar márgenes que puedan causar desbordamiento */
+}
+
+/* Ajustar el botón de cerrar sesión */
+header button {
+  padding: 0.5rem 1rem;
+}
+
+/* Responsividad */
+@media (max-width: 768px) {
+  header {
+    padding: 0.5rem 1rem;
+  }
+
+  header .flex {
+    gap: 0.5rem;
+  }
+}

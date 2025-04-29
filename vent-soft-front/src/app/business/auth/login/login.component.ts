@@ -6,6 +6,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../services/auth.service';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-login',
@@ -15,7 +16,8 @@ import { AuthService } from '../services/auth.service';
     ReactiveFormsModule,
     MatInputModule,
     MatButtonModule,
-    MatFormFieldModule
+    MatFormFieldModule,
+    MatIconModule
   ],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
@@ -23,6 +25,7 @@ import { AuthService } from '../services/auth.service';
 export default class LoginComponent {
   loginForm: FormGroup;
   error: string = '';
+  showPassword = false;
 
   constructor(
     private fb: FormBuilder,
@@ -39,7 +42,6 @@ export default class LoginComponent {
     if (this.loginForm.valid) {
       this.authService.login(this.loginForm.value).subscribe({
         next: () => {
-          // Redirigir a dashboard para todos los roles
           this.router.navigate(['/dashboard']);
         },
         error: (err) => {
@@ -49,4 +51,9 @@ export default class LoginComponent {
       });
     }
   }
+
+togglePasswordVisibility(): void {
+  this.showPassword = !this.showPassword;
+}
+
 }
