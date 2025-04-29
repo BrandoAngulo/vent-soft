@@ -33,8 +33,8 @@ public class SecurityConfig {
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/vent-soft/auth/**").permitAll()
-                        .requestMatchers("/vent-soft/user/**").hasRole("ADMIN")
-                        .requestMatchers("/vent-soft/client/**","/vent-soft/invoice/**","/vent-soft/city/**").hasRole("USER")
+                        .requestMatchers("/api/vent-soft/user/**").hasRole("ADMIN")
+                        .requestMatchers("/api/vent-soft/client/**","/api/vent-soft/invoice/**","/api/vent-soft/city/**").hasRole("USER")
                         .requestMatchers("/vent-soft/**").authenticated() // Rutas protegidas
                         .anyRequest().permitAll()
                 )
