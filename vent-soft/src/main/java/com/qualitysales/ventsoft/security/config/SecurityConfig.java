@@ -27,15 +27,16 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .cors(cors -> cors.configurationSource(corsConfigurationSource())) // Habilitar CORS
-                .csrf(csrf -> csrf.disable()) // Deshabilitar CSRF (API sin estado)
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+                .csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> session
-                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // Sin sesiones
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/vent-soft/auth/**").permitAll() // Permitir login
-                        .requestMatchers("/vent-soft/user/**").hasRole("ADMIN") // Solo ADMIN
+                        .requestMatchers("/api/vent-soft/auth/**").permitAll()
+                        .requestMatchers("/vent-soft/user/**").hasRole("ADMIN")
+                        .requestMatchers("/vent-soft/client/**","/vent-soft/invoice/**","/vent-soft/city/**").hasRole("USER")
                         .requestMatchers("/vent-soft/**").authenticated() // Rutas protegidas
-                        .anyRequest().permitAll() // Otras rutas públicas
+                        .anyRequest().permitAll()
                 )
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class); // Filtro JWT
 
@@ -45,10 +46,10 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:4200")); // Permitir solicitudes desde el frontend
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:4200"));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS")); // Métodos permitidos
         configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type")); // Encabezados permitidos
-        configuration.setAllowCredentials(true); // Permitir credenciales (si usas cookies, por ejemplo)
+        configuration.setAllowCredentials(true);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration); // Aplicar a todas las rutas
