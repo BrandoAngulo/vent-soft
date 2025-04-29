@@ -10,8 +10,21 @@
       <input matInput formControlName="date" placeholder="Fecha" />
     </mat-form-field>
     <mat-form-field appearance="fill">
-      <mat-label>Nombre del cliente</mat-label>
-      <input matInput formControlName="customer" placeholder="Nombre del cliente" />
+      <mat-label>Cliente</mat-label>
+      <mat-select formControlName="customer" [compareWith]="compareCustomers" [disabled]="loadingCustomers">
+        <mat-option>
+          <input type="text" placeholder="Buscar cliente..." (input)="filterCustomers($event)"
+            (click)="$event.stopPropagation()" />
+        </mat-option>
+        <mat-option *ngFor="let customer of filteredCustomers" [value]="customer">
+          {{ customer.name }} ({{ customer.document }})
+        </mat-option>
+        <mat-option *ngIf="filteredCustomers.length === 0" [disabled]="true">
+          No se encontraron clientes
+        </mat-option>
+      </mat-select>
+      <mat-error *ngIf="invoiceForm.get('customer')?.hasError('required')">El cliente es obligatorio</mat-error>
+      <mat-hint *ngIf="loadingCustomers">Cargando clientes...</mat-hint>
     </mat-form-field>
     <mat-form-field appearance="fill">
       <mat-label>NIT</mat-label>
@@ -20,6 +33,10 @@
     <mat-form-field appearance="fill">
       <mat-label>Dirección</mat-label>
       <input matInput formControlName="address" placeholder="Dirección" />
+    </mat-form-field>
+    <mat-form-field appearance="fill">
+      <mat-label>Celular</mat-label>
+      <input matInput formControlName="cellPhone" placeholder="cellPhone" />
     </mat-form-field>
 
     <h3>Productos</h3>
@@ -31,11 +48,13 @@
         </mat-form-field>
         <mat-form-field appearance="fill">
           <mat-label>Precio Unitario</mat-label>
-          <input matInput type="number" formControlName="unitPrice" placeholder="Precio" (ngModelChange)="updateProductTotal(i)" />
+          <input matInput type="number" formControlName="unitPrice" placeholder="Precio"
+            (ngModelChange)="updateProductTotal(i)" />
         </mat-form-field>
         <mat-form-field appearance="fill">
           <mat-label>Cantidad</mat-label>
-          <input matInput type="number" formControlName="quantity" placeholder="Cantidad" (ngModelChange)="updateProductTotal(i)" />
+          <input matInput type="number" formControlName="quantity" placeholder="Cantidad"
+            (ngModelChange)="updateProductTotal(i)" />
         </mat-form-field>
         <mat-form-field appearance="fill">
           <mat-label>Total</mat-label>
@@ -44,11 +63,18 @@
         <button mat-icon-button color="warn" type="button" (click)="removeProduct(i)">
           <mat-icon>delete</mat-icon>
         </button>
-
       </div>
     </div>
-    <!-- Botón que abre el modal para agregar un producto -->
     <button mat-raised-button type="button" (click)="openAddProductModal()">Agregar Producto</button>
-    <button mat-raised-button color="primary" type="submit">Guardar Factura</button>
+    <!-- <button mat-raised-button color="primary" type="submit">Guardar Factura</button> -->
+    <div class="button-container">
+      <button mat-raised-button color="primary" type="submit" [disabled]="invoiceForm.invalid">
+        {{ selectedInvoice ? 'Actualizar Factura' : 'Guardar Factura' }}
+      </button>
+
+      <button mat-raised-button color="warn" type="button" (click)="resetForm()" [disabled]="submit">
+        {{ submit ? 'Procesando...' : (selectedInvoice ? 'Cancelar' : 'Limpiar campos') }}
+      </button>
+    </div>
   </form>
 </div>

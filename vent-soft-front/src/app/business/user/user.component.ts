@@ -29,6 +29,7 @@ export default class UserComponent implements OnInit {
   ngOnInit(): void {
     this.getUsers()
     this.setTableColumns()
+    this
   }
 
   getUsers() {
@@ -47,11 +48,6 @@ export default class UserComponent implements OnInit {
 
   setTableColumns() {
     this.tableColumns = [
-      {
-        label: 'Id',
-        def: 'id',
-        content: (row) => row.id,
-      },
       {
         label: 'Nombre',
         def: 'name',

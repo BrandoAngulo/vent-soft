@@ -4,12 +4,12 @@
 
     <mat-form-field appearance="fill">
       <mat-label>Nombre</mat-label>
-      <input matInput formControlName="name" placeholder="Enter name" />
+      <input matInput formControlName="name" placeholder="Digita el nombre" />
     </mat-form-field>
 
     <mat-form-field appearance="fill">
-      <mat-label>Segundo nombre</mat-label>
-      <input matInput formControlName="lastName" placeholder="Enter lastName" />
+      <mat-label>Apellido</mat-label>
+      <input matInput formControlName="lastName" placeholder="Digita el apellido" />
     </mat-form-field>
 
     <mat-form-field appearance="fill">
@@ -19,14 +19,11 @@
         <mat-option value="Pasaporte">Pasaporte</mat-option>
         <mat-option value="Licencia de conduccion">Licencia de conduccion</mat-option>
       </mat-select>
-      <mat-error *ngIf="customerForm.get('doctipe')?.hasError('required')">
-        Tipe document is required
-      </mat-error>
     </mat-form-field>
 
     <mat-form-field appearance="fill">
       <mat-label>Documento</mat-label>
-      <input matInput formControlName="document" placeholder="Enter document" />
+      <input matInput formControlName="document" placeholder="Digita el documento" />
     </mat-form-field>
 
     <!-- Campo City con mat-select dinámico -->
@@ -37,25 +34,22 @@
           {{ city.name }}
         </mat-option>
       </mat-select>
-      <mat-error *ngIf="customerForm.get('city')?.hasError('required')">
-        City is required
-      </mat-error>
-      <mat-hint *ngIf="isLoadingCities">Loading cities...</mat-hint>
+      <mat-hint *ngIf="isLoadingCities">Cargando...</mat-hint>
     </mat-form-field>
 
     <mat-form-field appearance="fill">
       <mat-label>Residencia</mat-label>
-      <input matInput formControlName="residence" placeholder="Enter residence" />
+      <input matInput formControlName="residence" placeholder="Digita la residencia" />
     </mat-form-field>
 
     <mat-form-field appearance="fill">
       <mat-label>Celular</mat-label>
-      <input matInput formControlName="cellPhone" placeholder="Enter cellphone" />
+      <input matInput formControlName="cellPhone" placeholder="Digita el numero celular" />
     </mat-form-field>
 
     <mat-form-field appearance="fill">
       <mat-label>Correo</mat-label>
-      <input matInput formControlName="email" type="email" placeholder="Enter email" />
+      <input matInput formControlName="email" type="email" placeholder="Digita el correo" />
     </mat-form-field>
 
     <div class="button-container">
@@ -63,9 +57,9 @@
         {{ isSubmitting ? 'Guardando...' : (customerEdit ? 'Actualizar cliente' : 'Guardar cliente') }}
       </button>
 
-      <button mat-raised-button color="warn" type="button" 
+      <button mat-raised-button color="warn" type="button"
       (click)="customerForm.reset(); customerEdit = null"
-        [disabled]="isSubmitting">{{ isSubmitting ? 'Saving...' :
+        [disabled]="isSubmitting">{{ isSubmitting ? 'Guardando...' :
         (customerEdit ? 'Cancelar' : 'Limpiar campos') }}
       </button>
     </div>

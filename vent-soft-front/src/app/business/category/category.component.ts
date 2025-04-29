@@ -44,12 +44,6 @@ export default class CategoryComponent implements OnInit {
   setTableColumns() {
     this.tableColumns = [
       {
-        label: 'Id',
-        def: 'id',
-        content: (row) => row.id,
-      },
-
-      {
         label: 'Categoria',
         def: 'description',
         content: (row) => row.description,
@@ -104,7 +98,7 @@ export default class CategoryComponent implements OnInit {
       },
     });
   }
-  
+
   updateCategory(categoryDTO: CategoryDTO): void {
     if (!categoryDTO) {
       console.error("Category not found")

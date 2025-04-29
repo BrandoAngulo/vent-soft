@@ -14,9 +14,14 @@ import com.qualitysales.ventsoft.repository.ItemInvoiceRepository;
 import com.qualitysales.ventsoft.repository.ProductRepository;
 import com.qualitysales.ventsoft.service.InvoiceService;
 import com.qualitysales.ventsoft.utils.DateUtils;
+import com.qualitysales.ventsoft.utils.dto.GenericDTO;
+import com.qualitysales.ventsoft.utils.enums.MessagesEnum;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationContextException;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.*;
@@ -58,11 +63,17 @@ public class InvoiceServiceImpl implements InvoiceService {
         }
     }
 
+    @Transactional(rollbackFor = Exception.class)
     @Override
     public RegisterUptadeInvoiceDTO saveInvoice(Invoice invoice) {
         log.info("saveInvoice ok: {}", invoice.toString());
         try {
             stockValidate(invoice.getItemInvoices());
+
+            // Asegurémonos de que el cliente esté asignado desde el inicio
+            if (invoice.getClient() == null || invoice.getClient().getId() == null) {
+                throw new IllegalArgumentException("El cliente de la factura no está especificado");
+            }
 
             // Guardamos la factura inicialmente
             invoiceRepository.save(invoice);
@@ -87,11 +98,14 @@ public class InvoiceServiceImpl implements InvoiceService {
                 invoice.setTotal(totalInvoice);
             }
 
-            // Volvemos a guardar la factura con el total actualizado
+            // Actualizamos la fecha y el cliente
             invoice.setDate(dateUtils.getLocalDate());
-            Client client = clientRepository.findById(invoice.getId()).orElseThrow(() -> new RuntimeException("Pailas cliente"));
-            System.out.println("client = " + client);
+            // Buscamos el cliente usando su ID correcto
+            Client client = clientRepository.findById(invoice.getClient().getId())
+                    .orElseThrow(() -> new RuntimeException("Cliente no encontrado con ID: " + invoice.getClient().getId()));
             invoice.setClient(client);
+
+            // Volvemos a guardar la factura con el total y cliente actualizados
             invoiceRepository.save(invoice);
 
             // Convertimos la factura a DTO y la retornamos
@@ -119,9 +133,9 @@ public class InvoiceServiceImpl implements InvoiceService {
     }
 
     @Override
-    public RegisterUptadeInvoiceDTO updateInvoice(RegisterUptadeInvoiceDTO registerUptadeInvoiceDTO) {
+    public RegisterUptadeInvoiceDTO updateInvoice(Integer id, RegisterUptadeInvoiceDTO registerUptadeInvoiceDTO) {
         log.info("updateInvoice ok: {}", registerUptadeInvoiceDTO);
-        Invoice invoiceId = invoiceRepository.findById(registerUptadeInvoiceDTO.id()).orElseThrow(() -> new IllegalArgumentException("Invoice not found"));
+        Invoice invoiceId = invoiceRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invoice not found"));
         Client client = ClientMapper.MAPPER.toClientDTO(registerUptadeInvoiceDTO.client());
         try {
             if (invoiceId.getId().equals(registerUptadeInvoiceDTO.id())) {
@@ -146,18 +160,20 @@ public class InvoiceServiceImpl implements InvoiceService {
     }
 
     @Override
-    public boolean anularInvoice(Integer id) {
+    public GenericDTO anularInvoice(Integer id) {
         log.info("anularInvoice ok: {}", id);
-        Invoice searchInvoice = invoiceRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invoice not found"));
+        Invoice searchInvoice = invoiceRepository.findById(id).orElseThrow(
+                () -> new ApplicationContextException(MessagesEnum.REQUEST_FAILED.getMessage(), null));
         try {
             Boolean isActive = searchInvoice.isStatus();
             searchInvoice.setStatus(Boolean.TRUE.equals(isActive) ? Boolean.FALSE : Boolean.TRUE);
             invoiceRepository.save(searchInvoice);
-            return searchInvoice.isStatus();
+            searchInvoice.isStatus();
+            return GenericDTO.genericSuccess(MessagesEnum.REQUEST_SUCCESS, HttpStatus.OK.value());
 
         } catch (Exception e) {
             log.error("anularInvoice error: {}", e.getMessage());
-            throw new IllegalArgumentException(e);
+            throw new ApplicationContextException(e.getMessage());
         }
 
     }

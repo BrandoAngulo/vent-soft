@@ -1,0 +1,48 @@
+<!-- Usa Google Fonts Material Icons si no las tienes -->
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+<div class="flex items-center justify-center min-h-screen bg-gray-100">
+  <div class="w-full max-w-md p-8 bg-white rounded-2xl shadow-xl">
+
+    <!-- Ícono de usuario arriba -->
+    <div class="flex justify-center mb-6">
+      <img src="assets/login-icon.svg" alt="User Icon" class="w-24 h-24" />
+    </div>
+
+    <h2 class="text-3xl font-bold text-center text-[#333] mb-6" style="color: #6C6C6C;">Bienvenido</h2>
+
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+
+      <!-- Campo login con ícono -->
+      <mat-form-field appearance="fill" class="w-full mb-4">
+        <mat-label>Login</mat-label>
+        <mat-icon matPrefix style="color: #8C8989;">person</mat-icon>
+        <input matInput formControlName="login" placeholder="Ingresar login" />
+      </mat-form-field>
+
+      <!-- Campo contraseña con ícono + botón para mostrar/ocultar -->
+      <mat-form-field appearance="fill" class="w-full mb-4">
+        <mat-label>Contraseña</mat-label>
+        <mat-icon matPrefix style="color: #8C8989;">lock</mat-icon>
+        <input matInput [type]="showPassword ? 'text' : 'password'" formControlName="password" placeholder="Ingresar contraseña" />
+        <button mat-icon-button matSuffix (click)="togglePasswordVisibility()" type="button" tabindex="-1" style="color: #6C6C6C;">
+          <mat-icon>{{ showPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+        </button>
+      </mat-form-field>
+
+      <!-- Error de autenticación -->
+      <div class="text-red-500 text-center mb-4" *ngIf="error">{{ error }}</div>
+
+      <!-- Botón -->
+      <button
+        mat-raised-button
+        color="primary"
+        class="w-full py-2 text-white font-semibold"
+        type="submit"
+        [disabled]="loginForm.invalid">
+        Iniciar Sesión
+      </button>
+
+    </form>
+  </div>
+</div>

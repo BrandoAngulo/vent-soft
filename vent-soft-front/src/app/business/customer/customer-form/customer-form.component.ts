@@ -9,6 +9,8 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatSelectModule } from '@angular/material/select';
 import { CityDTO } from '../../city/city.dto';
 import { CityService } from '../../city/services/city.service';
+import { AlertService } from '../../../shared/services/alert.service';
+import { FormUtilsService } from '../../../shared/utils/form-utils.service';
 
 @Component({
   selector: 'app-customer-form',
@@ -38,18 +40,21 @@ export class CustomerFormComponent implements OnInit, OnChanges {
 
   constructor(
     private formBuilder: FormBuilder,
-    private cityService: CityService
+    private cityService: CityService,
+    private alertService: AlertService,
+    private formUtilsService: FormUtilsService,
   ) {
     this.customerForm = this.formBuilder.group({
-      name: [''],
-      lastName: [''],
-      docTipe: [''],
-      document: [''],
-      city: [''],
+      name: ['', Validators.required],
+      lastName: ['', Validators.required],
+      docTipe: ['', Validators.required],
+      document: ['', Validators.required],
+      city: ['', Validators.required],
       residence: [''],
-      cellPhone: [''],
+      cellPhone: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
     });
+    this.formUtilsService.AutoFirstWordMayus(this.customerForm);
   }
 
   ngOnInit(): void {
@@ -129,10 +134,10 @@ export class CustomerFormComponent implements OnInit, OnChanges {
     };
 
     if (this.customerEdit) {
-      console.log("actualizar");
+      this.alertService.showSuccess();
       this.update.emit(customer);
     } else {
-      console.log("agregar");
+      this.alertService.showSuccess();
       this.add.emit(customer);
     }
     this.isSubmitting = false;

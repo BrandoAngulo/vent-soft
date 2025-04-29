@@ -1,11 +1,13 @@
 package com.qualitysales.ventsoft.service.impl;
 
 import com.qualitysales.ventsoft.Controllers.DTO.ProductDTO;
+import com.qualitysales.ventsoft.mapper.ProductMapper;
 import com.qualitysales.ventsoft.model.Product;
 import com.qualitysales.ventsoft.repository.CategoryRepository;
 import com.qualitysales.ventsoft.repository.ProductRepository;
 import com.qualitysales.ventsoft.repository.SupplierRepository;
 import com.qualitysales.ventsoft.service.ProductService;
+import com.qualitysales.ventsoft.utils.DateUtils;
 import com.qualitysales.ventsoft.utils.dto.GenericDTO;
 import com.qualitysales.ventsoft.utils.enums.MessagesEnum;
 import jakarta.transaction.Transactional;
@@ -22,15 +24,17 @@ import java.util.List;
 @Transactional
 public class ProductServiceImpl implements ProductService {
 
-    public ProductServiceImpl(ProductRepository productRepository, SupplierRepository supplierRepository, CategoryRepository categoryRepository) {
+    public ProductServiceImpl(ProductRepository productRepository, SupplierRepository supplierRepository, CategoryRepository categoryRepository, DateUtils dateUtils) {
         this.productRepository = productRepository;
         this.supplierRepository = supplierRepository;
         this.categoryRepository = categoryRepository;
+        this.dateUtils = dateUtils;
     }
 
     private final ProductRepository productRepository;
     private final SupplierRepository supplierRepository;
     private final CategoryRepository categoryRepository;
+    private final DateUtils dateUtils;
 
     @Override
     public List<ProductDTO> findByAll() {
@@ -41,6 +45,7 @@ public class ProductServiceImpl implements ProductService {
                     .stream()
                     .map(product -> ProductDTO.builder()
                             .id(product.getId())
+                            .date(product.getDate())
                             .name(product.getName())
                             .itemCode(product.getItemCode())
                             .description(product.getDescription())
@@ -104,6 +109,7 @@ public class ProductServiceImpl implements ProductService {
 
             ProductDTO productSave = ProductDTO.builder()
                     .id(product.getId())
+                    .date(dateUtils.getLocalDate())
                     .name(product.getName())
                     .itemCode(product.getItemCode())
                     .description(product.getDescription())
@@ -114,7 +120,7 @@ public class ProductServiceImpl implements ProductService {
                     .status(product.getStatus())
                     .build();
             log.info("productSave = " + productSave);
-            productRepository.save(product);
+            productRepository.save(ProductMapper.MAPPER.productDTOToProduct(productSave));
             return  productSave;
 
         } catch (RuntimeException e) {
@@ -129,6 +135,7 @@ public class ProductServiceImpl implements ProductService {
         Product product = productRepository.findById(id).orElseThrow
                 (() -> new RuntimeException("Product not found"));
         try {
+            product.setDate(productDTO.getDate());
             product.setName(productDTO.getName());
             product.setItemCode(productDTO.getItemCode());
             product.setDescription(productDTO.getDescription());

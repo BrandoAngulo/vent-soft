@@ -52,6 +52,7 @@ export default class ProductComponent implements OnInit {
         def: 'id',
         content: (row) => row.id,
       },
+      { label: 'Fecha', def: 'date', content: (row) => row.date },
       {
         label: 'Nombre',
         def: 'name',
@@ -156,7 +157,7 @@ export default class ProductComponent implements OnInit {
           console.error('Customer ID not found');
           return;
         }
-    
+
         this.productService.update(product.id, product).subscribe({
           next: (updatedProduct) => {
             this.getProducts(); // Refrescar la lista

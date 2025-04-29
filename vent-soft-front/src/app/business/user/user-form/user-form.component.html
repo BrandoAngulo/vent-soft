@@ -4,27 +4,53 @@
 
     <mat-form-field appearance="fill">
       <mat-label>Nombre</mat-label>
-      <input matInput formControlName="name" placeholder="Enter user name" />
+      <input matInput formControlName="name" placeholder="Ingresa el nombre" />
     </mat-form-field>
 
     <mat-form-field appearance="fill">
       <mat-label>Apellido</mat-label>
-      <input matInput formControlName="lastName" placeholder="Enter user lastName" />
+      <input matInput formControlName="lastName" placeholder="Ingresa el apellido" />
     </mat-form-field>
 
     <mat-form-field appearance="fill">
       <mat-label>Login</mat-label>
-      <input matInput formControlName="login" placeholder="Enter login" />
+      <input matInput formControlName="login" placeholder="Ingresa el login" />
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Roles</mat-label>
+      <mat-select formControlName="roles" [compareWith]="compareRoles" [multiple]="true" [disabled]="loadRoles" #rolesSelect>
+        <!-- Entrada de búsqueda -->
+        <mat-option>
+          <input type="text" placeholder="Buscar roles.." (input)="filterRoles($event)" (click)="$event.stopPropagation()" />
+        </mat-option>
+        <!-- Opciones -->
+        <mat-option *ngFor="let roles of filterRol" [value]="roles">
+          {{ roles.description }}
+        </mat-option>
+        <mat-option *ngIf="filterRol.length === 0" [disabled]="true">
+          No se encontraron roles
+        </mat-option>
+      </mat-select>
+      <mat-error *ngIf="userForm.get('roles')?.hasError('required')">
+        El rol es obligatorio
+      </mat-error>
+      <mat-hint *ngIf="loadRoles">Cargando roles...</mat-hint>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Contraseña</mat-label>
+      <input matInput formControlName="password" placeholder="Ingresa la contraseña" />
     </mat-form-field>
 
     <mat-form-field appearance="fill">
       <mat-label>Codigo</mat-label>
-      <input matInput formControlName="code" placeholder="Enter code user" />
+      <input matInput formControlName="code" placeholder="Ingresa el codigo" />
     </mat-form-field>
 
     <mat-form-field appearance="fill">
       <mat-label>Correo</mat-label>
-      <input matInput formControlName="email" type="email" placeholder="enter user email" />
+      <input matInput formControlName="email" type="email" placeholder="Ingresa el correo" />
     </mat-form-field>
 
     <div class="button-container">

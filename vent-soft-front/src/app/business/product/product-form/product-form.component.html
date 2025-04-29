@@ -12,33 +12,49 @@
       <input matInput formControlName="itemCode" type="number" placeholder="Enter code item" />
     </mat-form-field>
 
-    <!-- Campo City con mat-select dinámico -->
     <mat-form-field appearance="fill">
-      <mat-label>Categoria</mat-label>
-      <mat-select formControlName="category" [compareWith]="compareCategories" [disabled]="loadCategories">
-        <mat-option *ngFor="let category of categories" [value]="category">
+      <mat-label>Categoría</mat-label>
+      <mat-select formControlName="category" [compareWith]="compareCategories" [disabled]="loadCategories" #categorySelect>
+        <!-- Entrada de búsqueda -->
+        <mat-option>
+          <input type="text" placeholder="Buscar categoría..." (input)="filterCategories($event)" (click)="$event.stopPropagation()" />
+        </mat-option>
+        <!-- Opciones -->
+        <mat-option *ngFor="let category of filterCategory" [value]="category">
           {{ category.description }}
+        </mat-option>
+        <mat-option *ngIf="filterCategory.length === 0" [disabled]="true">
+          No se encontraron categorías
         </mat-option>
       </mat-select>
       <mat-error *ngIf="productForm.get('category')?.hasError('required')">
-        Category is required
+        La categoría es obligatoria
       </mat-error>
-      <mat-hint *ngIf="loadCategories">Loading categories...</mat-hint>
+      <mat-hint *ngIf="loadCategories">Cargando categorías...</mat-hint>
     </mat-form-field>
 
     <!-- Select de suppliers -->
     <mat-form-field appearance="fill">
       <mat-label>Vendedor</mat-label>
-      <mat-select formControlName="supplier" [compareWith]="compareSuppliers" [disabled]="loadSuppliers">
-        <mat-option *ngFor="let supplier of suppliers" [value]="supplier">
+      <mat-select formControlName="supplier" [compareWith]="compareSuppliers" [disabled]="loadSuppliers" #supplierSelect>
+        <!-- Entrada de búsqueda -->
+        <mat-option>
+          <input type="text" placeholder="Buscar vendedor..." (input)="filterSuppliers($event)" (click)="$event.stopPropagation()" />
+        </mat-option>
+        <!-- Opciones -->
+        <mat-option *ngFor="let supplier of filterSupplier" [value]="supplier">
           {{ supplier.name }}
+        </mat-option>
+        <mat-option *ngIf="filterSupplier.length === 0" [disabled]="true">
+          No se encontraron vendedores
         </mat-option>
       </mat-select>
       <mat-error *ngIf="productForm.get('supplier')?.hasError('required')">
-        Supplier is required
+        El vendedor es obligatorio
       </mat-error>
-      <mat-hint *ngIf="loadSuppliers">Loading categories...</mat-hint>
+      <mat-hint *ngIf="loadSuppliers">Cargando vendedores...</mat-hint>
     </mat-form-field>
+
 
     <mat-form-field appearance="fill">
       <mat-label>Precio</mat-label>

@@ -17,6 +17,23 @@ public enum ErrorMessageEnum {
             "Verify the information and try again.",
             "The customer is registered"
 
+    ),
+    ERROR_LOGIN(
+            "3",
+            "Datos de acceso incorrectos",
+            "Verifique las credenciales e intente de nuevo"
+
+    ),
+    ERROR_DESCONOCIDO(
+            "500",
+            "Error no controlado",
+            "Comuniquese con el administrador del sistema"
+    ),
+
+    INVALID_TOKEN(
+            "401",
+            "Iniciar sesion de nuevo",
+            "Token expirado"
     );
     private final String code;
     private final String recommendation;

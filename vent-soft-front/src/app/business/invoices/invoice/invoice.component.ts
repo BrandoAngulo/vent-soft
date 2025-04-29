@@ -1,14 +1,17 @@
-import { timer } from 'rxjs';
-import { Invoice } from './invoice.dto';
 import { Component, OnInit } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 import { InvoiceFormComponent } from '../invoice-form/invoice-form.component';
 import { UiTableComponent, TableColumn } from '../../../shared/components/ui-table/ui-table.component';
+import { CommonModule } from '@angular/common';
+import { InvoiceService } from '../services/invoice.service';
+import { ApiResponse } from '../../../../apiResponse.dto';
+import { InvoiceDTO } from './invoice.dto';
 
 @Component({
   selector: 'app-invoice',
   standalone: true,
   imports: [
+    CommonModule,
     InvoiceFormComponent,
     UiTableComponent,
     MatCardModule,
@@ -17,58 +20,89 @@ import { UiTableComponent, TableColumn } from '../../../shared/components/ui-tab
   styleUrls: ['./invoice.component.css']
 })
 export default class InvoicesComponent implements OnInit {
-  invoices: Invoice[] = [];
-  isLoadingInvoices: boolean = true;
-  tableColumns: TableColumn<Invoice>[] = [];
+  invoices: InvoiceDTO[] = [];
+  loadingInvoices: boolean = true;
+  tableColumns: TableColumn<InvoiceDTO>[] = [];
+  selectedInvoice: InvoiceDTO | null = null;
+
+  constructor(private invoiceService: InvoiceService) { }
 
   ngOnInit(): void {
-    // Ejemplo de factura inicial
-    timer(2000).subscribe(() => {
-          this.isLoadingInvoices = false
-    this.invoices = [
-      {
-        id: 1,
-        invoiceCode: 'FAC-001',
-        customer: 'Juan Pérez',
-        nit: '123456789',
-        address: 'Calle 123',
-        date: '2024-02-18',
-        total: 250.0,
-        products: [
-          { name: 'Producto A', unitPrice: 50, quantity: 2, total: 100 },
-          { name: 'Producto B', unitPrice: 75, quantity: 2, total: 150 }
-        ]
-      }
-    ];
-  })
     this.setTableColumns();
+    this.getInvoices();
+  }
+
+  getInvoices() {
+    this.loadingInvoices = true;
+    this.invoiceService.list().subscribe({
+      next: (invoices) => {
+        this.invoices = invoices;
+        this.loadingInvoices = false;
+      },
+      error: (err) => {
+        console.error('List invoices error: ', err);
+        this.loadingInvoices = false;
+      }
+    });
   }
 
   setTableColumns(): void {
     this.tableColumns = [
-      { label: 'ID', def: 'id', content: (row: Invoice) => row.id },
-      { label: 'Código', def: 'invoiceCode', content: (row: Invoice) => row.invoiceCode },
-      { label: 'Cliente', def: 'customer', content: (row: Invoice) => row.customer },
-      { label: 'NIT', def: 'nit', content: (row: Invoice) => row.nit },
-      { label: 'Dirección', def: 'address', content: (row: Invoice) => row.address },
-      { label: 'Fecha', def: 'date', content: (row: Invoice) => row.date },
-      { label: 'Total', def: 'total', content: (row: Invoice) => row.total },
+      { label: 'ID', def: 'id', content: (row) => row.id },
+      { label: 'Código', def: 'invoiceCode', content: (row) => row.invoiceCode },
+      { label: 'Cliente', def: 'client', content: (row) => row.client?.name || 'N/A' },
+      { label: 'NIT', def: 'nit', content: (row) => row.client.document },
+      { label: 'Dirección', def: 'address', content: (row) => row.client.residence },
+      { label: 'Fecha', def: 'date', content: (row) => row.date },
+      { label: 'Total', def: 'total', content: (row) => row.total },
+      { label: 'Estado', def: 'status', content: (row) => row.status },
       { label: 'Acciones', def: 'acciones', content: () => '' }
     ];
   }
 
-  onAddInvoice(newInvoice: Invoice): void {
-    newInvoice.id = this.invoices.length + 1;
-    this.invoices = [...this.invoices, newInvoice];
+  addInvoice(invoice: InvoiceDTO): void {
+    this.invoiceService.saveInvoice(invoice).subscribe({
+      next: (newInvoice) => {
+        this.getInvoices();
+        this.selectedInvoice = null;
+        console.log('Factura creada exitosamente:', newInvoice);
+      },
+      error: (err) => {
+        console.error('Error al crear factura:', err);
+      }
+    });
   }
 
-  editInvoice(invoice: Invoice): void {
-    console.log('Editar factura', invoice);
-    // Lógica para editar la factura
+  updateInvoice(event: { id: number; invoice: InvoiceDTO }): void {
+    this.invoiceService.updateInvoice(event.id, event.invoice).subscribe({
+      next: (result) => {
+        this.getInvoices();
+        this.selectedInvoice = null;
+        console.log('Factura actualizada exitosamente:', result);
+      },
+      error: (err) => {
+        console.error('Error al actualizar factura:', err);
+      }
+    });
   }
 
-  deleteInvoice(invoice: Invoice): void {
-    console.log('Eliminar factura', invoice);
-    // Lógica para eliminar la factura
+  editInvoice(invoice: InvoiceDTO): void {
+    this.selectedInvoice = { ...invoice };
+  }
+
+  cancelInvoice(invoice: InvoiceDTO): void {
+    if (!invoice.id) {
+      console.error('Factura no encontrada');
+      return;
+    }
+    this.invoiceService.cancelInvoice(invoice.id).subscribe({
+      next: (response: ApiResponse<string>) => {
+        this.invoices = this.invoices.filter(i => i.id !== invoice.id);
+        console.log(`Status= ${response.status} Payload= ${response.payload?.messsage}`);
+      },
+      error: (err) => {
+        console.error('Error al anular la factura: ', err);
+      }
+    });
   }
 }

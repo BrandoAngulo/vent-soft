@@ -1,18 +1,17 @@
-export interface InvoiceProduct {
-  name: string;
-  unitPrice: number;
-  quantity: number;
-  total: number;
-}
+import { CustomerDTO } from "../../customer/customer.dto";
+import { ItemInvoiceDTO } from "./itemInvoice.dto";
 
-export interface Invoice {
+export interface InvoiceDTO {
   id: number;
   invoiceCode: string;
-  customer: string;
+  client: CustomerDTO;
   nit: string;
+  email: string;
+  cellPhone: string;
   address: string;
   date: string;
   total: number;
-  products: InvoiceProduct[];
+  itemInvoices: ItemInvoiceDTO[];
+  status: boolean;
 }
 

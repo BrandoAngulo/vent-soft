@@ -4,11 +4,12 @@ import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { CommonModule } from '@angular/common';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatIconModule } from '@angular/material/icon';
+import { AlertService } from '../../services/alert.service';
 
 export interface TableColumn<T> {
   label: string;
   def: keyof T | 'acciones';
-  content: (row: T) => string | null | undefined | number | boolean ;
+  content: (row: T) => string | null | undefined | number | boolean;
 }
 
 @Component({
@@ -34,6 +35,10 @@ export class UiTableComponent<T> implements OnChanges {
 
   displayedColumns: string[] = [];
   dataSource = new MatTableDataSource<T>([]);
+
+  constructor(
+    private alertService: AlertService,
+  ){}
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['data'] && changes['data'].currentValue) {
@@ -64,9 +69,9 @@ export class UiTableComponent<T> implements OnChanges {
     if (typeof row[key] === 'boolean') {
       row[key] = !row[key] as any;
       this.statusChanged.emit(row);
-      console.log('status actualizado:', row);
+      this.alertService.showSuccess();
     } else {
-      console.error(`El campo "${String(key)}" no es de tipo booleano.`);
+      this.alertService.showError(`El campo ${String(key)}`, "No es booleano")
     }
   }
 
@@ -75,7 +80,12 @@ export class UiTableComponent<T> implements OnChanges {
   }
 
   onDelete(row: T) {
-    this.deleteRow.emit(row);
+    this.alertService.showConfirmation('Desea eliminar?').then((result) => {
+      if (result.isConfirmed) {
+        this.alertService.showSuccess();
+        this.deleteRow.emit(row);
+      }
+    });
   }
 
 }
