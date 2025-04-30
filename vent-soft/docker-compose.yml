@@ -1,43 +1,6 @@
 #Instruccion para crear el contenedor
 #Despues de configurar las instrucciones del contenedor
 #escribir el comando en la terminal y dentro del proyecto donde este el archivo docker-compose.yml (docker compose up) para levantar el contenedor
-#version: '3.1'
-#services:
-#  db:
-#    container_name: mysql_db
-#    image: mysql:8.2.0
-#    volumes:
-#      - my-db:/var/lib/mysql
-#    restart: always
-#    ports:
-#      - '3306:3306'
-#    expose:
-#      - '3306'
-#    environment:
-#      MYSQL_USER: 'admin'
-#      MYSQL_PASSWORD: 'admin'
-#      MYSQL_ROOT_PASSWORD: 'admin'
-#volumes:
-#  my-db:
-
-#version: '3.1'
-#services:
-#  db:
-#    container_name: integrador
-#    image: postgres:15.0-alpine3.16
-#    volumes:
-#      - /var/lib/postgresql/data
-#    restart: always
-#    ports:
-#      - '5437:5432'
-#    expose:
-#      - '5432'
-#    environment:
-#      POSTGRES_USER: 'postgres'
-#      POSTGRES_PASSWORD: 'postgres'
-#volumes:
-#  my-db:
-
 version: '3.1'
 services:
   ventsoft:
@@ -52,23 +15,27 @@ services:
       - ventsoft-network
     depends_on:
       - db
+    environment:
+      - DB_URL=jdbc:postgresql://host.docker.internal:5433/ventsoft
+      - DB_USER=postgres
+      - DB_PASSWORD=postgres
   db:
-    container_name: localhost
-    image: postgres:15.0-alpine3.16
+    image: postgres:16.1-alpine3.18
+    container_name: ventsoft-db
     volumes:
-      - /var/lib/postgresql/data
+      - my-db:/var/lib/postgresql/data
     restart: always
     ports:
       - '5433:5432'
     networks:
       - ventsoft-network
-    expose:
-      - '5432'
     environment:
       POSTGRES_USER: 'postgres'
       POSTGRES_PASSWORD: 'postgres'
       POSTGRES_DB: 'ventsoft'
+
 networks:
   ventsoft-network:
+
 volumes:
   my-db:

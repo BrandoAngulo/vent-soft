@@ -20,7 +20,10 @@ RUN chmod +x /root/mvnw
 RUN ./mvnw dependency:go-offline
 
 # Copiar el código fuente dentro del contenedor
-COPY ./src /root/src
+#COPY ./src /root/src
+COPY . /root
+#Forzar UTF-8 en el Dockerfile
+ENV LANG C.UTF-8
 #Contruir la aplicacion
 RUN ./mvnw clean package -DskipTests
 # Cambiar al directorio donde se encuentra el JAR compilado
