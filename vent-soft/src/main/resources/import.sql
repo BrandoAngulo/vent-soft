@@ -32,7 +32,7 @@ CREATE TABLE usuario_roles
 INSERT INTO roles (descripcion)
 VALUES ('ROLE_ADMIN'),
        ('ROLE_USER');
-INSERT INTO usuario (login, pass)
-VALUES ('admin', '$2a$15$v.U4i22NPHOD4dmCOxf4NesQzrYYj7HeAuCLPuon5a05e91QU9Tr2'); -- Usa BCrypt 112233
+INSERT INTO usuario (login, pass, estado)
+VALUES ('admin', '$2a$15$v.U4i22NPHOD4dmCOxf4NesQzrYYj7HeAuCLPuon5a05e91QU9Tr2', true); -- Usa BCrypt 112233
 INSERT INTO usuario_roles (usuario_id, rol_id)
 VALUES (4, 1); -- admin tiene ROLE_ADMIN
