@@ -1,14 +1,11 @@
-<app-category-form
-[categoryEdit]="selectedCategory" 
-(add)="addCategory($event)"
-(update)="updateCategory($event)" 
-/>
-<ui-table 
-[data]="categories" 
-[columns]="tableColumns" 
-[isLoading]="loadingCategory"
-(editRow)="editCategory($event)"
-(deleteRow)="deleteCategory($event)"
-(statusChanged)="updateCategoryStatus($event)"
-/>
-
+<div class="container">
+  <mat-card>
+    <mat-card-content>
+      <app-category-form [categoryEdit]="selectedCategory" (add)="addCategory($event)"
+        (update)="updateCategory($event)" />
+      <ui-table [data]="categories" [columns]="tableColumns" [isLoading]="loadingCategory"
+        (editRow)="editCategory($event)" (deleteRow)="deleteCategory($event)"
+        (statusChanged)="updateCategoryStatus($event)" />
+    </mat-card-content>
+  </mat-card>
+</div>

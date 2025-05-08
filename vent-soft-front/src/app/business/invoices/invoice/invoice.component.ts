@@ -6,7 +6,7 @@ import { CommonModule } from '@angular/common';
 import { InvoiceService } from '../services/invoice.service';
 import { ApiResponse } from '../../../../apiResponse.dto';
 import { InvoiceDTO } from './invoice.dto';
-
+import { MatIconModule } from '@angular/material/icon';
 @Component({
   selector: 'app-invoice',
   standalone: true,
@@ -15,6 +15,7 @@ import { InvoiceDTO } from './invoice.dto';
     InvoiceFormComponent,
     UiTableComponent,
     MatCardModule,
+    MatIconModule,
   ],
   templateUrl: './invoice.component.html',
   styleUrls: ['./invoice.component.css']

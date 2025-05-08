@@ -6,6 +6,8 @@ import { UiTableComponent, TableColumn } from '../../shared/components/ui-table/
 import { CommonModule } from '@angular/common';
 import { SupplierService } from './services/supplier.service';
 import { ApiResponse } from '../../../apiResponse.dto';
+import { MatCardModule } from '@angular/material/card';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-supplier',
@@ -13,7 +15,9 @@ import { ApiResponse } from '../../../apiResponse.dto';
   imports: [
     CommonModule,
     UiTableComponent,
-    SupplierFormComponent
+    SupplierFormComponent,
+    MatCardModule,
+    MatIconModule
   ],
   templateUrl: './supplier.component.html',
   styleUrl: './supplier.component.css'

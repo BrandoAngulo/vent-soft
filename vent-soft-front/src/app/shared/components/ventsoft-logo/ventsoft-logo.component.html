@@ -1,0 +1,19 @@
+<div class="flex flex-col items-center">
+  <div class="flex items-center {{ sizeClasses[size].container }} group">
+    <div class="relative">
+      <mat-icon
+        class="wind-icon {{ accentColor }} transition-transform duration-300 group-hover:-translate-y-1 group-hover:rotate-12"
+        [style.fontSize.px]="sizeClasses[size].icon"
+        style="font-weight: bold;"
+      >data_thresholding</mat-icon>
+      <mat-icon
+        class="server-icon {{ accentColor }} absolute top-0 left-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+        [style.fontSize.px]="sizeClasses[size].icon"
+        style="font-weight: bold;"
+      >minimize</mat-icon>
+    </div>
+    <span class="{{ sizeClasses[size].textSize }} {{ textColor }} ml-2 flex items-center tracking-tight">
+      Vent<span class="{{ accentColor }}">soft</span>
+    </span>
+  </div>
+</div>

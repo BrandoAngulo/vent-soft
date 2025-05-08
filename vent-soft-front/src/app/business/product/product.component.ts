@@ -6,6 +6,8 @@ import { TableColumn, UiTableComponent } from '../../shared/components/ui-table/
 import { CommonModule } from '@angular/common';
 import { ProductService } from './services/product.service';
 import { ApiResponse } from '../../../apiResponse.dto';
+import { MatCardModule } from '@angular/material/card';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-product',
@@ -13,7 +15,9 @@ import { ApiResponse } from '../../../apiResponse.dto';
   imports: [
     CommonModule,
     UiTableComponent,
-    ProductFormComponent
+    ProductFormComponent,
+    MatCardModule,
+    MatIconModule
   ],
   templateUrl: './product.component.html',
   styleUrl: './product.component.css'

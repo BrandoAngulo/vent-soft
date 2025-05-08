@@ -1,13 +1,11 @@
-<app-customer-form
-[customerEdit]="selectedCustomer"
-(add)="addCustomer($event)"
-(update)="updateCustomer($event)"
-/>
-<ui-table
-[data]="customers"
-[columns]="tableColumns"
-[isLoading]="isloadingCustomer"
-(editRow)="editCustomer($event)"
-(deleteRow)="deleteCustomer($event)"
-(statusChanged)="updateCustomerStatus($event)"
-/>
+<div class="container">
+  <mat-card>
+    <mat-card-content>
+      <app-customer-form [customerEdit]="selectedCustomer" (add)="addCustomer($event)"
+        (update)="updateCustomer($event)" />
+      <ui-table [data]="customers" [columns]="tableColumns" [isLoading]="isloadingCustomer"
+        (editRow)="editCustomer($event)" (deleteRow)="deleteCustomer($event)"
+        (statusChanged)="updateCustomerStatus($event)" />
+    </mat-card-content>
+  </mat-card>
+</div>

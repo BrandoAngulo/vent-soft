@@ -11,6 +11,7 @@ import { UserService } from '../services/user.service';
 import { MatSelectModule } from '@angular/material/select';
 import { AlertService } from '../../../shared/services/alert.service';
 import { FormUtilsService } from '../../../shared/utils/form-utils.service';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-user-form',
@@ -22,7 +23,8 @@ import { FormUtilsService } from '../../../shared/utils/form-utils.service';
     MatButtonModule,
     MatSelectModule,
     ReactiveFormsModule,
-    MatSlideToggleModule
+    MatSlideToggleModule,
+    MatIconModule
   ],
   templateUrl: './user-form.component.html',
   styleUrl: './user-form.component.css'

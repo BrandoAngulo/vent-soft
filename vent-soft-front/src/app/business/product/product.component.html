@@ -1,14 +1,18 @@
-<app-product-form 
-[productEdit]="selectedProduct"
-(add)="addProduct($event)"
-(update)="updateProduct($event)"
-/>
-
-<ui-table 
-[data]="products" 
-[columns]="tableColumns" 
-[isLoading]="loadingProduct" 
-(editRow)="editProduct($event)"
-(deleteRow)="deleteProduct($event)"
-(statusChanged)="updateProductStatus($event)"
-/>
+<div class="container">
+  <mat-card>
+    <mat-card-content>
+      <app-product-form
+        [productEdit]="selectedProduct"
+          (add)="addProduct($event)"
+          (update)="updateProduct($event)"
+      />
+      <ui-table
+      [data]="products"
+      [columns]="tableColumns"
+      [isLoading]="loadingProduct"
+        (editRow)="editProduct($event)"
+        (deleteRow)="deleteProduct($event)"
+        (statusChanged)="updateProductStatus($event)" />
+    </mat-card-content>
+  </mat-card>
+</div>

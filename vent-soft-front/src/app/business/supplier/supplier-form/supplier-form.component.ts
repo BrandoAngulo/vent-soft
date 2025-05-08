@@ -8,6 +8,7 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { FormUtilsService } from '../../../shared/utils/form-utils.service';
 import { AlertService } from '../../../shared/services/alert.service';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-supplier-form',
@@ -19,6 +20,7 @@ import { AlertService } from '../../../shared/services/alert.service';
         MatButtonModule,
         ReactiveFormsModule,
         MatSlideToggleModule,
+        MatIconModule
   ],
   templateUrl: './supplier-form.component.html',
   styleUrl: './supplier-form.component.css'

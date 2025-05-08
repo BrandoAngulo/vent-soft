@@ -8,6 +8,7 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AlertService } from '../../../shared/services/alert.service';
 import { FormUtilsService } from '../../../shared/utils/form-utils.service';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-city-form',
@@ -19,7 +20,7 @@ import { FormUtilsService } from '../../../shared/utils/form-utils.service';
     MatButtonModule,
     ReactiveFormsModule,
     MatSlideToggleModule,
-
+    MatIconModule
   ],
   templateUrl: './city-form.component.html',
   styleUrl: './city-form.component.css'

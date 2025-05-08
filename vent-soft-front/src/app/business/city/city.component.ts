@@ -4,6 +4,8 @@ import { CityFormComponent } from './city-form/city-form.component';
 import { TableColumn, UiTableComponent } from '../../shared/components/ui-table/ui-table.component';
 import { CityService } from './services/city.service';
 import { ApiResponse } from '../../../apiResponse.dto';
+import { MatCardModule } from '@angular/material/card';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-city',
@@ -11,6 +13,8 @@ import { ApiResponse } from '../../../apiResponse.dto';
   imports: [
     UiTableComponent,
     CityFormComponent,
+    MatCardModule,
+    MatIconModule
   ],
   templateUrl: './city.component.html',
   styleUrl: './city.component.css'

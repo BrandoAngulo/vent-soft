@@ -11,7 +11,7 @@ import { CategoryDTO } from '../../category/category.dto';
 import { SupplierDTO } from '../../supplier/supplier.dto';
 import { CategoryService } from '../../category/services/category.service';
 import { SupplierService } from '../../supplier/services/supplier.service';
-
+import { MatIconModule } from '@angular/material/icon';
 @Component({
   selector: 'app-product-form',
   standalone: true,
@@ -23,6 +23,7 @@ import { SupplierService } from '../../supplier/services/supplier.service';
     MatSelectModule,
     ReactiveFormsModule,
     MatSlideToggleModule,
+    MatIconModule
   ],
   templateUrl: './product-form.component.html',
   styleUrls: ['./product-form.component.css']

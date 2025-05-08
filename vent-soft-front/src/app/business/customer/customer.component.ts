@@ -5,6 +5,8 @@ import { CustomerFormComponent } from './customer-form/customer-form.component';
 import { TableColumn, UiTableComponent } from '../../shared/components/ui-table/ui-table.component';
 import { ApiResponse } from '../../../apiResponse.dto';
 import { CommonModule } from '@angular/common';
+import { MatCardModule } from '@angular/material/card';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-customer',
@@ -13,6 +15,8 @@ import { CommonModule } from '@angular/common';
     CommonModule,
     UiTableComponent,
     CustomerFormComponent,
+    MatCardModule,
+    MatIconModule
   ],
   templateUrl: './customer.component.html',
   styleUrl: './customer.component.css'

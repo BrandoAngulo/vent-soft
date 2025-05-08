@@ -1,19 +1,18 @@
 <div class="container">
   <mat-card>
     <mat-card-content>
-      <h2>Módulo de Facturación</h2>
       <!-- Formulario de factura -->
-      <app-invoice-form 
+      <app-invoice-form
         [selectedInvoice]="selectedInvoice"
         (addInvoice)="addInvoice($event)"
         (updateInvoice)="updateInvoice($event)"
       />
 
       <!-- Tabla de facturas -->
-      <ui-table 
-        [data]="invoices" 
-        [columns]="tableColumns" 
-        [isLoading]="loadingInvoices" 
+      <ui-table
+        [data]="invoices"
+        [columns]="tableColumns"
+        [isLoading]="loadingInvoices"
         (editRow)="editInvoice($event)"
         (deleteRow)="cancelInvoice($event)"
       />

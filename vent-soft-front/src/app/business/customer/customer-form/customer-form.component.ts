@@ -11,7 +11,7 @@ import { CityDTO } from '../../city/city.dto';
 import { CityService } from '../../city/services/city.service';
 import { AlertService } from '../../../shared/services/alert.service';
 import { FormUtilsService } from '../../../shared/utils/form-utils.service';
-
+import { MatIconModule } from '@angular/material/icon';
 @Component({
   selector: 'app-customer-form',
   standalone: true,
@@ -22,7 +22,8 @@ import { FormUtilsService } from '../../../shared/utils/form-utils.service';
     MatButtonModule,
     MatSelectModule,
     ReactiveFormsModule,
-    MatSlideToggleModule
+    MatSlideToggleModule,
+    MatIconModule
   ],
   templateUrl: './customer-form.component.html',
   styleUrl: './customer-form.component.css'

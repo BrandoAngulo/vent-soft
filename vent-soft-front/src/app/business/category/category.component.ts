@@ -6,11 +6,19 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { CommonModule } from '@angular/common';
 import { CategoryService } from './services/category.service';
 import { ApiResponse } from '../../../apiResponse.dto';
-
+import { MatCardModule } from '@angular/material/card';
+import { MatIconModule } from '@angular/material/icon';
 @Component({
   selector: 'app-category',
   standalone: true,
-  imports: [UiTableComponent, CategoryFormComponent, MatProgressSpinnerModule, CommonModule],
+  imports: [
+    UiTableComponent,
+    CategoryFormComponent,
+    MatProgressSpinnerModule,
+    CommonModule,
+    MatCardModule,
+    MatIconModule
+  ],
   templateUrl: './category.component.html',
   styleUrl: './category.component.css'
 })

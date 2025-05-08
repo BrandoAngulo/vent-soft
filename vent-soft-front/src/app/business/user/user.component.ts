@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { UserDTO } from './user.dto';
 import { TableColumn, UiTableComponent } from '../../shared/components/ui-table/ui-table.component';
-import { timer } from 'rxjs';
 import { UserFormComponent } from "./user-form/user-form.component";
 import { CommonModule } from '@angular/common';
 import { UserService } from './services/user.service';
 import { ApiResponse } from '../../../apiResponse.dto';
+import { MatIconModule } from '@angular/material/icon';
+import { MatCardModule } from '@angular/material/card';
 
 @Component({
   selector: 'app-user',
@@ -14,6 +15,8 @@ import { ApiResponse } from '../../../apiResponse.dto';
     CommonModule,
     UiTableComponent,
     UserFormComponent,
+    MatCardModule,
+    MatIconModule
   ],
   templateUrl: './user.component.html',
   styleUrl: './user.component.css'

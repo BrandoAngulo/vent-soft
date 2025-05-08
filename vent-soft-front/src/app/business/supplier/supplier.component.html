@@ -1,15 +1,19 @@
-<app-supplier-form
-[supplierEdit]="selectedSupplier"
-(add)="addSupplier($event)" 
-(update)="updateSupplier($event)"
-/>
-
-<ui-table 
-[data]="suppliers" 
-[columns]="tableColumns" 
-[isLoading]="loadingSupplier" 
-(editRow)="editSupplier($event)"
-(deleteRow)="deleteSupplier($event)"
-(statusChanged)="updateSupplierStatus($event)"
-/>
-
+<div class="container">
+  <mat-card>
+    <mat-card-content>
+      <app-supplier-form
+        [supplierEdit]="selectedSupplier"
+          (add)="addSupplier($event)"
+          (update)="updateSupplier($event)"
+        />
+        <ui-table
+        [data]="suppliers"
+        [columns]="tableColumns"
+        [isLoading]="loadingSupplier"
+          (editRow)="editSupplier($event)"
+          (deleteRow)="deleteSupplier($event)"
+          (statusChanged)="updateSupplierStatus($event)"
+        />
+    </mat-card-content>
+  </mat-card>
+</div>
