@@ -6,14 +6,15 @@ import com.qualitysales.ventsoft.model.City;
 import com.qualitysales.ventsoft.repository.CityRepository;
 import com.qualitysales.ventsoft.service.CityService;
 import com.qualitysales.ventsoft.utils.dto.GenericDTO;
+import com.qualitysales.ventsoft.utils.enums.ErrorMessageEnum;
 import com.qualitysales.ventsoft.utils.enums.MessagesEnum;
+import com.qualitysales.ventsoft.exceptions.AppException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationContextException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -87,15 +88,15 @@ public class CityServiceImpl implements CityService {
     }
 
     @Override
-    public GenericDTO deleteCity(Integer id) {
+    public GenericDTO deleteCity(Integer id)  {
         City findId = cityRepository.findById(id).orElseThrow(() ->
-                new ApplicationContextException(MessagesEnum.REQUEST_FAILED.getMessage(), null));
+                new ApplicationContextException(MessagesEnum.REQUEST_FAILED.getMessage()));
         try {
             log.info("deleteCity ok: {}", findId);
             cityRepository.delete(findId);
             return GenericDTO.genericSuccess(MessagesEnum.REQUEST_SUCCESS, HttpStatus.OK.value());
         } catch (Exception e) {
-            log.error("deleteCity throw: {}", findId);
+            log.error("deleteCity throw: {}", findId, e.getCause());
             throw new ApplicationContextException(e.getMessage());
         }
     }

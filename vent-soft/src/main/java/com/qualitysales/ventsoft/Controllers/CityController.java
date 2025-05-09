@@ -4,6 +4,7 @@ import com.qualitysales.ventsoft.Controllers.DTO.CityDTO;
 import com.qualitysales.ventsoft.model.City;
 import com.qualitysales.ventsoft.service.impl.CityServiceImpl;
 import com.qualitysales.ventsoft.utils.dto.GenericDTO;
+import com.qualitysales.ventsoft.exceptions.AppException;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -42,7 +43,7 @@ public class CityController {
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<GenericDTO> delete(@PathVariable int id) {
+    public ResponseEntity<GenericDTO> delete(@PathVariable int id) throws AppException {
         return ResponseEntity.ok(cityService.deleteCity(id));
     }
 

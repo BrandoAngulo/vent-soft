@@ -3,6 +3,7 @@ package com.qualitysales.ventsoft.service;
 import com.qualitysales.ventsoft.Controllers.DTO.CityDTO;
 import com.qualitysales.ventsoft.model.City;
 import com.qualitysales.ventsoft.utils.dto.GenericDTO;
+import com.qualitysales.ventsoft.exceptions.AppException;
 
 import java.util.List;
 
@@ -15,6 +16,6 @@ public interface CityService {
 
     CityDTO updateCity(Integer id, City city);
 
-    GenericDTO deleteCity(Integer id);
+    GenericDTO deleteCity(Integer id) throws AppException;
 
 }

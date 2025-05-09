@@ -33,6 +33,7 @@ export class CityService {
     return this.http.delete<ApiResponse<string>>(`${this.urlBase}/city/delete/${id}`)
       .pipe(
         catchError(error => {
+          console.log(error);
           return throwError(() => new Error('Error deleting city'));
         })
       );

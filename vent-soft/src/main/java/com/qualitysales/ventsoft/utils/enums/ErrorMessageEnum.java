@@ -1,5 +1,6 @@
 package com.qualitysales.ventsoft.utils.enums;
 
+import com.qualitysales.ventsoft.utils.constants.Const;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -14,29 +15,42 @@ public enum ErrorMessageEnum {
     ),
     DATA_NOT_FOUND(
             "2",
-            "Verify the information and try again.",
+            Const.VERIFY_PARAMS,
             "The customer is registered"
 
     ),
     ERROR_LOGIN(
             "3",
-            "Datos de acceso incorrectos",
-            "Verifique las credenciales e intente de nuevo"
+            Const.VERIFY_PARAMS,
+            "Datos de acceso incorrectos"
 
     ),
     ERROR_DESCONOCIDO(
-            "500",
+            "4",
             "Error no controlado",
-            "Comuniquese con el administrador del sistema"
+            Const.COMMUNICATION_ADMIN
     ),
-
     INVALID_TOKEN(
-            "401",
+            "5",
             "Iniciar sesion de nuevo",
             "Token expirado"
+    ),
+    USER_NOT_FOUND(
+            "6",
+            Const.VERIFY_PARAMS,
+            "Usuario no encontrado "
+    ),
+    INTERNAL_SERVER_ERROR(
+            "7",
+            Const.COMMUNICATION_ADMIN,
+            "Error interno del servidor"
+    ),
+    FOREIGN_KEY_VIOLATION(
+            "8",
+            Const.COMMUNICATION_ADMIN,
+            "Error, la lave foranea viola la restriccion"
     );
     private final String code;
     private final String recommendation;
     private final String message;
-
 }

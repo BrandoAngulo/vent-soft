@@ -1,4 +1,4 @@
-package com.qualitysales.ventsoft.utils.exceptions;
+package com.qualitysales.ventsoft.exceptions;
 
 import com.qualitysales.ventsoft.utils.dto.GenericDTO;
 import com.qualitysales.ventsoft.utils.enums.ErrorMessageEnum;
