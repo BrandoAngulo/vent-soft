@@ -5,6 +5,8 @@ import { CommonModule } from '@angular/common';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatIconModule } from '@angular/material/icon';
 import { AlertService } from '../../services/alert.service';
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
 
 export interface TableColumn<T> {
   label: string;
@@ -20,7 +22,9 @@ export interface TableColumn<T> {
     MatTableModule,
     MatSlideToggleModule,
     MatProgressSpinnerModule,
-    MatIconModule
+    MatIconModule,
+    MatInputModule,
+    MatFormFieldModule
   ],
   templateUrl: './ui-table.component.html',
   styleUrls: ['./ui-table.component.css'],
@@ -88,4 +92,8 @@ export class UiTableComponent<T> implements OnChanges {
     });
   }
 
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+  }
 }
